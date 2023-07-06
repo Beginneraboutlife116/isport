@@ -1,14 +1,8 @@
 import { Outlet } from 'react-router-dom';
-import Nav from './components/Nav';
+import Header from './components/Header';
 
 function App() {
-	return (
-		<div>
-			<h1>This is app</h1>
-			<Nav />
-			<Outlet />
-		</div>
-	);
+	return <Header />;
 }
 
 export default App;

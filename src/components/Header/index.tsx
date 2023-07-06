@@ -1,10 +1,15 @@
-import styles from './style.module.scss';
+import styles from './styles.module.scss';
 
-export default function Header() {
+export default function Header({ children }: { children?: React.ReactNode }) {
 	return (
 		<header className={styles.header}>
-			<h1>Hello</h1>
-			<h2>world</h2>
+			<div className={styles.header__wrapper}>
+				<div className={styles.header__logo}>
+					<img src='' alt='isport logo' />
+					<h1>愛運動</h1>
+				</div>
+				{children}
+			</div>
 		</header>
 	);
 }
