@@ -2,7 +2,14 @@ import { Outlet } from 'react-router-dom';
 import Header from './components/Header';
 
 function App() {
-	return <Header />;
+	// If authentication is true, then return different children in Header.
+	const children = null;
+	return (
+		<>
+			<Header children={children} />
+			<Outlet />
+		</>
+	);
 }
 
 export default App;
