@@ -21,9 +21,6 @@ export default function LoginPage() {
 	const [emailError, setEmailError] = useState('pass');
 	const [passwordError, setPasswordError] = useState('pass');
 
-	console.log('🚀 ~ file: index.tsx:18 ~ LoginPage ~ isValid:', isValid);
-	// console.log('🚀 ~ file: index.tsx:17 ~ LoginPage ~ isSubmitting:', isSubmitting);
-
 	return (
 		<main className={styles.login}>
 			<h2 className={styles.login__title}>請先登入愛運動帳戶</h2>
@@ -85,7 +82,7 @@ export default function LoginPage() {
 					登入
 				</Button>
 			</form>
-			<div className={styles.login__switch_method}>
+			<div className={styles.login__other_methods}>
 				<Link to='/signup'>
 					<Button data-switch>註冊</Button>
 				</Link>
