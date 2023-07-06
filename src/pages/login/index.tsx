@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
-import { Button } from '../../components';
+import Button from '../../components/Button';
 import styles from './styles.module.scss';
 
 type LoginFormProps = {
