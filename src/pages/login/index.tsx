@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
+import { IconContext } from 'react-icons';
+import { BsGoogle, BsFacebook } from 'react-icons/bs';
 import Button from '../../components/Button';
 import styles from './styles.module.scss';
 
@@ -90,12 +92,16 @@ export default function LoginPage() {
 					<Button data-switch>商家登入頁</Button>
 				</Link>
 			</div>
-			<div>
+			<div className={styles.login__icon_wrapper}>
 				<a href='#' target='_blank'>
-					To google
+					<IconContext.Provider value={{ color: '#D3455B', className: styles.login__icon }}>
+						<BsGoogle />
+					</IconContext.Provider>
 				</a>
 				<a href='#' target='_blank'>
-					To Facebook
+					<IconContext.Provider value={{ color: '#3488D9', className: styles.login__icon }}>
+						<BsFacebook />
+					</IconContext.Provider>
 				</a>
 			</div>
 		</main>

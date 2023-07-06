@@ -19,7 +19,7 @@
 		gap: 1rem;
 		border-block-end: 0.125rem solid #9eadba;
 		padding-block-end: 1.5rem;
-		margin-block-end: 1.5rem;
+		margin-block-end: 2rem;
 
 		& [data-switch] {
 			color: #6558f5;
@@ -28,6 +28,18 @@
 			&:hover {
 				background-color: #c7c3fb;
 			}
+		}
+	}
+
+	&__icon {
+		display: block;
+		width: 2.5rem;
+		height: 2.5rem;
+
+		&_wrapper {
+			display: grid;
+			grid-template-columns: repeat(2, 1fr);
+			justify-items: center;
 		}
 	}
 }
