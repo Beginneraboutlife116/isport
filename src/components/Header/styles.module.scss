@@ -1,0 +1,19 @@
+.header {
+	--clr-primary: #3fb1e4;
+	
+	display: flex;
+	background-color: var(--clr-primary);
+	padding-block: 0.625rem;
+	color: #fff;
+
+	&__wrapper {
+		width: min(100%, 80rem);
+		margin-inline: auto;
+	}
+
+	&__logo {
+		display: flex;
+		gap: 1rem;
+		margin-inline-end: auto;
+	}
+}

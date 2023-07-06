@@ -1,13 +1,14 @@
 import { Outlet } from 'react-router-dom';
-import Nav from './components/Nav';
+import Header from './components/Header';
 
 function App() {
+	// If authentication is true, then return different children in Header.
+	const children = null;
 	return (
-		<div>
-			<h1>This is app</h1>
-			<Nav />
+		<>
+			<Header children={children} />
 			<Outlet />
-		</div>
+		</>
 	);
 }
 
