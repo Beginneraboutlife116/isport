@@ -1,0 +1,15 @@
+.container {
+  padding-top: 2rem;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+
+  &_wrap {
+    width: 80%;
+    // border: 1px solid black;
+    height: 100%;
+    display: grid;
+    justify-content: center;
+  }
+
+}
