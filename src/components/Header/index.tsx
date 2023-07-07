@@ -1,44 +1,64 @@
 import styles from './styles.module.scss';
 import logo from '../../assets/Logo.png';
 import { Link } from 'react-router-dom';
+import { IconContext } from 'react-icons';
+import { BiSolidUserCircle } from 'react-icons/bi';
+import Button from '../Button';
 
 export default function Header({
-	children,
 	className,
+	role,
+	currentUserId,
 }: {
-	children?: React.ReactNode;
 	className?: string;
+	role?: string;
+	currentUserId?: string;
 }) {
 	return (
 		<header className={`${styles.header} ${className ?? ''}`.trim()}>
 			<div className={styles.header__wrapper}>
 				<div className={styles.header__logo}>
-					<img src={logo} alt='isport logo' className={styles.header__logo__width} />
-					<h1>愛運動</h1>
+					<img src={logo} alt='isport logo' />
 				</div>
 
-				{/* auth = user */}
-				{/* button */}
 				<div className={styles.header__linkWrap}>
-					<Link to='/find' className={styles.header__linkWrap__link}>
-						找場館
-					</Link>
+					{role && (
+						<Link to='/find'>
+							<Button className={styles.header__linkWrap__link}>找場館</Button>
+						</Link>
+					)}
 
-					<Link to='/collection' className={styles.header__linkWrap__link}>
-						我的場館
-					</Link>
+					{role === 'user' && (
+						<Link to='/collection'>
+							<Button className={styles.header__linkWrap__link}>我的場館</Button>
+						</Link>
+					)}
 
-					<Link to='/reservation' className={styles.header__linkWrap__link}>
-						我的預約
-					</Link>
+					{role === 'user' && (
+						<Link to='/reservation'>
+							<Button className={styles.header__linkWrap__link}>我的預約</Button>
+						</Link>
+					)}
 				</div>
 
-				<div>我的帳戶</div>
+				{role && (
+					<>
+						{role === 'user' && (
+							<Link to={`/${currentUserId}`}>
+								<Button aria-label='修改大頭照' className={styles.header__btn}>
+									<IconContext.Provider value={{ size: '2rem' }}>
+										<BiSolidUserCircle />
+									</IconContext.Provider>
+								</Button>
+							</Link>
+						)}
+						<Link to={`/${currentUserId}`}>
+							<Button className={styles.header__btn}>我的帳戶</Button>
+						</Link>
 
-				<div>登出</div>
-
-				{/* auth = owner */}
-				{children}
+						<Button className={styles.header__btn}>登出</Button>
+					</>
+				)}
 			</div>
 		</header>
 	);

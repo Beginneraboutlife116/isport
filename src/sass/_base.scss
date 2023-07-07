@@ -4,3 +4,9 @@ h2 {
 	margin: 0;
 	font-size: 1.5rem;
 }
+
+img {
+	display: block;
+	// 不確定要 max-width 還是 width
+	width: 100%;
+}
