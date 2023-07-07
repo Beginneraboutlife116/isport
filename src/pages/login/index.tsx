@@ -27,7 +27,7 @@ export default function LoginPage() {
 		<main className={styles.login}>
 			<h2 className={styles.login__title}>請先登入愛運動帳戶</h2>
 			<form onSubmit={handleSubmit((data) => console.log(data))}>
-				<div className='input'>
+				<div className={styles.input}>
 					<input
 						type='email'
 						placeholder='請輸入 Email'
@@ -56,11 +56,13 @@ export default function LoginPage() {
 							},
 						})}
 					/>
-					{emailError === 'email empty' && <p>Email 不可為空</p>}
-					{emailError === 'email pattern incorrect' && <p>Email pattern incorrect</p>}
+					{emailError === 'email empty' && <p className={styles.input__error}>Email 不可為空</p>}
+					{emailError === 'email pattern incorrect' && (
+						<p className={styles.input__error}>Email pattern incorrect</p>
+					)}
 				</div>
 
-				<div className='input'>
+				<div className={styles.input}>
 					<input
 						type='password'
 						placeholder='請輸入 密碼'
@@ -78,7 +80,9 @@ export default function LoginPage() {
 							},
 						})}
 					/>
-					{passwordError === 'password empty' && <p>密碼 不可為空</p>}
+					{passwordError === 'password empty' && (
+						<p className={styles.input__error}>密碼 不可為空</p>
+					)}
 				</div>
 				<Button type='submit' disabled={!isValid} className={styles.login__btn}>
 					登入
