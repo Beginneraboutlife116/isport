@@ -9,11 +9,30 @@
 	&__wrapper {
 		width: min(100%, 80rem);
 		margin-inline: auto;
+		display: flex;
+		align-items: center;
 	}
 
 	&__logo {
 		display: flex;
 		gap: 1rem;
 		margin-inline-end: auto;
+		align-items: center;
+
+		&__width {
+			width: 50px;
+		}
 	}
+
+  &__linkWrap {
+    display: grid;
+    grid-gap: 1rem;
+    grid-auto-flow: column;
+
+    &__link {
+      text-decoration: none;
+      color: inherit;
+      font-weight: bold;
+    }
+  }
 }
