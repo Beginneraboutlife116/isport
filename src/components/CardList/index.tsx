@@ -35,20 +35,3 @@ function CardList({ data }: CardListProps) {
 }
 
 export default CardList;
-
-// const CardList = ({ data }) => {
-//   return (
-//     <div className="card-list">
-//       {data.map((item) => (
-//         <Card
-//           key={item.id}
-//           title={item.title}
-//           description={item.description}
-//           image={item.image}
-//         />
-//       ))}
-//     </div>
-//   );
-// };
-
-// export default CardList;
