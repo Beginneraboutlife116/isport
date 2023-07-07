@@ -1,0 +1,123 @@
+@mixin animation {
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+  opacity: 0;
+  animation: fadeIn 0.5s ease-in-out forwards;
+}
+
+@mixin button {
+  background-color: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+
+  &__numberWrap {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgb(246, 243, 243);
+    width: 200px;
+    height: 200px;
+    background-color: rgb(246, 243, 243);
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+  }
+
+  
+
+  &__number {
+    font-size: 130px;
+    @include animation;
+  }
+
+  &__text {
+    font-size: 24px;
+    @include animation
+  }
+
+  &__list {
+    margin-left: 3rem;
+    width: 600px;
+    height: 100%;
+  }
+
+  &__itemWrap {
+    border-top: 2px solid gray;
+    height: 100%;
+  }
+
+  &__item {
+    display: grid;
+    grid-auto-flow: column;
+    grid-gap: 0.5rem;
+    padding: 1rem 0;
+    border-bottom: 2px solid lightgray;
+    align-items: center;
+  }
+
+  &__title {
+    display: flex;
+    background-color: lightgray;
+    color: white;
+    height: 3rem;
+    align-items: center;
+    font-size: 20px;
+    padding-left: 5px;
+    margin-bottom: 1rem;
+  }
+
+  &__store {
+    @include button;
+    color: blue;
+  }
+
+  &__cancel {
+    @include button;
+    background-color: lightgray;
+    padding: 5px;
+    border-radius: 20px;
+
+    &:hover {
+      background-color: gray;
+    }
+  }
+
+  &__modal {
+    position: fixed;
+    top: 35%;
+    left: 60%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    height: 100px;
+    background-color: rgb(252, 248, 248);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid gray;
+    border-radius: 10px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  }
+
+  &__modalContent {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+  }
+
+  &__modalButton {
+    display: grid;
+    grid-gap: 1rem;
+    grid-auto-flow: column;
+  }
+}

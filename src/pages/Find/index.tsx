@@ -96,11 +96,8 @@ const data = [
 function Find() {
 	return (
 		<div className={styled.container}>
-			<div className={styled.container_wrap}>
-				{/* Search Bar */}
+			<div className={styled.container__wrap}>
 				<SearchBar />
-
-				{/* Store card list */}
 				<CardList data={data} />
 			</div>
 		</div>
