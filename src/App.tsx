@@ -7,7 +7,7 @@ function App() {
 	let returnRole = 'user';
 	return (
 		<>
-			<Header role={!isAuthenticated ? undefined : returnRole} />
+			<Header role={!isAuthenticated ? "" : returnRole} />
 			<Outlet />
 		</>
 	);
