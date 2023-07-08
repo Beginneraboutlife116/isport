@@ -22,10 +22,11 @@ export default function LoginPage() {
 	});
 	const [emailError, setEmailError] = useState('pass');
 	const [passwordError, setPasswordError] = useState('pass');
+	console.log('🚀 ~ file: index.tsx:20 ~ LoginPage ~ isSubmitting:', isSubmitting);
 
 	return (
 		<main className={styles.login}>
-			<h2 className={styles.login__title}>請先登入愛運動帳戶</h2>
+			<h1 className={styles.login__title}>請先登入愛運動帳戶</h1>
 			<form onSubmit={handleSubmit((data) => console.log(data))}>
 				<div className={styles.input}>
 					<input
@@ -58,7 +59,7 @@ export default function LoginPage() {
 					/>
 					{emailError === 'email empty' && <p className={styles.input__error}>Email 不可為空</p>}
 					{emailError === 'email pattern incorrect' && (
-						<p className={styles.input__error}>Email pattern incorrect</p>
+						<p className={styles.input__error}>Email 格式不對</p>
 					)}
 				</div>
 
@@ -97,16 +98,16 @@ export default function LoginPage() {
 				</Link>
 			</div>
 			<div className={styles.login__icon_wrapper}>
-				<a href='#' target='_blank'>
+				<Button>
 					<IconContext.Provider value={{ color: '#D3455B', className: styles.login__icon }}>
 						<BsGoogle />
 					</IconContext.Provider>
-				</a>
-				<a href='#' target='_blank'>
+				</Button>
+				<Button>
 					<IconContext.Provider value={{ color: '#3488D9', className: styles.login__icon }}>
 						<BsFacebook />
 					</IconContext.Provider>
-				</a>
+				</Button>
 			</div>
 		</main>
 	);
