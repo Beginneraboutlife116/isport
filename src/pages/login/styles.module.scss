@@ -43,6 +43,10 @@
 		}
 	}
 
+	&__input {
+		margin-block-end: 1.5em;
+	}
+
 	&__icon {
 		display: block;
 		width: 2.5rem;
@@ -53,32 +57,5 @@
 			grid-template-columns: repeat(2, 1fr);
 			justify-items: center;
 		}
-	}
-}
-
-.input {
-	display: grid;
-	position: relative;
-
-	& input {
-		padding: 0.75em;
-		border: 0.125rem solid #c5ced6;
-		border-radius: 0.25rem;
-		margin-bottom: 1.5em;
-
-		&::placeholder {
-			color: #c5ced6;
-		}
-	}
-
-	&__error {
-		position: absolute;
-		top: 47.5%;
-		left: 0.75em;
-		color: #da1010;
-	}
-
-	&:has(&__error) input {
-		border-color: #da1010;
 	}
 }

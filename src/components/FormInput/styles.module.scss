@@ -1,0 +1,32 @@
+.input {
+	text-align: left;
+
+	& :where([data-input-wrapper]) {
+		position: relative;
+		display: grid;
+	}
+
+	& :where(label) {
+		font-weight: 700;
+	}
+
+	& :where(input) {
+		padding: 0.75em;
+		border: 0.125rem solid #c5ced6;
+		border-radius: 0.25rem;
+
+		&::placeholder {
+			color: #c5ced6;
+		}
+	}
+
+	& :where([data-error-message]) {
+		position: absolute;
+		top: calc(100% - 0.9em);
+		color: #da1010;
+
+		& + :where(input) {
+			border-color: #da1010;
+		}
+	}
+}
