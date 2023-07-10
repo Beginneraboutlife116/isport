@@ -3,10 +3,11 @@ import Header from './components/Header';
 
 function App() {
 	// If authentication is true, then return different children in Header.
-	const children = null;
+	const isAuthenticated = true;
+	let returnRole = 'user';
 	return (
 		<>
-			<Header children={children} />
+			<Header role={!isAuthenticated ? "" : returnRole} />
 			<Outlet />
 		</>
 	);
