@@ -1,0 +1,61 @@
+.login {
+	width: min(100%, 25rem);
+	margin-inline: auto;
+	text-align: center;
+
+	&__title {
+		margin-block: 1em 1.125em;
+	}
+
+	&__btn {
+		--clr-primary: #3fb1e4;
+		--clr-disabled: #d5e7f8;
+
+		width: 100%;
+		padding: 0.625em 1em 0.625em;
+		color: #fff;
+		background-color: var(--clr-primary);
+		margin-block-end: 0.9375rem;
+		border: none;
+
+		&:disabled {
+			background-color: var(--clr-disabled);
+		}
+	}
+
+	&__other_methods {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 1rem;
+		border-block-end: 0.125rem solid #9eadba;
+		padding-block-end: 1.5rem;
+		margin-block-end: 2rem;
+
+		& [data-switch] {
+			width: 100%;
+			padding: 0.625em 1em 0.625em;
+			color: #6558f5;
+			border: 0.125rem solid #c7c3fb;
+
+			&:hover {
+				background-color: #c7c3fb;
+			}
+		}
+	}
+
+	&__input {
+		margin-block-end: 1.5em;
+	}
+
+	&__icon {
+		display: block;
+		width: 2.5rem;
+		height: 2.5rem;
+
+		&_wrapper {
+			display: grid;
+			grid-template-columns: repeat(2, 1fr);
+			justify-items: center;
+		}
+	}
+}
