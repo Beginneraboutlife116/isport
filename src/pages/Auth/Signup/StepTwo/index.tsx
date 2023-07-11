@@ -16,7 +16,7 @@ export default function SignupStepTwoPage() {
 		formState: { isValid },
 	} = useForm();
 	const nameErrors = {
-		overflow: '暱稱 超過 50 個字',
+		exceed: '暱稱 超過 50 個字',
 	};
 	const file = watch('avatar', null);
 	const validateFormat = ['image/jpg', 'image/png', 'image/jpeg', 'image/*'];
@@ -62,7 +62,7 @@ export default function SignupStepTwoPage() {
 					rules={{
 						validate: (value) => {
 							if (value.length > 50) {
-								setNameErrorKey('overflow');
+								setNameErrorKey('exceed');
 								return false;
 							} else {
 								setNameErrorKey('');

@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import FormInput from '../../../../components/FormInput';
 import authStyles from '../../styles.module.scss';
-import styles from './styles.module.scss';
+import styles from '../styles.module.scss';
 import Button from '../../../../components/Button';
 
 export default function StoreLoginPage() {

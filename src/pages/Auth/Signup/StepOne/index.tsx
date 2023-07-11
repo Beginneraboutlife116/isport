@@ -125,8 +125,8 @@ export default function SignupStepOnePage() {
 				<Link to='/login'>
 					<Button className={styles['auth__otherMethods--btn']}>登入</Button>
 				</Link>
-				<Link to='/store/login'>
-					<Button className={styles['auth__otherMethods--btn']}>商家登入頁</Button>
+				<Link to='/store/signup'>
+					<Button className={styles['auth__otherMethods--btn']}>商家註冊頁</Button>
 				</Link>
 			</div>
 			<div className={styles.auth__iconWrapper}>
