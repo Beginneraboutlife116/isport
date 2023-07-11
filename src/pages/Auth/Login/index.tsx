@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { useState } from 'react';
 import { BsGoogle, BsFacebook } from 'react-icons/bs';
+import { useErrors } from '../../../util';
 import Button from '../../../components/Button';
 import styles from '../styles.module.scss';
 import FormInput from '../../../components/FormInput';
@@ -13,17 +13,8 @@ export default function LoginPage() {
 		// `isSubmitting` is for waiting data from server while user tries to log in.
 		formState: { isValid, isSubmitting },
 	} = useForm();
-	const [emailErrorKey, setEmailErrorKey] = useState('');
-	const [passwordErrorKey, setPasswordErrorKey] = useState('');
 	console.log('🚀 ~ file: index.tsx:20 ~ LoginPage ~ isSubmitting:', isSubmitting);
-
-	const passwordErrors = {
-		empty: '密碼 不可為空',
-	};
-	const emailErrors = {
-		empty: 'Email 不可為空',
-		pattern: 'Email 格式不對',
-	};
+	const { errors, state, dispatch } = useErrors();
 
 	return (
 		<>
@@ -33,31 +24,31 @@ export default function LoginPage() {
 					register={register}
 					id='email'
 					placeholder='請輸入 Email'
-					errors={emailErrors}
-					errorKey={emailErrorKey}
+					errors={errors.email}
+					errorKey={state.email}
 					rules={{
 						required: true,
 						validate: {
 							pattern: (v) => {
 								const pattern = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
 								if (!pattern.test(v)) {
-									setEmailErrorKey('pattern');
+									dispatch({ type: 'email', status: 'pattern' });
 									return false;
 								}
-								setEmailErrorKey('');
+								dispatch({ type: 'email', status: 'pass' });
 								return true;
 							},
 						},
 						onBlur: (event) => {
 							const { target } = event;
 							if (target.value === '') {
-								setEmailErrorKey('empty');
+								dispatch({ type: 'email', status: 'empty' });
 							}
 						},
 						onChange: (event) => {
 							const { target } = event;
 							if (target.value !== '') {
-								setEmailErrorKey('');
+								dispatch({ type: 'email', status: 'pass' });
 							}
 						},
 					}}
@@ -68,21 +59,21 @@ export default function LoginPage() {
 					type='password'
 					placeholder='請輸入 密碼'
 					id='password'
-					errors={passwordErrors}
-					errorKey={passwordErrorKey}
+					errors={errors.password}
+					errorKey={state.password}
 					register={register}
 					rules={{
 						required: true,
 						onBlur: (event) => {
 							const { target } = event;
 							if (target.value === '') {
-								setPasswordErrorKey('empty');
+								dispatch({ type: 'password', status: 'empty' });
 							}
 						},
 						onChange: (event) => {
 							const { target } = event;
 							if (target.value !== '') {
-								setPasswordErrorKey('pass');
+								dispatch({ type: 'password', status: 'pass' });
 							}
 						},
 					}}

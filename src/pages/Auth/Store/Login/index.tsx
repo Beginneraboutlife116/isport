@@ -1,6 +1,6 @@
-import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
+import { useErrors } from '../../../../util';
 import FormInput from '../../../../components/FormInput';
 import authStyles from '../../styles.module.scss';
 import styles from '../styles.module.scss';
@@ -12,19 +12,7 @@ export default function StoreLoginPage() {
 		handleSubmit,
 		formState: { isValid },
 	} = useForm();
-	const [emailErrorKey, setEmailErrorKey] = useState('');
-	const [passwordErrorKey, setPasswordErrorKey] = useState('');
-
-	const emailErrors = {
-		empty: 'Email 不可為空',
-		notExist: 'Email 不存在',
-		pattern: 'Email 格式不對',
-	};
-
-	const passwordErrors = {
-		empty: '密碼 不可為空',
-		error: '密碼 錯誤',
-	};
+	const { errors, state, dispatch } = useErrors();
 
 	return (
 		<>
@@ -36,29 +24,27 @@ export default function StoreLoginPage() {
 					id='email'
 					type='email'
 					className={authStyles.auth__input}
-					errors={emailErrors}
-					errorKey={emailErrorKey}
+					errors={errors.email}
+					errorKey={state.email}
 					rules={{
 						required: true,
 						validate: (v) => {
 							const pattern = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
 							if (!pattern.test(v)) {
-								setEmailErrorKey('pattern');
+								dispatch({ type: 'email', status: 'pattern' });
 								return false;
 							}
-							setEmailErrorKey('');
+							dispatch({ type: 'email', status: 'pass' });
 							return true;
 						},
 						onBlur: (event) => {
 							if (event.target.value === '') {
-								setEmailErrorKey('empty');
-							} else {
-								setEmailErrorKey('');
+								dispatch({ type: 'email', status: 'empty' });
 							}
 						},
 						onChange: (event) => {
 							if (event.target.value !== '') {
-								setEmailErrorKey('');
+								dispatch({ type: 'email', status: 'pass' });
 							}
 						},
 					}}
@@ -68,21 +54,19 @@ export default function StoreLoginPage() {
 					register={register}
 					id='password'
 					type='password'
-					errors={passwordErrors}
-					errorKey={passwordErrorKey}
+					errors={errors.password}
+					errorKey={state.password}
 					className={authStyles.auth__input}
 					rules={{
 						required: true,
 						onBlur: (event) => {
 							if (event.target.value === '') {
-								setPasswordErrorKey('empty');
-							} else {
-								setPasswordErrorKey('');
+								dispatch({ type: 'password', status: 'empty' });
 							}
 						},
 						onChange: (event) => {
 							if (event.target.value !== '') {
-								setPasswordErrorKey('');
+								dispatch({ type: 'password', status: 'pass' });
 							}
 						},
 					}}

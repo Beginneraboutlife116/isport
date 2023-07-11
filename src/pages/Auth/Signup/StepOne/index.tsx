@@ -1,7 +1,7 @@
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { BsGoogle, BsFacebook } from 'react-icons/bs';
+import { useErrors } from '../../../../util';
 import FormInput from '../../../../components/FormInput';
 import Button from '../../../../components/Button';
 import styles from '../../styles.module.scss';
@@ -12,23 +12,8 @@ export default function SignupStepOnePage() {
 		handleSubmit,
 		formState: { isValid, isSubmitting },
 	} = useForm();
-	const [emailErrorKey, setEmailErrorKey] = useState('');
-	const [passwordErrorKey, setPasswordErrorKey] = useState('');
-	const [confirmedPasswordErrorKey, setConfirmedPasswordErrorKey] = useState('');
+	const { errors, state, dispatch } = useErrors({ email: '', password: '', confirmedPassword: '' });
 	console.log('🚀 ~ file: index.tsx:20 ~ LoginPage ~ isSubmitting:', isSubmitting);
-
-	const passwordErrors = {
-		empty: '密碼 不可為空',
-	};
-	const emailErrors = {
-		empty: 'Email 不可為空',
-		pattern: 'Email 格式不對',
-		overlap: 'Email 已被註冊過',
-	};
-	const confirmedPasswordErrors = {
-		empty: '確認密碼 不可為空',
-		different: '密碼 與 確認密碼 不一致',
-	};
 
 	return (
 		<>
@@ -38,31 +23,31 @@ export default function SignupStepOnePage() {
 					register={register}
 					id='email'
 					placeholder='請輸入 Email'
-					errors={emailErrors}
-					errorKey={emailErrorKey}
+					errors={errors.email}
+					errorKey={state.email}
 					rules={{
 						required: true,
 						validate: {
 							pattern: (v) => {
 								const pattern = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
 								if (!pattern.test(v)) {
-									setEmailErrorKey('pattern');
+									dispatch({ type: 'email', status: 'pattern' });
 									return false;
 								}
-								setEmailErrorKey('');
+								dispatch({ type: 'email', status: 'pass' });
 								return true;
 							},
 						},
 						onBlur: (event) => {
 							const { target } = event;
 							if (target.value === '') {
-								setEmailErrorKey('empty');
+								dispatch({ type: 'email', status: 'empty' });
 							}
 						},
 						onChange: (event) => {
 							const { target } = event;
 							if (target.value !== '') {
-								setEmailErrorKey('');
+								dispatch({ type: 'email', status: 'pass' });
 							}
 						},
 					}}
@@ -73,21 +58,21 @@ export default function SignupStepOnePage() {
 					type='password'
 					placeholder='請輸入 密碼'
 					id='password'
-					errors={passwordErrors}
-					errorKey={passwordErrorKey}
+					errors={errors.password}
+					errorKey={state.password}
 					register={register}
 					rules={{
 						required: true,
 						onBlur: (event) => {
 							const { target } = event;
 							if (target.value === '') {
-								setPasswordErrorKey('empty');
+								dispatch({ type: 'password', status: 'empty' });
 							}
 						},
 						onChange: (event) => {
 							const { target } = event;
 							if (target.value !== '') {
-								setPasswordErrorKey('pass');
+								dispatch({ type: 'password', status: 'pass' });
 							}
 						},
 					}}
@@ -97,21 +82,21 @@ export default function SignupStepOnePage() {
 					type='password'
 					placeholder='請再次輸入 密碼'
 					id='confirmedPassword'
-					errors={confirmedPasswordErrors}
-					errorKey={confirmedPasswordErrorKey}
+					errors={errors.confirmedPassword}
+					errorKey={state.confirmedPassword}
 					register={register}
 					rules={{
 						required: true,
 						onBlur: (event) => {
 							const { target } = event;
 							if (target.value === '') {
-								setConfirmedPasswordErrorKey('empty');
+								dispatch({ type: 'confirmedPassword', status: 'empty' });
 							}
 						},
 						onChange: (event) => {
 							const { target } = event;
 							if (target.value !== '') {
-								setConfirmedPasswordErrorKey('pass');
+								dispatch({ type: 'confirmedPassword', status: 'pass' });
 							}
 						},
 					}}

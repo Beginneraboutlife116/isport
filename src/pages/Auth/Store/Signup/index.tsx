@@ -1,70 +1,18 @@
-import { useReducer } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
+import { useErrors } from '../../../../util';
 import FormInput from '../../../../components/FormInput';
 import Button from '../../../../components/Button';
 import authStyles from '../../styles.module.scss';
 import styles from '../styles.module.scss';
 
-type ErrorsType = {
-	emailErrorKey: string;
-	passwordErrorKey: string;
-	confirmedPasswordErrorKey: string;
-	nameErrorKey: string;
-};
-
-type ErrorsAction = {
-	type: string;
-	status: string;
-};
-
-function errorKeyReducer(state: ErrorsType, action: ErrorsAction) {
-	switch (action.type) {
-		case 'email':
-			return { ...state, emailErrorKey: action.status };
-		case 'password':
-			return { ...state, passwordErrorKey: action.status };
-		case 'confirmedPassword':
-			return { ...state, confirmedPasswordErrorKey: action.status };
-		case 'name':
-			return { ...state, nameErrorKey: action.status };
-		default:
-			throw new Error('你傳入了不存在的 error key 名稱');
-	}
-}
-
 export default function StoreSignupPage() {
-	const [state, dispatch] = useReducer(errorKeyReducer, {
-		emailErrorKey: '',
-		passwordErrorKey: '',
-		confirmedPasswordErrorKey: '',
-		nameErrorKey: '',
-	});
+	const { errors, state, dispatch } = useErrors();
 	const {
 		register,
 		handleSubmit,
 		formState: { isValid },
 	} = useForm();
-
-	const emailErrors = {
-		empty: 'Email 不可為空',
-		pattern: 'Email 格式不對',
-		exist: 'Email 已重複註冊',
-	};
-
-	const nameErrors = {
-		empty: '商家名稱 不可為空',
-		exceed: '商家名稱 超過 50 個字',
-		exist: '商家名稱 已重複註冊',
-	};
-
-	const passwordErrors = {
-		empty: '密碼 不可為空',
-	};
-	const confirmedPasswordErrors = {
-		empty: '確認密碼 不可為空',
-		different: '密碼 與 確認密碼 不一致',
-	};
 
 	return (
 		<>
@@ -75,8 +23,8 @@ export default function StoreSignupPage() {
 					id='email'
 					type='email'
 					placeholder='請輸入 註冊Email'
-					errors={emailErrors}
-					errorKey={state.emailErrorKey}
+					errors={errors.email}
+					errorKey={state.email}
 					className={authStyles.auth__input}
 					rules={{
 						required: true,
@@ -86,7 +34,7 @@ export default function StoreSignupPage() {
 								dispatch({ type: 'email', status: 'pattern' });
 								return false;
 							}
-							dispatch({ type: 'email', status: '' });
+							dispatch({ type: 'email', status: 'pass' });
 							return true;
 						},
 						onBlur: (event) => {
@@ -96,7 +44,7 @@ export default function StoreSignupPage() {
 						},
 						onChange: (event) => {
 							if (event.target.value !== '') {
-								dispatch({ type: 'email', status: '' });
+								dispatch({ type: 'email', status: 'pass' });
 							}
 						},
 					}}
@@ -106,8 +54,8 @@ export default function StoreSignupPage() {
 					id='name'
 					placeholder='請輸入 商家名稱'
 					className={authStyles.auth__input}
-					errors={nameErrors}
-					errorKey={state.nameErrorKey}
+					errors={errors.name}
+					errorKey={state.name}
 					rules={{
 						required: true,
 						validate: (value) => (value.length > 50 ? false : true),
@@ -118,10 +66,10 @@ export default function StoreSignupPage() {
 						},
 						onChange: (event) => {
 							if (event.target.value !== '') {
-								dispatch({ type: 'name', status: '' });
+								dispatch({ type: 'name', status: 'pass' });
 							}
 							if (event.target.value.length > 50) {
-								dispatch({ type: 'name', status: 'exceed' });
+								dispatch({ type: 'name', status: 'storeExceed' });
 							}
 						},
 					}}
@@ -132,8 +80,8 @@ export default function StoreSignupPage() {
 					type='password'
 					placeholder='請輸入 密碼'
 					className={authStyles.auth__input}
-					errors={passwordErrors}
-					errorKey={state.passwordErrorKey}
+					errors={errors.password}
+					errorKey={state.password}
 					rules={{
 						required: true,
 						onBlur: (event) => {
@@ -143,7 +91,7 @@ export default function StoreSignupPage() {
 						},
 						onChange: (event) => {
 							if (event.target.value !== '') {
-								dispatch({ type: 'password', status: '' });
+								dispatch({ type: 'password', status: 'pass' });
 							}
 						},
 					}}
@@ -154,8 +102,8 @@ export default function StoreSignupPage() {
 					type='password'
 					placeholder='請再次輸入 密碼'
 					className={authStyles.auth__input}
-					errors={confirmedPasswordErrors}
-					errorKey={state.confirmedPasswordErrorKey}
+					errors={errors.confirmedPassword}
+					errorKey={state.confirmedPassword}
 					rules={{
 						required: true,
 						onBlur: (event) => {
@@ -165,7 +113,7 @@ export default function StoreSignupPage() {
 						},
 						onChange: (event) => {
 							if (event.target.value !== '') {
-								dispatch({ type: 'confirmedPassword', status: '' });
+								dispatch({ type: 'confirmedPassword', status: 'pass' });
 							}
 						},
 					}}
