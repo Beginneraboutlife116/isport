@@ -3,17 +3,33 @@ import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import './sass/index.scss';
 import App from './App.tsx';
-import LoginPage from './pages/Login/index.tsx';
 import Find from './pages/Find/index.tsx';
 import Collection from './pages/Collection/index.tsx';
 import Reservation from './pages/Reservation/index.tsx';
+import {
+	UserAuthPage,
+	LoginPage,
+	SignupStepOnePage,
+	SignupStepTwoPage,
+} from './pages/Auth/index.tsx';
 
 const router = createBrowserRouter([
 	{
 		path: '/',
 		element: <App />,
 		children: [
-			{ path: 'login', element: <LoginPage /> },
+			{
+				path: '',
+				element: <UserAuthPage />,
+				children: [
+					{ path: 'login', element: <LoginPage /> },
+					{ path: 'signup', element: <SignupStepOnePage /> },
+					{
+						path: 'signup/:id',
+						element: <SignupStepTwoPage />,
+					},
+				],
+			},
 			{ path: 'find', element: <Find /> },
 			{ path: 'collection', element: <Collection /> },
 			{ path: 'reservation', element: <Reservation /> },

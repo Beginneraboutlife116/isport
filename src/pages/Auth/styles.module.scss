@@ -1,4 +1,4 @@
-.login {
+.auth {
 	width: min(100%, 25rem);
 	margin-inline: auto;
 	text-align: center;
@@ -23,7 +23,7 @@
 		}
 	}
 
-	&__other_methods {
+	&__otherMethods {
 		display: grid;
 		grid-template-columns: repeat(2, 1fr);
 		gap: 1rem;
@@ -31,7 +31,7 @@
 		padding-block-end: 1.5rem;
 		margin-block-end: 2rem;
 
-		& [data-switch] {
+		&--btn {
 			width: 100%;
 			padding: 0.625em 1em 0.625em;
 			color: #6558f5;
@@ -52,10 +52,18 @@
 		width: 2.5rem;
 		height: 2.5rem;
 
-		&_wrapper {
+		&Wrapper {
 			display: grid;
 			grid-template-columns: repeat(2, 1fr);
 			justify-items: center;
+		}
+
+		&--google {
+			color: #d3455b;
+		}
+
+		&--facebook {
+			color: #3488d9;
 		}
 	}
 }
