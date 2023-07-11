@@ -11,6 +11,8 @@ import {
 	LoginPage,
 	SignupStepOnePage,
 	SignupStepTwoPage,
+	StoreLoginPage,
+	StoreSignupPage,
 } from './pages/Auth/index.tsx';
 
 const router = createBrowserRouter([
@@ -28,6 +30,8 @@ const router = createBrowserRouter([
 						path: 'signup/:id',
 						element: <SignupStepTwoPage />,
 					},
+					{ path: 'store/login', element: <StoreLoginPage /> },
+					{ path: 'store/signup', element: <StoreSignupPage /> },
 				],
 			},
 			{ path: 'find', element: <Find /> },

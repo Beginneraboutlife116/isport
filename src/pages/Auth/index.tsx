@@ -3,6 +3,8 @@ import styles from './styles.module.scss';
 import LoginPage from './Login';
 import SignupStepOnePage from './Signup/StepOne';
 import SignupStepTwoPage from './Signup/StepTwo';
+import StoreLoginPage from './Store/Login';
+import StoreSignupPage from './Store/Signup';
 
 function UserAuthPage() {
 	return (
@@ -12,4 +14,11 @@ function UserAuthPage() {
 	);
 }
 
-export { UserAuthPage, LoginPage, SignupStepOnePage, SignupStepTwoPage };
+export {
+	UserAuthPage,
+	LoginPage,
+	SignupStepOnePage,
+	SignupStepTwoPage,
+	StoreLoginPage,
+	StoreSignupPage,
+};
