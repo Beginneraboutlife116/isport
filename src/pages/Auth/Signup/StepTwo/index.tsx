@@ -1,23 +1,21 @@
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { BiSolidUserCircle } from 'react-icons/bi';
+import { useErrors } from '../../../../util';
 import FormInput from '../../../../components/FormInput';
 import Button from '../../../../components/Button';
 import authStyles from '../../styles.module.scss';
 import styles from './styles.module.scss';
 
 export default function SignupStepTwoPage() {
-	const [nameErrorKey, setNameErrorKey] = useState('');
 	const {
 		register,
 		handleSubmit,
 		watch,
 		formState: { isValid },
 	} = useForm();
-	const nameErrors = {
-		overflow: '暱稱 超過 50 個字',
-	};
+	const { errors, state, dispatch } = useErrors();
+
 	const file = watch('avatar', null);
 	const validateFormat = ['image/jpg', 'image/png', 'image/jpeg', 'image/*'];
 	let imgSrc: string = '';
@@ -55,17 +53,17 @@ export default function SignupStepTwoPage() {
 				<FormInput
 					register={register}
 					placeholder='請輸入 暱稱'
-					errors={nameErrors}
-					errorKey={nameErrorKey}
+					errors={errors.name}
+					errorKey={state.name}
 					id='name'
 					className={authStyles.auth__input}
 					rules={{
 						validate: (value) => {
 							if (value.length > 50) {
-								setNameErrorKey('overflow');
+								dispatch({ type: 'name', status: 'userExceed' });
 								return false;
 							} else {
-								setNameErrorKey('');
+								dispatch({ type: 'name', status: 'pass' });
 								return true;
 							}
 						},
