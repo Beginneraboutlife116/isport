@@ -1,6 +1,17 @@
+@mixin rating {
+  background-color: lightcoral;
+  color: white;
+  border-radius: 20px;
+  padding: 5px 10px 5px 10px;
+}
+
+%iconColor {
+  color: rgb(163, 163, 248);
+}
+
 .card {
-  height: 400px;
-  width: 400px;
+  min-width: 400px;
+  max-width: 400px;
   display: flex;
   flex-direction: column;
   border: 1px solid lightgray;
@@ -8,17 +19,18 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   cursor: pointer;
   transition: box-shadow 0.3s ease;
+  flex-grow: 1;
 
   &:hover {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
   }
 
-  &_imgWrap {
+  &__imgWrap {
     width: 100%;
     height: 50%;
     padding-bottom: 0.5rem;
 
-    &_img {
+    &--img {
       object-fit: cover;
       width: 100%;
       height: 100%;
@@ -26,28 +38,28 @@
     }
   }
 
-  &_infoWrap {
+  &__infoWrap {
     display: grid;
     grid-gap: 0.5rem;
 
-    &_title {
+    &--title {
       font-size: 24px;
       font-weight: bold;
       padding: 1rem 0 2rem 0.5rem;
     }
 
-    &_detailWrap {
+    &__detailWrap {
       display: flex;
       justify-content: space-between;
       padding: 0 0.5rem 0 0.5rem;
       align-items: center;
       
-      &_detail {
+      &__detail {
         display: grid;
         grid-auto-flow: column;
         grid-gap: 1rem;
 
-        &_map {
+        &__map {
           display: flex;
           align-items: center;
           background-color: lightblue;
@@ -61,26 +73,23 @@
             background-color: rgb(133, 133, 245);
           }
 
-          &_logo {
-            color: rgb(163, 163, 248);
+          &--logo {
+            @extend %iconColor;
           }
         }
 
-        &_rating {
-          background-color: lightcoral;
-          color: white;
-          border-radius: 20px;
-          padding: 5px 10px 5px 10px;
+        &--rating {
+          @include rating;
         }
 
-        &_review {
+        &--review {
           display: flex;
           align-items: center;
         }
       }
     }
 
-    &_text {
+    &--text {
       display: -webkit-box;
       -webkit-box-orient: vertical;
       -webkit-line-clamp: 3; 
@@ -89,6 +98,61 @@
       padding-left: 10px;
       padding-right: 10px;
     }
+  }
+
+  // store version
+  &__storeInfoWrap {
+    display: grid;
+    grid-gap: 1rem;
+    padding: 1rem;
+
+    &--title {
+      display: flex;
+      justify-content: space-between;
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    &--address {
+      display: flex;
+      align-items: center;
+    }
+
+    &--addressIcon {
+      @extend %iconColor;
+      font-size: 24px;
+    }
+
+    &--review {
+      display: flex;
+      align-items: center;
+    }
+
+    &--rating {
+      @include rating;
+      margin-right: 5px;
+    }
+
+    &--phone {
+      display: flex;
+      align-items: center
+    }
+
+    &--phoneIcon {
+      @extend %iconColor;
+      margin-right: 5px;
+    }
+
+    &--email {
+      display: flex;
+      align-items: center
+    }
+
+    &--emailIcon {
+      @extend %iconColor;
+      margin-right: 5px;
+    }
+
   }
 
   
