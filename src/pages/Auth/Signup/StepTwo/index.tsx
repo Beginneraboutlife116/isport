@@ -1,11 +1,11 @@
 import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { BiSolidUserCircle } from 'react-icons/bi';
 import { useErrors } from '../../../../util/useErrors';
 import FormInput from '../../../../components/FormInput';
 import Button from '../../../../components/Button';
 import authStyles from '../../styles.module.scss';
 import styles from './styles.module.scss';
+import AvatarInput from '../../../../components/AvatarInput';
 
 export default function SignupStepTwoPage() {
 	const {
@@ -13,42 +13,22 @@ export default function SignupStepTwoPage() {
 		handleSubmit,
 		watch,
 		formState: { isValid },
+		resetField,
 	} = useForm();
-	const { errors, state, dispatch } = useErrors();
-
-	const file = watch('avatar', null);
-	const validateFormat = ['image/jpg', 'image/png', 'image/jpeg', 'image/*'];
-	let imgSrc: string = '';
-	let imgName: string = '';
-	let doesTypeCorrect: boolean = true;
-	if (file && file.length !== 0) {
-		const fileData = file[0];
-		if (validateFormat.includes(fileData.type)) {
-			imgSrc = URL.createObjectURL(file[0]);
-			imgName = file[0].name;
-			doesTypeCorrect = true;
-		} else {
-			imgSrc = '';
-			imgName = '';
-			doesTypeCorrect = false;
-		}
-	}
+	const { errors, state, dispatch } = useErrors({ name: '', avatar: '' });
 
 	return (
 		<>
 			<h1 className={authStyles.auth__title}>用戶註冊 Step 2</h1>
 			<form onSubmit={handleSubmit((data) => console.log(data))}>
-				<label htmlFor='avatar' className={styles.previewAvatar}>
-					{imgSrc ? <img src={imgSrc} alt={imgName} /> : <BiSolidUserCircle />}
-					{!doesTypeCorrect && <p className={styles['previewAvatar--error']}>所上傳的檔案不支援</p>}
-				</label>
-				<input
-					type='file'
-					{...register('avatar')}
-					id='avatar'
-					accept='./jpg, ./png, ./jpeg, image/*'
-					className={styles['input--file']}
-					tabIndex={-1}
+				<AvatarInput
+					dispatch={dispatch}
+					errors={errors.avatar}
+					errorKey={state.avatar}
+					register={register}
+					watch={watch}
+					className={authStyles.auth__input}
+					onReset={resetField}
 				/>
 				<FormInput
 					register={register}

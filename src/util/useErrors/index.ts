@@ -19,17 +19,21 @@ const errors = {
 		empty: '確認密碼 不可為空',
 		different: '密碼 與 確認密碼 不一致',
 	},
+	avatar: {
+		notSupport: '不支援的圖片格式',
+	},
 };
 
 type initialKeysType = {
-	email: string;
-	name?: string | undefined;
-	password: string;
-	confirmedPassword?: string | undefined;
+	email?: string;
+	name?: string;
+	password?: string;
+	confirmedPassword?: string;
+	avatar?: string;
 };
 
 export type ActionType = {
-	type: 'email' | 'password' | 'confirmedPassword' | 'name';
+	type: 'email' | 'password' | 'confirmedPassword' | 'name' | 'avatar';
 	status:
 		| 'empty'
 		| 'pattern'
@@ -38,6 +42,7 @@ export type ActionType = {
 		| 'storeExceed'
 		| 'userExceed'
 		| 'different'
+		| 'notSupport'
 		| 'pass';
 };
 
@@ -57,7 +62,13 @@ function errorsReducer(state: initialKeysType, { type, status }: ActionType): in
  * 該動作函式要傳入 type, status， type 是指對應的錯誤訊息名稱，而 status 則可依據錯誤訊息提供的 key 去找尋對應的錯誤訊息並顯示在 input 下方
  */
 export function useErrors(
-	initialKeys: initialKeysType = { email: '', name: '', password: '', confirmedPassword: '' },
+	initialKeys: initialKeysType = {
+		email: '',
+		name: '',
+		password: '',
+		confirmedPassword: '',
+		avatar: '',
+	},
 ) {
 	const [state, dispatch] = useReducer(errorsReducer, initialKeys);
 	return {
