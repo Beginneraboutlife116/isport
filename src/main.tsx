@@ -15,6 +15,7 @@ import {
 	StoreSignupPage,
 } from './pages/Auth/index.tsx';
 import Store from './pages/Store/index.tsx';
+import UserInfoPage from './pages/UserInfo/index.tsx';
 
 const router = createBrowserRouter([
 	{
@@ -39,6 +40,7 @@ const router = createBrowserRouter([
 			{ path: 'collection', element: <Collection /> },
 			{ path: 'reservation', element: <Reservation /> },
 			{ path: 'store', element: <Store /> },
+			{ path: 'user/:id', element: <UserInfoPage /> },
 		],
 	},
 	{

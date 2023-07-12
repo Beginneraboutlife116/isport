@@ -1,0 +1,28 @@
+.container {
+	max-width: 80%;
+	margin-inline: auto;
+	margin-block-start: 2.5rem;
+}
+
+.header {
+	display: flex;
+	border-block-end: 0.125rem solid #666a6e;
+	gap: 0.5rem;
+
+	&__title {
+		background-color: #ebecec;
+		color: #666a6e;
+		flex: 0.275;
+		padding: 0.5rem 0 0.5rem 0.5rem;
+		cursor: pointer;
+
+		& > label {
+			display: block;
+		}
+	}
+}
+
+.currentElement {
+	background-color: #666a6e;
+	color: white;
+}
