@@ -1,0 +1,52 @@
+.container {
+  width: 100%;
+
+  &__date {
+    border-radius: 20px;
+    background-color: rgb(40, 198, 190);
+    height: 40px;
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+    cursor: pointer;
+    margin-top: 1rem;
+  }
+
+  &__infoWrap {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 5px;
+    border-bottom: 2px solid lightgray;
+
+    &--title {
+      display: grid;
+      grid-gap: 5px;
+    }
+
+    &--text {
+      font-size: 22px;
+    }
+
+    &--button {
+      outline: none;
+      border: 2px solid rgb(110, 110, 239);
+      background-color: lightblue;
+      color: white;
+      padding: 5px 1.5rem;
+      border-radius: 20px;
+
+      &:hover {
+        background-color: rgb(23, 180, 233);
+      }
+    }
+
+    &--deadLine {
+      border-radius: 20px;
+      padding: 5px;
+      background-color: rgb(201, 197, 197);
+      text-align: center;
+      color: white;
+    }
+  }
+}

@@ -14,6 +14,7 @@ import {
 	StoreLoginPage,
 	StoreSignupPage,
 } from './pages/Auth/index.tsx';
+import Store from './pages/Store/index.tsx';
 
 const router = createBrowserRouter([
 	{
@@ -37,6 +38,7 @@ const router = createBrowserRouter([
 			{ path: 'find', element: <Find /> },
 			{ path: 'collection', element: <Collection /> },
 			{ path: 'reservation', element: <Reservation /> },
+			{ path: 'store', element: <Store /> },
 		],
 	},
 	{

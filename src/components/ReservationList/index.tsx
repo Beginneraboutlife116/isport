@@ -27,6 +27,7 @@ function Item() {
 				取消
 			</button>
 
+			{/* 按下取消鍵的彈出視窗 */}
 			{showModal && (
 				<div className={styled.container__modal}>
 					<div className={styled.container__modalContent}>
