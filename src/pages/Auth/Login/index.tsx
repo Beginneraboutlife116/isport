@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { BsGoogle, BsFacebook } from 'react-icons/bs';
-import { useErrors } from '../../../util';
+import { useErrors, ActionType } from '../../../util/useErrors';
 import Button from '../../../components/Button';
 import styles from '../styles.module.scss';
 import FormInput from '../../../components/FormInput';
@@ -16,44 +16,51 @@ export default function LoginPage() {
 	console.log('🚀 ~ file: index.tsx:20 ~ LoginPage ~ isSubmitting:', isSubmitting);
 	const { errors, state, dispatch } = useErrors();
 
+	function handleBlur(type: ActionType['type']) {
+		return (event: React.FocusEvent<HTMLInputElement, Element>) => {
+			const { target } = event;
+			if (target.value === '') {
+				dispatch({ type, status: 'empty' });
+			}
+		};
+	}
+
+	function handleChange(type: ActionType['type']) {
+		return (event: React.ChangeEvent<HTMLInputElement>) => {
+			const { target } = event;
+			if (target.value !== '') {
+				dispatch({ type, status: 'pass' });
+			}
+		};
+	}
+
 	return (
 		<>
 			<h1 className={styles.auth__title}>請先登入愛運動帳戶</h1>
 			<form onSubmit={handleSubmit((data) => console.log(data))}>
 				<FormInput
-					register={register}
+					placeholder='請輸入Email'
 					id='email'
-					placeholder='請輸入 Email'
+					type='email'
 					errors={errors.email}
 					errorKey={state.email}
-					rules={{
-						required: true,
-						validate: {
-							pattern: (v) => {
-								const pattern = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
-								if (!pattern.test(v)) {
-									dispatch({ type: 'email', status: 'pattern' });
-									return false;
-								}
-								dispatch({ type: 'email', status: 'pass' });
-								return true;
-							},
-						},
-						onBlur: (event) => {
-							const { target } = event;
-							if (target.value === '') {
-								dispatch({ type: 'email', status: 'empty' });
+					register={register}
+					required={true}
+					validate={{
+						pattern: (v) => {
+							const pattern = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
+							if (!pattern.test(v)) {
+								dispatch({ type: 'email', status: 'pattern' });
+								return false;
 							}
-						},
-						onChange: (event) => {
-							const { target } = event;
-							if (target.value !== '') {
-								dispatch({ type: 'email', status: 'pass' });
-							}
+							dispatch({ type: 'email', status: 'pass' });
+							return true;
 						},
 					}}
+					onBlur={handleBlur('email')}
+					onChange={handleChange('email')}
 					className={styles.auth__input}
-				></FormInput>
+				/>
 
 				<FormInput
 					type='password'
@@ -62,21 +69,9 @@ export default function LoginPage() {
 					errors={errors.password}
 					errorKey={state.password}
 					register={register}
-					rules={{
-						required: true,
-						onBlur: (event) => {
-							const { target } = event;
-							if (target.value === '') {
-								dispatch({ type: 'password', status: 'empty' });
-							}
-						},
-						onChange: (event) => {
-							const { target } = event;
-							if (target.value !== '') {
-								dispatch({ type: 'password', status: 'pass' });
-							}
-						},
-					}}
+					required={true}
+					onBlur={handleBlur('password')}
+					onChange={handleChange('password')}
 					className={styles.auth__input}
 				/>
 				<Button type='submit' disabled={!isValid} className={styles.auth__btn}>

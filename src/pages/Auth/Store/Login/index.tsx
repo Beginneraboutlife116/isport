@@ -1,6 +1,6 @@
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
-import { useErrors } from '../../../../util';
+import { useErrors, ActionType } from '../../../../util/useErrors';
 import FormInput from '../../../../components/FormInput';
 import authStyles from '../../styles.module.scss';
 import styles from '../styles.module.scss';
@@ -14,21 +14,38 @@ export default function StoreLoginPage() {
 	} = useForm();
 	const { errors, state, dispatch } = useErrors();
 
+	function handleBlur(type: ActionType['type']) {
+		return (event: React.FocusEvent<HTMLInputElement, Element>) => {
+			const { target } = event;
+			if (target.value === '') {
+				dispatch({ type, status: 'empty' });
+			}
+		};
+	}
+
+	function handleChange(type: ActionType['type']) {
+		return (event: React.ChangeEvent<HTMLInputElement>) => {
+			const { target } = event;
+			if (target.value !== '') {
+				dispatch({ type, status: 'pass' });
+			}
+		};
+	}
+
 	return (
 		<>
 			<h1 className={authStyles.auth__title}>請先登入愛運動商家帳戶</h1>
 			<form onSubmit={handleSubmit((data) => console.log(data))}>
 				<FormInput
-					placeholder='請輸入 Email'
-					register={register}
+					placeholder='請輸入Email'
 					id='email'
 					type='email'
-					className={authStyles.auth__input}
 					errors={errors.email}
 					errorKey={state.email}
-					rules={{
-						required: true,
-						validate: (v) => {
+					register={register}
+					required={true}
+					validate={{
+						pattern: (v) => {
 							const pattern = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
 							if (!pattern.test(v)) {
 								dispatch({ type: 'email', status: 'pattern' });
@@ -37,18 +54,12 @@ export default function StoreLoginPage() {
 							dispatch({ type: 'email', status: 'pass' });
 							return true;
 						},
-						onBlur: (event) => {
-							if (event.target.value === '') {
-								dispatch({ type: 'email', status: 'empty' });
-							}
-						},
-						onChange: (event) => {
-							if (event.target.value !== '') {
-								dispatch({ type: 'email', status: 'pass' });
-							}
-						},
 					}}
+					onBlur={handleBlur('email')}
+					onChange={handleChange('email')}
+					className={authStyles.auth__input}
 				/>
+
 				<FormInput
 					placeholder='請輸入 密碼'
 					register={register}
@@ -57,19 +68,9 @@ export default function StoreLoginPage() {
 					errors={errors.password}
 					errorKey={state.password}
 					className={authStyles.auth__input}
-					rules={{
-						required: true,
-						onBlur: (event) => {
-							if (event.target.value === '') {
-								dispatch({ type: 'password', status: 'empty' });
-							}
-						},
-						onChange: (event) => {
-							if (event.target.value !== '') {
-								dispatch({ type: 'password', status: 'pass' });
-							}
-						},
-					}}
+					required={true}
+					onBlur={handleBlur('password')}
+					onChange={handleChange('password')}
 				/>
 				<Button type='submit' disabled={!isValid} className={authStyles.auth__btn}>
 					登入

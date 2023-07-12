@@ -1,5 +1,5 @@
 import React from 'react';
-import { FieldValues, RegisterOptions, UseFormRegister } from 'react-hook-form';
+import { FieldValues, Validate, UseFormRegister } from 'react-hook-form';
 import styles from './styles.module.scss';
 
 type FormInputProps = React.InputHTMLAttributes<HTMLInputElement> & {
@@ -8,7 +8,8 @@ type FormInputProps = React.InputHTMLAttributes<HTMLInputElement> & {
 	className?: string;
 	errors?: { [key: string]: string };
 	errorKey?: string;
-	rules?: RegisterOptions<FieldValues>;
+	required: boolean;
+	validate?: Validate<any, FieldValues> | Record<string, Validate<any, FieldValues>> | undefined;
 	label?: string;
 };
 
@@ -16,7 +17,10 @@ export default function FormInput({
 	register,
 	errors,
 	errorKey,
-	rules,
+	required,
+	validate,
+	onBlur,
+	onChange,
 	id,
 	className,
 	label,
@@ -33,7 +37,12 @@ export default function FormInput({
 			{label && <label htmlFor={id}>{label}</label>}
 			<div data-input-wrapper>
 				{errorMessage && <p data-error-message>{errorMessage}</p>}
-				<input type={props.type ?? 'text'} id={id} {...register(id, { ...rules })} {...props} />
+				<input
+					type={props.type ?? 'text'}
+					id={id}
+					{...register(id, { required, validate, onBlur, onChange })}
+					{...props}
+				/>
 			</div>
 		</div>
 	);

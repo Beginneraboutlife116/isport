@@ -1,6 +1,6 @@
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
-import { useErrors } from '../../../../util';
+import { useErrors, ActionType } from '../../../../util/useErrors';
 import FormInput from '../../../../components/FormInput';
 import Button from '../../../../components/Button';
 import authStyles from '../../styles.module.scss';
@@ -14,21 +14,38 @@ export default function StoreSignupPage() {
 		formState: { isValid },
 	} = useForm();
 
+	function handleBlur(type: ActionType['type']) {
+		return (event: React.FocusEvent<HTMLInputElement, Element>) => {
+			const { target } = event;
+			if (target.value === '') {
+				dispatch({ type, status: 'empty' });
+			}
+		};
+	}
+
+	function handleChange(type: ActionType['type']) {
+		return (event: React.ChangeEvent<HTMLInputElement>) => {
+			const { target } = event;
+			if (target.value !== '') {
+				dispatch({ type, status: 'pass' });
+			}
+		};
+	}
+
 	return (
 		<>
 			<h1 className={authStyles.auth__title}>商家註冊</h1>
 			<form onSubmit={handleSubmit((data) => console.log(data))}>
 				<FormInput
-					register={register}
+					placeholder='請輸入Email'
 					id='email'
 					type='email'
-					placeholder='請輸入 註冊Email'
 					errors={errors.email}
 					errorKey={state.email}
-					className={authStyles.auth__input}
-					rules={{
-						required: true,
-						validate: (v) => {
+					register={register}
+					required={true}
+					validate={{
+						pattern: (v) => {
 							const pattern = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
 							if (!pattern.test(v)) {
 								dispatch({ type: 'email', status: 'pattern' });
@@ -37,18 +54,12 @@ export default function StoreSignupPage() {
 							dispatch({ type: 'email', status: 'pass' });
 							return true;
 						},
-						onBlur: (event) => {
-							if (event.target.value === '') {
-								dispatch({ type: 'email', status: 'empty' });
-							}
-						},
-						onChange: (event) => {
-							if (event.target.value !== '') {
-								dispatch({ type: 'email', status: 'pass' });
-							}
-						},
 					}}
+					onBlur={handleBlur('email')}
+					onChange={handleChange('email')}
+					className={authStyles.auth__input}
 				/>
+
 				<FormInput
 					register={register}
 					id='name'
@@ -56,22 +67,16 @@ export default function StoreSignupPage() {
 					className={authStyles.auth__input}
 					errors={errors.name}
 					errorKey={state.name}
-					rules={{
-						required: true,
-						validate: (value) => (value.length > 50 ? false : true),
-						onBlur: (event) => {
-							if (event.target.value === '') {
-								dispatch({ type: 'name', status: 'empty' });
-							}
-						},
-						onChange: (event) => {
-							if (event.target.value !== '') {
-								dispatch({ type: 'name', status: 'pass' });
-							}
-							if (event.target.value.length > 50) {
-								dispatch({ type: 'name', status: 'storeExceed' });
-							}
-						},
+					required={true}
+					validate={(value) => (value.length > 50 ? false : true)}
+					onBlur={handleBlur('name')}
+					onChange={(event) => {
+						if (event.target.value !== '') {
+							dispatch({ type: 'name', status: 'pass' });
+						}
+						if (event.target.value.length > 50) {
+							dispatch({ type: 'name', status: 'storeExceed' });
+						}
 					}}
 				/>
 				<FormInput
@@ -82,19 +87,9 @@ export default function StoreSignupPage() {
 					className={authStyles.auth__input}
 					errors={errors.password}
 					errorKey={state.password}
-					rules={{
-						required: true,
-						onBlur: (event) => {
-							if (event.target.value === '') {
-								dispatch({ type: 'password', status: 'empty' });
-							}
-						},
-						onChange: (event) => {
-							if (event.target.value !== '') {
-								dispatch({ type: 'password', status: 'pass' });
-							}
-						},
-					}}
+					required={true}
+					onBlur={handleBlur('password')}
+					onChange={handleChange('password')}
 				/>
 				<FormInput
 					register={register}
@@ -104,19 +99,9 @@ export default function StoreSignupPage() {
 					className={authStyles.auth__input}
 					errors={errors.confirmedPassword}
 					errorKey={state.confirmedPassword}
-					rules={{
-						required: true,
-						onBlur: (event) => {
-							if (event.target.value === '') {
-								dispatch({ type: 'confirmedPassword', status: 'empty' });
-							}
-						},
-						onChange: (event) => {
-							if (event.target.value !== '') {
-								dispatch({ type: 'confirmedPassword', status: 'pass' });
-							}
-						},
-					}}
+					required={true}
+					onBlur={handleBlur('confirmedPassword')}
+					onChange={handleChange('confirmedPassword')}
 				/>
 				<Button type='submit' disabled={!isValid} className={authStyles.auth__btn}>
 					註冊
