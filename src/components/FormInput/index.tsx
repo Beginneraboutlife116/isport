@@ -1,5 +1,6 @@
 import React from 'react';
 import { FieldValues, RegisterOptions, UseFormRegister } from 'react-hook-form';
+import EmailInput from './EmailInput';
 import styles from './styles.module.scss';
 
 type FormInputProps = React.InputHTMLAttributes<HTMLInputElement> & {
@@ -38,3 +39,5 @@ export default function FormInput({
 		</div>
 	);
 }
+
+export { EmailInput };

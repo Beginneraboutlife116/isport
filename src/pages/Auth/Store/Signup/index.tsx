@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import { useErrors } from '../../../../util';
-import FormInput from '../../../../components/FormInput';
+import FormInput, { EmailInput } from '../../../../components/FormInput';
 import Button from '../../../../components/Button';
 import authStyles from '../../styles.module.scss';
 import styles from '../styles.module.scss';
@@ -18,37 +18,13 @@ export default function StoreSignupPage() {
 		<>
 			<h1 className={authStyles.auth__title}>商家註冊</h1>
 			<form onSubmit={handleSubmit((data) => console.log(data))}>
-				<FormInput
+				<EmailInput
+					placeholder='請輸入Email'
 					register={register}
-					id='email'
-					type='email'
-					placeholder='請輸入 註冊Email'
-					errors={errors.email}
-					errorKey={state.email}
+					required={true}
 					className={authStyles.auth__input}
-					rules={{
-						required: true,
-						validate: (v) => {
-							const pattern = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
-							if (!pattern.test(v)) {
-								dispatch({ type: 'email', status: 'pattern' });
-								return false;
-							}
-							dispatch({ type: 'email', status: 'pass' });
-							return true;
-						},
-						onBlur: (event) => {
-							if (event.target.value === '') {
-								dispatch({ type: 'email', status: 'empty' });
-							}
-						},
-						onChange: (event) => {
-							if (event.target.value !== '') {
-								dispatch({ type: 'email', status: 'pass' });
-							}
-						},
-					}}
 				/>
+
 				<FormInput
 					register={register}
 					id='name'
