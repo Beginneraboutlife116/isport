@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { BsGoogle, BsFacebook } from 'react-icons/bs';
-import { useErrors } from '../../../../util';
+import { useErrors, ActionType } from '../../../../util/useErrors';
 import FormInput from '../../../../components/FormInput';
 import Button from '../../../../components/Button';
 import styles from '../../styles.module.scss';
@@ -14,6 +14,24 @@ export default function SignupStepOnePage() {
 	} = useForm();
 	const { errors, state, dispatch } = useErrors({ email: '', password: '', confirmedPassword: '' });
 	console.log('🚀 ~ file: index.tsx:20 ~ LoginPage ~ isSubmitting:', isSubmitting);
+
+	function handleBlur(type: ActionType['type']) {
+		return (event: React.FocusEvent<HTMLInputElement, Element>) => {
+			const { target } = event;
+			if (target.value === '') {
+				dispatch({ type, status: 'empty' });
+			}
+		};
+	}
+
+	function handleChange(type: ActionType['type']) {
+		return (event: React.ChangeEvent<HTMLInputElement>) => {
+			const { target } = event;
+			if (target.value !== '') {
+				dispatch({ type, status: 'pass' });
+			}
+		};
+	}
 
 	return (
 		<>
@@ -38,18 +56,8 @@ export default function SignupStepOnePage() {
 							return true;
 						},
 					}}
-					onBlur={(event) => {
-						const { target } = event;
-						if (target.value === '') {
-							dispatch({ type: 'email', status: 'empty' });
-						}
-					}}
-					onChange={(event) => {
-						const { target } = event;
-						if (target.value !== '') {
-							dispatch({ type: 'email', status: 'pass' });
-						}
-					}}
+					onBlur={handleBlur('email')}
+					onChange={handleChange('email')}
 					className={styles.auth__input}
 				/>
 
@@ -61,18 +69,8 @@ export default function SignupStepOnePage() {
 					errorKey={state.password}
 					register={register}
 					required={true}
-					onBlur={(event) => {
-						const { target } = event;
-						if (target.value === '') {
-							dispatch({ type: 'password', status: 'empty' });
-						}
-					}}
-					onChange={(event) => {
-						const { target } = event;
-						if (target.value !== '') {
-							dispatch({ type: 'password', status: 'pass' });
-						}
-					}}
+					onBlur={handleBlur('password')}
+					onChange={handleChange('password')}
 					className={styles.auth__input}
 				/>
 				<FormInput
@@ -83,18 +81,8 @@ export default function SignupStepOnePage() {
 					errorKey={state.confirmedPassword}
 					register={register}
 					required={true}
-					onBlur={(event) => {
-						const { target } = event;
-						if (target.value === '') {
-							dispatch({ type: 'confirmedPassword', status: 'empty' });
-						}
-					}}
-					onChange={(event) => {
-						const { target } = event;
-						if (target.value !== '') {
-							dispatch({ type: 'confirmedPassword', status: 'pass' });
-						}
-					}}
+					onBlur={handleBlur('confirmedPassword')}
+					onChange={handleChange('confirmedPassword')}
 					className={styles.auth__input}
 				/>
 				<Button type='submit' disabled={!isValid} className={styles.auth__btn}>

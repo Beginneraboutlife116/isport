@@ -28,7 +28,7 @@ type initialKeysType = {
 	confirmedPassword?: string | undefined;
 };
 
-type ActionType = {
+export type ActionType = {
 	type: 'email' | 'password' | 'confirmedPassword' | 'name';
 	status:
 		| 'empty'
@@ -56,7 +56,7 @@ function errorsReducer(state: initialKeysType, { type, status }: ActionType): in
  * @returns {object} 一個物件，包含 所有的錯誤訊息、錯誤訊息的 key 群，以及 動作函式
  * 該動作函式要傳入 type, status， type 是指對應的錯誤訊息名稱，而 status 則可依據錯誤訊息提供的 key 去找尋對應的錯誤訊息並顯示在 input 下方
  */
-export default function useErrors(
+export function useErrors(
 	initialKeys: initialKeysType = { email: '', name: '', password: '', confirmedPassword: '' },
 ) {
 	const [state, dispatch] = useReducer(errorsReducer, initialKeys);

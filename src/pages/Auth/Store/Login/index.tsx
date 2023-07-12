@@ -1,6 +1,6 @@
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
-import { useErrors } from '../../../../util';
+import { useErrors, ActionType } from '../../../../util/useErrors';
 import FormInput from '../../../../components/FormInput';
 import authStyles from '../../styles.module.scss';
 import styles from '../styles.module.scss';
@@ -13,6 +13,24 @@ export default function StoreLoginPage() {
 		formState: { isValid },
 	} = useForm();
 	const { errors, state, dispatch } = useErrors();
+
+	function handleBlur(type: ActionType['type']) {
+		return (event: React.FocusEvent<HTMLInputElement, Element>) => {
+			const { target } = event;
+			if (target.value === '') {
+				dispatch({ type, status: 'empty' });
+			}
+		};
+	}
+
+	function handleChange(type: ActionType['type']) {
+		return (event: React.ChangeEvent<HTMLInputElement>) => {
+			const { target } = event;
+			if (target.value !== '') {
+				dispatch({ type, status: 'pass' });
+			}
+		};
+	}
 
 	return (
 		<>
@@ -37,18 +55,8 @@ export default function StoreLoginPage() {
 							return true;
 						},
 					}}
-					onBlur={(event) => {
-						const { target } = event;
-						if (target.value === '') {
-							dispatch({ type: 'email', status: 'empty' });
-						}
-					}}
-					onChange={(event) => {
-						const { target } = event;
-						if (target.value !== '') {
-							dispatch({ type: 'email', status: 'pass' });
-						}
-					}}
+					onBlur={handleBlur('email')}
+					onChange={handleChange('email')}
 					className={authStyles.auth__input}
 				/>
 
@@ -61,16 +69,8 @@ export default function StoreLoginPage() {
 					errorKey={state.password}
 					className={authStyles.auth__input}
 					required={true}
-					onBlur={(event) => {
-						if (event.target.value === '') {
-							dispatch({ type: 'password', status: 'empty' });
-						}
-					}}
-					onChange={(event) => {
-						if (event.target.value !== '') {
-							dispatch({ type: 'password', status: 'pass' });
-						}
-					}}
+					onBlur={handleBlur('password')}
+					onChange={handleChange('password')}
 				/>
 				<Button type='submit' disabled={!isValid} className={authStyles.auth__btn}>
 					登入

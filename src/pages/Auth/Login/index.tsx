@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { BsGoogle, BsFacebook } from 'react-icons/bs';
-import { useErrors } from '../../../util';
+import { useErrors, ActionType } from '../../../util/useErrors';
 import Button from '../../../components/Button';
 import styles from '../styles.module.scss';
 import FormInput from '../../../components/FormInput';
@@ -15,6 +15,24 @@ export default function LoginPage() {
 	} = useForm();
 	console.log('🚀 ~ file: index.tsx:20 ~ LoginPage ~ isSubmitting:', isSubmitting);
 	const { errors, state, dispatch } = useErrors();
+
+	function handleBlur(type: ActionType['type']) {
+		return (event: React.FocusEvent<HTMLInputElement, Element>) => {
+			const { target } = event;
+			if (target.value === '') {
+				dispatch({ type, status: 'empty' });
+			}
+		};
+	}
+
+	function handleChange(type: ActionType['type']) {
+		return (event: React.ChangeEvent<HTMLInputElement>) => {
+			const { target } = event;
+			if (target.value !== '') {
+				dispatch({ type, status: 'pass' });
+			}
+		};
+	}
 
 	return (
 		<>
@@ -39,18 +57,8 @@ export default function LoginPage() {
 							return true;
 						},
 					}}
-					onBlur={(event) => {
-						const { target } = event;
-						if (target.value === '') {
-							dispatch({ type: 'email', status: 'empty' });
-						}
-					}}
-					onChange={(event) => {
-						const { target } = event;
-						if (target.value !== '') {
-							dispatch({ type: 'email', status: 'pass' });
-						}
-					}}
+					onBlur={handleBlur('email')}
+					onChange={handleChange('email')}
 					className={styles.auth__input}
 				/>
 
@@ -62,18 +70,8 @@ export default function LoginPage() {
 					errorKey={state.password}
 					register={register}
 					required={true}
-					onBlur={(event) => {
-						const { target } = event;
-						if (target.value === '') {
-							dispatch({ type: 'password', status: 'empty' });
-						}
-					}}
-					onChange={(event) => {
-						const { target } = event;
-						if (target.value !== '') {
-							dispatch({ type: 'password', status: 'pass' });
-						}
-					}}
+					onBlur={handleBlur('password')}
+					onChange={handleChange('password')}
 					className={styles.auth__input}
 				/>
 				<Button type='submit' disabled={!isValid} className={styles.auth__btn}>

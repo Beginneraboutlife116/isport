@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { BiSolidUserCircle } from 'react-icons/bi';
-import { useErrors } from '../../../../util';
+import { useErrors } from '../../../../util/useErrors';
 import FormInput from '../../../../components/FormInput';
 import Button from '../../../../components/Button';
 import authStyles from '../../styles.module.scss';

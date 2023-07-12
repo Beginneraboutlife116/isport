@@ -1,6 +1,6 @@
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
-import { useErrors } from '../../../../util';
+import { useErrors, ActionType } from '../../../../util/useErrors';
 import FormInput from '../../../../components/FormInput';
 import Button from '../../../../components/Button';
 import authStyles from '../../styles.module.scss';
@@ -13,6 +13,24 @@ export default function StoreSignupPage() {
 		handleSubmit,
 		formState: { isValid },
 	} = useForm();
+
+	function handleBlur(type: ActionType['type']) {
+		return (event: React.FocusEvent<HTMLInputElement, Element>) => {
+			const { target } = event;
+			if (target.value === '') {
+				dispatch({ type, status: 'empty' });
+			}
+		};
+	}
+
+	function handleChange(type: ActionType['type']) {
+		return (event: React.ChangeEvent<HTMLInputElement>) => {
+			const { target } = event;
+			if (target.value !== '') {
+				dispatch({ type, status: 'pass' });
+			}
+		};
+	}
 
 	return (
 		<>
@@ -37,18 +55,8 @@ export default function StoreSignupPage() {
 							return true;
 						},
 					}}
-					onBlur={(event) => {
-						const { target } = event;
-						if (target.value === '') {
-							dispatch({ type: 'email', status: 'empty' });
-						}
-					}}
-					onChange={(event) => {
-						const { target } = event;
-						if (target.value !== '') {
-							dispatch({ type: 'email', status: 'pass' });
-						}
-					}}
+					onBlur={handleBlur('email')}
+					onChange={handleChange('email')}
 					className={authStyles.auth__input}
 				/>
 
@@ -61,11 +69,7 @@ export default function StoreSignupPage() {
 					errorKey={state.name}
 					required={true}
 					validate={(value) => (value.length > 50 ? false : true)}
-					onBlur={(event) => {
-						if (event.target.value === '') {
-							dispatch({ type: 'name', status: 'empty' });
-						}
-					}}
+					onBlur={handleBlur('name')}
 					onChange={(event) => {
 						if (event.target.value !== '') {
 							dispatch({ type: 'name', status: 'pass' });
@@ -84,16 +88,8 @@ export default function StoreSignupPage() {
 					errors={errors.password}
 					errorKey={state.password}
 					required={true}
-					onBlur={(event) => {
-						if (event.target.value === '') {
-							dispatch({ type: 'password', status: 'empty' });
-						}
-					}}
-					onChange={(event) => {
-						if (event.target.value !== '') {
-							dispatch({ type: 'password', status: 'pass' });
-						}
-					}}
+					onBlur={handleBlur('password')}
+					onChange={handleChange('password')}
 				/>
 				<FormInput
 					register={register}
@@ -104,16 +100,8 @@ export default function StoreSignupPage() {
 					errors={errors.confirmedPassword}
 					errorKey={state.confirmedPassword}
 					required={true}
-					onBlur={(event) => {
-						if (event.target.value === '') {
-							dispatch({ type: 'confirmedPassword', status: 'empty' });
-						}
-					}}
-					onChange={(event) => {
-						if (event.target.value !== '') {
-							dispatch({ type: 'confirmedPassword', status: 'pass' });
-						}
-					}}
+					onBlur={handleBlur('confirmedPassword')}
+					onChange={handleChange('confirmedPassword')}
 				/>
 				<Button type='submit' disabled={!isValid} className={authStyles.auth__btn}>
 					註冊
