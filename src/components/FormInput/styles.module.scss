@@ -15,6 +15,10 @@
 		border: 0.125rem solid #c5ced6;
 		border-radius: 0.25rem;
 
+		&:focus {
+			outline-color: #6558f5;
+		}
+
 		&::placeholder {
 			color: #c5ced6;
 		}
