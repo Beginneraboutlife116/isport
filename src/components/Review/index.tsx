@@ -56,6 +56,8 @@ function Review() {
 			{/* Reviews */}
 			<ReviewItem />
 			<ReviewItem />
+			<ReviewItem />
+			<ReviewItem />
 
 			{/* send review */}
 			<div className={styled.container__replyWrap}>

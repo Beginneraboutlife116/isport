@@ -1,0 +1,50 @@
+.container {
+  display: grid;
+  grid-gap: 1rem;
+  padding-top: 1rem;
+
+  &__infoWrap {
+    border: 2px solid lightgray;
+    display: grid;
+    grid-gap: 0.5rem;
+    padding: 1rem;
+
+    &--title {
+      font-size: 20px;
+    }
+
+    &--select {
+      outline: none;
+      padding: 0.5rem;
+      width: 40%;
+      border: 2px solid lightgray;
+      border-radius: 4px;
+      font-size: 16px;
+
+    }
+  }
+
+  &__input {
+    box-sizing: border-box;
+    outline: none;
+    border: 2px solid lightgray;
+    border-radius: 5px;
+    padding: 1rem;
+    font-size: 20px;
+    width: 100%;
+  }
+
+  &__buttonWrap {
+    display: flex;
+    justify-self: flex-end;
+  }
+
+  &__button {
+    border: none;
+    background-color: lightblue;
+    border-radius: 20px;
+    padding: 0.5rem 1rem;
+    font-size: 20px;
+    cursor: pointer;
+  }
+}
