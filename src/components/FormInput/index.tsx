@@ -1,6 +1,5 @@
 import React from 'react';
 import { FieldValues, Validate, UseFormRegister } from 'react-hook-form';
-import EmailInput from './EmailInput';
 import styles from './styles.module.scss';
 
 type FormInputProps = React.InputHTMLAttributes<HTMLInputElement> & {
@@ -10,7 +9,7 @@ type FormInputProps = React.InputHTMLAttributes<HTMLInputElement> & {
 	errors?: { [key: string]: string };
 	errorKey?: string;
 	required: boolean;
-	validate?: Validate<any, FieldValues>;
+	validate?: Validate<any, FieldValues> | Record<string, Validate<any, FieldValues>> | undefined;
 	label?: string;
 };
 
@@ -38,10 +37,13 @@ export default function FormInput({
 			{label && <label htmlFor={id}>{label}</label>}
 			<div data-input-wrapper>
 				{errorMessage && <p data-error-message>{errorMessage}</p>}
-				<input type={props.type ?? 'text'} id={id} {...register(id, {required, validate, onBlur, onChange})} {...props} />
+				<input
+					type={props.type ?? 'text'}
+					id={id}
+					{...register(id, { required, validate, onBlur, onChange })}
+					{...props}
+				/>
 			</div>
 		</div>
 	);
 }
-
-export { EmailInput };

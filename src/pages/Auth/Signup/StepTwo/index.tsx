@@ -57,16 +57,15 @@ export default function SignupStepTwoPage() {
 					errorKey={state.name}
 					id='name'
 					className={authStyles.auth__input}
-					rules={{
-						validate: (value) => {
-							if (value.length > 50) {
-								dispatch({ type: 'name', status: 'userExceed' });
-								return false;
-							} else {
-								dispatch({ type: 'name', status: 'pass' });
-								return true;
-							}
-						},
+					required={false}
+					validate={(value) => {
+						if (value.length > 50) {
+							dispatch({ type: 'name', status: 'userExceed' });
+							return false;
+						} else {
+							dispatch({ type: 'name', status: 'pass' });
+							return true;
+						}
 					}}
 				/>
 				<Button type='submit' disabled={!isValid} className={authStyles.auth__btn}>
