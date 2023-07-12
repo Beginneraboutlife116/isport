@@ -1,5 +1,6 @@
 .container {
   width: 100%;
+  position: relative;
   
   &__reviewWrap {
     border: 2px solid lightgray;
@@ -42,9 +43,14 @@
 
   &__replyWrap {
     padding-top: 1rem;
-    margin-top: 3cqi;
+    margin-top: 3rem;
     border-top: 2px solid lightgray;
     width: 100%;
+    position: fixed;
+    z-index: 999;
+    background-color: white;
+    width: 602px;
+    bottom: 6rem;
 
     &--input {
       box-sizing: border-box;

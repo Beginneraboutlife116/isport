@@ -1,6 +1,16 @@
 import styled from './styles.module.scss';
 
-function CourseInfo() {
+type setStatus = React.Dispatch<React.SetStateAction<string>>;
+
+type propType = {
+	setStatus: setStatus;
+};
+
+function CourseInfo({ setStatus }: propType) {
+	function handleBooking() {
+		setStatus('booking');
+	}
+
 	return (
 		<div className={styled.container__infoWrap}>
 			<div className={styled['container__infoWrap--title']}>
@@ -13,13 +23,15 @@ function CourseInfo() {
 
 			<div>
 				{/* 根據狀態顯示不同樣式 */}
-				<button className={styled['container__infoWrap--button']}>預約</button>
+				<button className={styled['container__infoWrap--button']} onClick={handleBooking}>
+					預約
+				</button>
 			</div>
 		</div>
 	);
 }
 
-function Course() {
+function Course({ setStatus }: propType) {
 	return (
 		<div className={styled.container}>
 			<div>
@@ -27,19 +39,9 @@ function Course() {
 					<span>6/25 (日)</span>
 				</div>
 
-				<CourseInfo />
-				<CourseInfo />
-				<CourseInfo />
-			</div>
-
-			<div>
-				<div className={styled.container__date}>
-					<span>6/25 (日)</span>
-				</div>
-
-				<CourseInfo />
-				<CourseInfo />
-				<CourseInfo />
+				<CourseInfo setStatus={setStatus} />
+				<CourseInfo setStatus={setStatus} />
+				<CourseInfo setStatus={setStatus} />
 			</div>
 		</div>
 	);
