@@ -1,6 +1,6 @@
 import styles from './styles.module.scss';
 import logo from '../../assets/Logo.png';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { IconContext } from 'react-icons';
 import { BiSolidUserCircle } from 'react-icons/bi';
 import Button from '../Button';
@@ -14,6 +14,8 @@ export default function Header({
 	role?: string;
 	currentUserId?: string;
 }) {
+	const navigate = useNavigate();
+
 	return (
 		<header className={`${styles.header} ${className ?? ''}`.trim()}>
 			<div className={styles.header__wrapper}>
@@ -52,11 +54,18 @@ export default function Header({
 								</Button>
 							</Link>
 						)}
-						<Link to={`/${currentUserId}`}>
+						<Link to={`/user/${currentUserId}`}>
 							<Button className={styles.header__btn}>我的帳戶</Button>
 						</Link>
 
-						<Button className={styles.header__btn}>登出</Button>
+						<Button
+							className={styles.header__btn}
+							onClick={() => {
+								navigate('/login');
+							}}
+						>
+							登出
+						</Button>
 					</>
 				)}
 			</div>

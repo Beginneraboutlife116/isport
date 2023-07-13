@@ -35,19 +35,18 @@ export default function AvatarInput({
 				setImgInfo({ imgSrc: URL.createObjectURL(fileData), imgName: fileData.name });
 				dispatch({ type: 'avatar', status: 'pass' });
 			} else {
-				onReset('avatar')
+				onReset('avatar');
 				setImgInfo({ imgSrc: '', imgName: '' });
 				dispatch({ type: 'avatar', status: 'notSupport' });
 			}
-		} else {
-			setImgInfo({ imgSrc: '', imgName: '' });
-			dispatch({ type: 'avatar', status: 'pass' });
 		}
 	}, [files]);
 
 	function handleClick() {
 		if (imgSrc) {
 			onReset('avatar');
+			setImgInfo({ imgSrc: '', imgName: '' });
+			dispatch({ type: 'avatar', status: 'pass' });
 		} else {
 			labelRef.current?.click();
 		}
@@ -74,7 +73,7 @@ export default function AvatarInput({
 					{...register('avatar')}
 					id='avatar'
 					accept='./jpg, ./png, ./jpeg, image/*'
-					className={styles.hidden}
+					className='hidden'
 					tabIndex={-1}
 				/>
 			</label>

@@ -1,0 +1,45 @@
+.item {
+	& > a {
+		text-decoration: none;
+	}
+	&__row {
+		background-color: var(--bg-clr, #fff);
+		color: #2f3b47;
+		font-size: 1.5rem;
+		padding: 0.5rem;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+
+		& > * {
+			margin: 0;
+		}
+	}
+	&__header {
+		--bg-clr: #d5e7f8;
+		margin-block-end: 1rem;
+
+		&:hover {
+			opacity: 0.5;
+		}
+	}
+	&__planType {
+		--bg-clr: #e4e8ed;
+
+		& :last-child {
+			color: #52ab9f;
+			font-size: 1.25rem;
+			flex-basis: 12.5%;
+		}
+	}
+	&__planRest {
+		border-block-end: 0.125rem solid #c2cdd8;
+		margin-block-end: 1.25rem;
+
+		& :last-child {
+			color: #52ab9f;
+			font-size: 1.25rem;
+			flex-basis: 15%;
+		}
+	}
+}
