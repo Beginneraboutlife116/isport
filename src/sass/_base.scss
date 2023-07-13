@@ -7,6 +7,10 @@ h2 {
 
 img {
 	display: block;
-	// 不確定要 max-width 還是 width
-	width: 100%;
+	max-width: 100%;
+}
+
+ul {
+	list-style: none;
+	padding: 0;
 }

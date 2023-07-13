@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import styles from './styles.module.scss';
 import MyAccount from '../../components/MyAccount';
+import MyPlan from '../../components/MyPlan';
 
 export default function UserInfoPage() {
 	const [element, setElement] = useState('myAccount');
@@ -44,7 +45,7 @@ export default function UserInfoPage() {
 			</div>
 			<div>
 				{element === 'myAccount' && <MyAccount />}
-				{/* {element === 'myPlan' && <MyPlan />} */}
+				{element === 'myPlan' && <MyPlan />}
 			</div>
 		</main>
 	);
