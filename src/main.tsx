@@ -16,6 +16,7 @@ import {
 } from './pages/Auth/index.tsx';
 import Store from './pages/Store/index.tsx';
 import { UserInfoPage, MyAccountPage, MyPlanPage } from './pages/UserInfo/index.tsx';
+import StoreAccount from './pages/StoreAccount/index.tsx';
 
 const router = createBrowserRouter([
 	{
@@ -48,6 +49,7 @@ const router = createBrowserRouter([
 					{ path: 'plan', element: <MyPlanPage /> },
 				],
 			},
+			{ path: 'store/account', element: <StoreAccount /> },
 		],
 	},
 	{
