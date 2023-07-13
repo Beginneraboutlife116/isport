@@ -39,15 +39,14 @@ export default function AvatarInput({
 				setImgInfo({ imgSrc: '', imgName: '' });
 				dispatch({ type: 'avatar', status: 'notSupport' });
 			}
-		} else {
-			setImgInfo({ imgSrc: '', imgName: '' });
-			dispatch({ type: 'avatar', status: 'pass' });
 		}
 	}, [files]);
 
 	function handleClick() {
 		if (imgSrc) {
 			onReset('avatar');
+			setImgInfo({ imgSrc: '', imgName: '' });
+			dispatch({ type: 'avatar', status: 'pass' });
 		} else {
 			labelRef.current?.click();
 		}
