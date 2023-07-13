@@ -1,49 +1,60 @@
-import React from 'react';
-import { FieldValues, Validate, UseFormRegister } from 'react-hook-form';
+import { ReactNode } from 'react';
+import { RegisterOptions, UseFormRegister, FieldErrors, FieldValues } from 'react-hook-form';
 import styles from './styles.module.scss';
+import EmailInput from './EmailInput';
+import PasswordInput from './PasswordInput';
+import ConfirmPasswordInput from './ConfirmPasswordInput';
 
-type FormInputProps = React.InputHTMLAttributes<HTMLInputElement> & {
-	register: UseFormRegister<FieldValues>;
-	id: string;
-	className?: string;
-	errors?: { [key: string]: string };
-	errorKey?: string;
-	required: boolean;
-	validate?: Validate<any, FieldValues> | Record<string, Validate<any, FieldValues>> | undefined;
+export type FormInputProps = React.InputHTMLAttributes<HTMLInputElement> & {
+	name: string;
 	label?: string;
+	labelClassName?: string;
+	errors?: FieldErrors<FieldValues>;
+	errorClassName?: string;
+	inputClassName?: string;
+	rules?: RegisterOptions;
+	register: UseFormRegister<FieldValues>;
 };
 
 export default function FormInput({
 	register,
 	errors,
-	errorKey,
-	required,
-	validate,
-	onBlur,
-	onChange,
-	id,
-	className,
+	errorClassName,
 	label,
+	labelClassName,
+	inputClassName,
+	rules,
+	name,
 	...props
 }: FormInputProps) {
+	const { className, type, id } = props;
 	let errorMessage = null;
-	if (errors && errorKey) {
-		errorMessage = errors[errorKey];
-	} else {
-		errorMessage = null;
+	if (errors) {
+		errorMessage = errors[name]?.message;
 	}
+
 	return (
-		<div key={id} className={`${styles.input} ${className ?? ''}`.trim()}>
-			{label && <label htmlFor={id}>{label}</label>}
+		<div className={`${styles.input} ${className ?? ''}`.trim()}>
+			{label && (
+				<label htmlFor={id} className={labelClassName}>
+					{label}
+				</label>
+			)}
 			<div data-input-wrapper>
-				{errorMessage && <p data-error-message>{errorMessage}</p>}
+				{errorMessage && (
+					<p className={errorClassName} data-error-message>
+						{errorMessage as ReactNode}
+					</p>
+				)}
 				<input
-					type={props.type ?? 'text'}
-					id={id}
-					{...register(id, { required, validate, onBlur, onChange })}
+					type={type ?? 'text'}
 					{...props}
+					{...register(name, rules)}
+					className={inputClassName}
 				/>
 			</div>
 		</div>
 	);
 }
+
+export { EmailInput, PasswordInput, ConfirmPasswordInput };

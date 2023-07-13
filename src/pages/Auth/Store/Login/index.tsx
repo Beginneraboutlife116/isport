@@ -1,7 +1,6 @@
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
-import { useErrors, ActionType } from '../../../../util/useErrors';
-import FormInput from '../../../../components/FormInput';
+import { EmailInput, PasswordInput } from '../../../../components/FormInput';
 import authStyles from '../../styles.module.scss';
 import styles from '../styles.module.scss';
 import Button from '../../../../components/Button';
@@ -10,67 +9,34 @@ export default function StoreLoginPage() {
 	const {
 		register,
 		handleSubmit,
-		formState: { isValid },
+		formState: { isValid, errors },
+		setError,
+		clearErrors,
 	} = useForm();
-	const { errors, state, dispatch } = useErrors();
-
-	function handleBlur(type: ActionType['type']) {
-		return (event: React.FocusEvent<HTMLInputElement, Element>) => {
-			const { target } = event;
-			if (target.value === '') {
-				dispatch({ type, status: 'empty' });
-			}
-		};
-	}
-
-	function handleChange(type: ActionType['type']) {
-		return (event: React.ChangeEvent<HTMLInputElement>) => {
-			const { target } = event;
-			if (target.value !== '') {
-				dispatch({ type, status: 'pass' });
-			}
-		};
-	}
 
 	return (
 		<>
 			<h1 className={authStyles.auth__title}>請先登入愛運動商家帳戶</h1>
 			<form onSubmit={handleSubmit((data) => console.log(data))}>
-				<FormInput
-					placeholder='請輸入Email'
-					id='email'
-					type='email'
-					errors={errors.email}
-					errorKey={state.email}
+				<EmailInput
 					register={register}
-					required={true}
-					validate={{
-						pattern: (v) => {
-							const pattern = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
-							if (!pattern.test(v)) {
-								dispatch({ type: 'email', status: 'pattern' });
-								return false;
-							}
-							dispatch({ type: 'email', status: 'pass' });
-							return true;
-						},
-					}}
-					onBlur={handleBlur('email')}
-					onChange={handleChange('email')}
+					errors={errors}
+					placeholder='請輸入Email'
+					type='email'
+					name='email'
+					setError={setError}
+					clearErrors={clearErrors}
 					className={authStyles.auth__input}
 				/>
-
-				<FormInput
-					placeholder='請輸入 密碼'
+				<PasswordInput
+					setError={setError}
+					clearErrors={clearErrors}
+					placeholder='請輸入密碼'
 					register={register}
-					id='password'
+					name='password'
 					type='password'
-					errors={errors.password}
-					errorKey={state.password}
+					errors={errors}
 					className={authStyles.auth__input}
-					required={true}
-					onBlur={handleBlur('password')}
-					onChange={handleChange('password')}
 				/>
 				<Button type='submit' disabled={!isValid} className={authStyles.auth__btn}>
 					登入

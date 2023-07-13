@@ -1,63 +1,55 @@
-import { useEffect, useState, useRef, type Dispatch } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { BiSolidUserCircle, BiPlus, BiRedo } from 'react-icons/bi';
-import { ActionType } from '../../util/useErrors';
 import styles from './styles.module.scss';
 import { UseFormRegister, FieldValues, UseFormWatch, UseFormResetField } from 'react-hook-form';
 
 type AvatarInputProps = {
 	register: UseFormRegister<FieldValues>;
-	watch: UseFormWatch<FieldValues>;
-	onReset: UseFormResetField<FieldValues>;
-	errors: { [key: string]: string };
-	errorKey: string | undefined;
-	dispatch: Dispatch<ActionType>;
 	className?: string;
+	watch: UseFormWatch<FieldValues>;
+	resetField: UseFormResetField<FieldValues>;
+	name?: string;
 };
 
 export default function AvatarInput({
 	register,
-	errors,
-	errorKey,
-	dispatch,
 	className,
 	watch,
-	onReset,
+	resetField,
+	name = 'avatar',
 }: AvatarInputProps) {
 	const [{ imgSrc, imgName }, setImgInfo] = useState({ imgSrc: '', imgName: '' });
+	const [errorKey, setErrorKey] = useState('pass');
 	const labelRef = useRef<HTMLLabelElement>(null);
+	const errors: { [key: string]: string } = {
+		notSupport: '不支援的圖片格式',
+		pass: '',
+	};
 
 	const files = watch('avatar', null);
 	useEffect(() => {
 		if (files && files.length > 0) {
+			const validateFormat = ['image/jpg', 'image/png', 'image/jpeg'];
 			const fileData = files[0];
-			const validateFormat = ['image/jpg', 'image/png', 'image/jpeg', 'image/*'];
+			setErrorKey('pass');
 			if (validateFormat.includes(fileData.type)) {
 				setImgInfo({ imgSrc: URL.createObjectURL(fileData), imgName: fileData.name });
-				dispatch({ type: 'avatar', status: 'pass' });
 			} else {
-				onReset('avatar')
+				resetField('avatar');
 				setImgInfo({ imgSrc: '', imgName: '' });
-				dispatch({ type: 'avatar', status: 'notSupport' });
+				setErrorKey('notSupport');
 			}
 		} else {
 			setImgInfo({ imgSrc: '', imgName: '' });
-			dispatch({ type: 'avatar', status: 'pass' });
 		}
 	}, [files]);
 
 	function handleClick() {
 		if (imgSrc) {
-			onReset('avatar');
+			resetField('avatar');
 		} else {
 			labelRef.current?.click();
 		}
-	}
-
-	let errorMessage = null;
-	if (errors && errorKey) {
-		errorMessage = errors[errorKey];
-	} else {
-		errorMessage = null;
 	}
 
 	return (
@@ -66,13 +58,15 @@ export default function AvatarInput({
 				className={`${styles.previewAvatar} ${className ?? ''}`.trim()}
 				aria-label='上傳你的大頭照'
 				ref={labelRef}
+				onClick={() => {
+					setErrorKey('pass');
+				}}
 			>
 				{imgSrc ? <img src={imgSrc} alt={imgName} /> : <BiSolidUserCircle />}
-				{errorMessage && <p className={styles['previewAvatar--error']}>{errorMessage}</p>}
+				{errors[errorKey] && <p className={styles['previewAvatar--error']}>{errors[errorKey]}</p>}
 				<input
 					type='file'
-					{...register('avatar')}
-					id='avatar'
+					{...register(name)}
 					accept='./jpg, ./png, ./jpeg, image/*'
 					className={styles.hidden}
 					tabIndex={-1}
