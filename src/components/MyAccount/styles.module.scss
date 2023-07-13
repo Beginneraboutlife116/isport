@@ -1,0 +1,35 @@
+@use '../../pages/Auth/styles.module.scss';
+
+.form {
+	@extend .auth;
+
+	&__btn {
+		@extend .auth__btn;
+    margin-block-end: 2rem;
+	}
+
+	&__input {
+		@extend .auth__input;
+	}
+}
+
+.border-bottom {
+	border-block-end: 0.125rem solid #666a6e;
+}
+
+.section {
+	max-width: 65%;
+	margin-inline: auto;
+
+	&__title {
+		color: #3488d9;
+		display: flex;
+		align-items: center;
+		gap: 0.25rem;
+
+		& > svg {
+			width: 1.5em;
+			height: 1.5em;
+		}
+	}
+}
