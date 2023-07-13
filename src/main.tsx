@@ -17,6 +17,7 @@ import {
 import Store from './pages/Store/index.tsx';
 import { UserInfoPage, MyAccountPage, MyPlanPage } from './pages/UserInfo/index.tsx';
 import StoreAccount from './pages/StoreAccount/index.tsx';
+import OwnerFindPage from './pages/OwnerFind/index.tsx';
 
 const router = createBrowserRouter([
 	{
@@ -50,6 +51,7 @@ const router = createBrowserRouter([
 				],
 			},
 			{ path: 'store/account', element: <StoreAccount /> },
+			{ path: 'owner/:ownerId', children: [{ path: 'find', element: <OwnerFindPage /> }] },
 		],
 	},
 	{
