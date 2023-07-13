@@ -13,6 +13,7 @@ function Booking() {
 			</div>
 
 			{/* text */}
+			{/* 可以改成 textarea */}
 			<div>
 				<input type='text' placeholder='預約備註' className={styled.container__input} />
 			</div>
