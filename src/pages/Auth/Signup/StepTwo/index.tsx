@@ -26,7 +26,6 @@ export default function SignupStepTwoPage() {
 					watch={watch}
 					className={authStyles.auth__input}
 					resetField={resetField}
-					name='avatar'
 				/>
 				<FormInput
 					register={register}
