@@ -68,7 +68,7 @@ export default function AvatarInput({
 					type='file'
 					{...register(name)}
 					accept='./jpg, ./png, ./jpeg, image/*'
-					className={styles.hidden}
+					className='hidden'
 					tabIndex={-1}
 				/>
 			</label>
