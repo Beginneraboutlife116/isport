@@ -31,7 +31,7 @@ const dummyData = [
 	},
 ];
 
-export default function MyPlan() {
+export default function MyPlanPage() {
 	return (
 		<ul className={styles.myPlan}>
 			{dummyData.map((data) => (

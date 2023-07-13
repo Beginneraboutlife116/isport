@@ -1,11 +1,11 @@
-@use '../../pages/Auth/styles.module.scss';
+@use '../../Auth/styles.module.scss';
 
 .form {
 	@extend .auth;
 
 	&__btn {
 		@extend .auth__btn;
-    margin-block-end: 2rem;
+		margin-block-end: 2rem;
 	}
 
 	&__input {

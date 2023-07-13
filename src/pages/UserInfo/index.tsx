@@ -1,52 +1,38 @@
-import { useState } from 'react';
 import styles from './styles.module.scss';
-import MyAccount from '../../components/MyAccount';
-import MyPlan from '../../components/MyPlan';
+import { Link, Outlet, useLocation, useParams } from 'react-router-dom';
+import MyAccountPage from './MyAccount';
+import MyPlanPage from './MyPlan';
 
-export default function UserInfoPage() {
-	const [element, setElement] = useState('myAccount');
+function UserInfoPage() {
+	const { pathname } = useLocation();
+	const { id: userId } = useParams();
 
 	return (
 		<main className={styles.container}>
 			<h1 className='hidden'>我的帳戶資訊</h1>
 			<div className={styles.header}>
-				<h2
+				<Link
+					to={`/user/${userId}`}
 					className={`${styles.header__title} ${
-						element === 'myAccount' ? styles.currentElement : ''
+						pathname === `/user/${userId}` ? styles.currentElement : ''
 					}`.trim()}
 				>
-					<label htmlFor='myAccount'>我的帳戶</label>
-					<input
-						className='hidden'
-						type='radio'
-						id='myAccount'
-						name='whichElement'
-						value='myAccount'
-						onChange={() => setElement('myAccount')}
-						checked={element === 'myAccount'}
-					/>
-				</h2>
-				<h2
+					<h2>我的帳戶</h2>
+				</Link>
+				<Link
+					to='./plan'
 					className={`${styles.header__title} ${
-						element === 'myPlan' ? styles.currentElement : ''
+						pathname === `/user/${userId}/plan` ? styles.currentElement : ''
 					}`.trim()}
 				>
-					<label htmlFor='myPlan'>我的方案</label>
-					<input
-						className='hidden'
-						type='radio'
-						id='myPlan'
-						name='whichElement'
-						value='myPlan'
-						onChange={() => setElement('myPlan')}
-						checked={element === 'myPlan'}
-					/>
-				</h2>
+					<h2>我的方案</h2>
+				</Link>
 			</div>
 			<div>
-				{element === 'myAccount' && <MyAccount />}
-				{element === 'myPlan' && <MyPlan />}
+				<Outlet />
 			</div>
 		</main>
 	);
 }
+
+export { UserInfoPage, MyAccountPage, MyPlanPage };

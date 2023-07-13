@@ -3,7 +3,7 @@ import UpperForm from './UpperForm';
 import BottomForm from './BottomForm';
 import styles from './styles.module.scss';
 
-export default function MyAccount() {
+export default function MyAccountPage() {
 	return (
 		<>
 			<div className={styles['border-bottom']}>

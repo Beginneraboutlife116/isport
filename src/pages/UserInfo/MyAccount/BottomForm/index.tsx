@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form';
-import { useErrors, ActionType } from '../../../util/useErrors';
-import FormInput from '../../FormInput';
-import Button from '../../Button';
+import { useErrors, ActionType } from '../../../../util/useErrors';
+import FormInput from '../../../../components/FormInput';
+import Button from '../../../../components/Button';
 import styles from '../styles.module.scss';
 
 export default function BottomForm() {

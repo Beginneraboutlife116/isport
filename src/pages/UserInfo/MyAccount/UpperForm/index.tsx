@@ -1,8 +1,8 @@
 import { useForm } from 'react-hook-form';
-import { useErrors } from '../../../util/useErrors';
-import AvatarInput from '../../AvatarInput';
-import FormInput from '../../FormInput';
-import Button from '../../Button';
+import { useErrors } from '../../../../util/useErrors';
+import AvatarInput from '../../../../components/AvatarInput';
+import FormInput from '../../../../components/FormInput';
+import Button from '../../../../components/Button';
 import styles from '../styles.module.scss';
 
 export default function UpperForm() {
