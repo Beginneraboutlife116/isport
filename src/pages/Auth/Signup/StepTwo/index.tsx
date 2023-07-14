@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { useErrors } from '../../../../util/useErrors';
 import FormInput from '../../../../components/FormInput';
 import Button from '../../../../components/Button';
 import authStyles from '../../styles.module.scss';
@@ -12,40 +11,38 @@ export default function SignupStepTwoPage() {
 		register,
 		handleSubmit,
 		watch,
-		formState: { isValid },
+		formState: { isValid, errors },
 		resetField,
+		setError,
+		clearErrors,
 	} = useForm();
-	const { errors, state, dispatch } = useErrors({ name: '', avatar: '' });
 
 	return (
 		<>
 			<h1 className={authStyles.auth__title}>用戶註冊 Step 2</h1>
 			<form onSubmit={handleSubmit((data) => console.log(data))}>
 				<AvatarInput
-					dispatch={dispatch}
-					errors={errors.avatar}
-					errorKey={state.avatar}
 					register={register}
 					watch={watch}
 					className={authStyles.auth__input}
-					onReset={resetField}
+					resetField={resetField}
 				/>
 				<FormInput
 					register={register}
-					placeholder='請輸入 暱稱'
-					errors={errors.name}
-					errorKey={state.name}
-					id='name'
+					errors={errors}
+					name='name'
+					placeholder='請輸入暱稱'
 					className={authStyles.auth__input}
-					required={false}
-					validate={(value) => {
-						if (value.length > 50) {
-							dispatch({ type: 'name', status: 'userExceed' });
-							return false;
-						} else {
-							dispatch({ type: 'name', status: 'pass' });
-							return true;
-						}
+					rules={{
+						maxLength: 50,
+						onChange: (event: React.ChangeEvent<HTMLInputElement>) => {
+							const { target } = event;
+							if (target.value.length > 50) {
+								setError('name', { type: 'maxLength', message: '暱稱不能大於50個字' });
+							} else {
+								clearErrors('name');
+							}
+						},
 					}}
 				/>
 				<Button type='submit' disabled={!isValid} className={authStyles.auth__btn}>

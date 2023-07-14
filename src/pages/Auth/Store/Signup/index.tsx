@@ -1,107 +1,80 @@
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
-import { useErrors, ActionType } from '../../../../util/useErrors';
-import FormInput from '../../../../components/FormInput';
+import FormInput, {
+	EmailInput,
+	PasswordInput,
+	ConfirmPasswordInput,
+} from '../../../../components/FormInput';
 import Button from '../../../../components/Button';
 import authStyles from '../../styles.module.scss';
 import styles from '../styles.module.scss';
 
 export default function StoreSignupPage() {
-	const { errors, state, dispatch } = useErrors();
 	const {
 		register,
 		handleSubmit,
-		formState: { isValid },
+		formState: { isValid, errors },
+		watch,
+		setError,
+		clearErrors,
 	} = useForm();
 
-	function handleBlur(type: ActionType['type']) {
-		return (event: React.FocusEvent<HTMLInputElement, Element>) => {
-			const { target } = event;
-			if (target.value === '') {
-				dispatch({ type, status: 'empty' });
-			}
-		};
-	}
-
-	function handleChange(type: ActionType['type']) {
-		return (event: React.ChangeEvent<HTMLInputElement>) => {
-			const { target } = event;
-			if (target.value !== '') {
-				dispatch({ type, status: 'pass' });
-			}
-		};
-	}
+	const watchingPassword = watch('password');
 
 	return (
 		<>
 			<h1 className={authStyles.auth__title}>商家註冊</h1>
 			<form onSubmit={handleSubmit((data) => console.log(data))}>
-				<FormInput
-					placeholder='請輸入Email'
-					id='email'
-					type='email'
-					errors={errors.email}
-					errorKey={state.email}
+				<EmailInput
 					register={register}
-					required={true}
-					validate={{
-						pattern: (v) => {
-							const pattern = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
-							if (!pattern.test(v)) {
-								dispatch({ type: 'email', status: 'pattern' });
-								return false;
+					errors={errors}
+					setError={setError}
+					clearErrors={clearErrors}
+					name='email'
+					placeholder='請輸入註冊Email'
+					className={authStyles.auth__input}
+				/>
+				<FormInput
+					register={register}
+					errors={errors}
+					name='name'
+					placeholder='請輸入商家名稱'
+					className={authStyles.auth__input}
+					rules={{
+						required: true,
+						onBlur: (event: React.FocusEvent<HTMLInputElement, Element>) => {
+							if (event.target.value === '') {
+								setError('name', { type: 'required', message: '商家名稱不可為空' });
 							}
-							dispatch({ type: 'email', status: 'pass' });
-							return true;
+						},
+						onChange: (event: React.ChangeEvent<HTMLInputElement>) => {
+							const { target } = event;
+							if (target.value.length > 50) {
+								setError('name', { type: 'maxLength', message: '商家名稱不能大於50個字' });
+							} else {
+								clearErrors('name');
+							}
 						},
 					}}
-					onBlur={handleBlur('email')}
-					onChange={handleChange('email')}
+				/>
+				<PasswordInput
+					register={register}
+					errors={errors}
+					setError={setError}
+					clearErrors={clearErrors}
+					placeholder='請輸入密碼'
+					name='password'
 					className={authStyles.auth__input}
 				/>
-
-				<FormInput
+				<ConfirmPasswordInput
+					watchingPassword={watchingPassword}
 					register={register}
-					id='name'
-					placeholder='請輸入 商家名稱'
+					errors={errors}
+					setError={setError}
+					clearErrors={clearErrors}
+					placeholder='請再次輸入確認密碼'
+					name='confirmedPassword'
 					className={authStyles.auth__input}
-					errors={errors.name}
-					errorKey={state.name}
-					required={true}
-					validate={(value) => (value.length > 50 ? false : true)}
-					onBlur={handleBlur('name')}
-					onChange={(event) => {
-						if (event.target.value !== '') {
-							dispatch({ type: 'name', status: 'pass' });
-						}
-						if (event.target.value.length > 50) {
-							dispatch({ type: 'name', status: 'storeExceed' });
-						}
-					}}
-				/>
-				<FormInput
-					register={register}
-					id='password'
-					type='password'
-					placeholder='請輸入 密碼'
-					className={authStyles.auth__input}
-					errors={errors.password}
-					errorKey={state.password}
-					required={true}
-					onBlur={handleBlur('password')}
-					onChange={handleChange('password')}
-				/>
-				<FormInput
-					register={register}
-					id='confirmedPassword'
-					type='password'
-					placeholder='請再次輸入 密碼'
-					className={authStyles.auth__input}
-					errors={errors.confirmedPassword}
-					errorKey={state.confirmedPassword}
-					required={true}
-					onBlur={handleBlur('confirmedPassword')}
-					onChange={handleChange('confirmedPassword')}
 				/>
 				<Button type='submit' disabled={!isValid} className={authStyles.auth__btn}>
 					註冊

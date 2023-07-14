@@ -1,8 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { BsGoogle, BsFacebook } from 'react-icons/bs';
-import { useErrors, ActionType } from '../../../../util/useErrors';
-import FormInput from '../../../../components/FormInput';
+import { EmailInput, PasswordInput, ConfirmPasswordInput } from '../../../../components/FormInput';
 import Button from '../../../../components/Button';
 import styles from '../../styles.module.scss';
 
@@ -10,79 +9,44 @@ export default function SignupStepOnePage() {
 	const {
 		register,
 		handleSubmit,
-		formState: { isValid, isSubmitting },
+		formState: { isValid, isSubmitting, errors },
+		setError,
+		clearErrors,
+		watch,
 	} = useForm();
-	const { errors, state, dispatch } = useErrors({ email: '', password: '', confirmedPassword: '' });
-	console.log('🚀 ~ file: index.tsx:20 ~ LoginPage ~ isSubmitting:', isSubmitting);
 
-	function handleBlur(type: ActionType['type']) {
-		return (event: React.FocusEvent<HTMLInputElement, Element>) => {
-			const { target } = event;
-			if (target.value === '') {
-				dispatch({ type, status: 'empty' });
-			}
-		};
-	}
-
-	function handleChange(type: ActionType['type']) {
-		return (event: React.ChangeEvent<HTMLInputElement>) => {
-			const { target } = event;
-			if (target.value !== '') {
-				dispatch({ type, status: 'pass' });
-			}
-		};
-	}
+	const watchingPassword = watch('password');
 
 	return (
 		<>
 			<h1 className={styles.auth__title}>用戶註冊 Step 1</h1>
 			<form onSubmit={handleSubmit((data) => console.log(data))}>
-				<FormInput
-					placeholder='請輸入Email'
-					id='email'
-					type='email'
-					errors={errors.email}
-					errorKey={state.email}
+				<EmailInput
 					register={register}
-					required={true}
-					validate={{
-						pattern: (v) => {
-							const pattern = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
-							if (!pattern.test(v)) {
-								dispatch({ type: 'email', status: 'pattern' });
-								return false;
-							}
-							dispatch({ type: 'email', status: 'pass' });
-							return true;
-						},
-					}}
-					onBlur={handleBlur('email')}
-					onChange={handleChange('email')}
+					errors={errors}
+					setError={setError}
+					clearErrors={clearErrors}
+					name='email'
+					placeholder='請輸入註冊Email'
 					className={styles.auth__input}
 				/>
-
-				<FormInput
-					type='password'
-					placeholder='請輸入 密碼'
-					id='password'
-					errors={errors.password}
-					errorKey={state.password}
+				<PasswordInput
 					register={register}
-					required={true}
-					onBlur={handleBlur('password')}
-					onChange={handleChange('password')}
+					errors={errors}
+					setError={setError}
+					clearErrors={clearErrors}
+					placeholder='請輸入密碼'
+					name='password'
 					className={styles.auth__input}
 				/>
-				<FormInput
-					type='password'
-					placeholder='請再次輸入 密碼'
-					id='confirmedPassword'
-					errors={errors.confirmedPassword}
-					errorKey={state.confirmedPassword}
+				<ConfirmPasswordInput
+					watchingPassword={watchingPassword}
 					register={register}
-					required={true}
-					onBlur={handleBlur('confirmedPassword')}
-					onChange={handleChange('confirmedPassword')}
+					errors={errors}
+					setError={setError}
+					clearErrors={clearErrors}
+					placeholder='請再次輸入確認密碼'
+					name='confirmedPassword'
 					className={styles.auth__input}
 				/>
 				<Button type='submit' disabled={!isValid} className={styles.auth__btn}>

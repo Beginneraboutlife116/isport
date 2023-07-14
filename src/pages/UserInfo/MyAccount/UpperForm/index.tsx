@@ -1,7 +1,6 @@
 import { useForm } from 'react-hook-form';
-import { useErrors } from '../../../../util/useErrors';
 import AvatarInput from '../../../../components/AvatarInput';
-import FormInput from '../../../../components/FormInput';
+import FormInput, { EmailInput } from '../../../../components/FormInput';
 import Button from '../../../../components/Button';
 import styles from '../styles.module.scss';
 
@@ -9,11 +8,12 @@ export default function UpperForm() {
 	const {
 		register,
 		handleSubmit,
-		formState: { isValid },
+		formState: { isValid, errors },
 		watch,
 		resetField,
+		setError,
+		clearErrors,
 	} = useForm();
-	const { errors, state, dispatch } = useErrors({ email: '', name: '', avatar: '' });
 	const userEmail = watch('email', 'user1@example.com');
 	const userName = watch('name', 'user1');
 
@@ -22,53 +22,38 @@ export default function UpperForm() {
 			<AvatarInput
 				register={register}
 				watch={watch}
-				onReset={resetField}
-				errors={errors.avatar}
-				errorKey={state.avatar}
-				dispatch={dispatch}
+				resetField={resetField}
 				className={styles.form__input}
 			/>
-			<FormInput
+			<EmailInput
 				register={register}
 				type='email'
-				errors={errors.email}
-				errorKey={state.email}
+				errors={errors}
 				value={userEmail}
-				required={true}
 				label='Email'
-				id='email'
 				className={styles.form__input}
-				validate={(v) => {
-					const pattern = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
-					if (!pattern.test(v)) {
-						dispatch({ type: 'email', status: 'pattern' });
-						return false;
-					}
-					dispatch({ type: 'email', status: 'pass' });
-					return true;
-				}}
-				onBlur={(event) => {
-					const { target } = event;
-					if (target.value === '') {
-						dispatch({ type: 'email', status: 'empty' });
-					}
-				}}
-				onChange={(event) => {
-					const { target } = event;
-					if (target.value !== '') {
-						dispatch({ type: 'email', status: 'pass' });
-					}
-				}}
+				name='email'
+				setError={setError}
+				clearErrors={clearErrors}
 			/>
 			<FormInput
 				register={register}
-				errors={errors.name}
-				errorKey={state.name}
+				errors={errors}
 				value={userName}
-				required={false}
 				label='暱稱'
-				id='name'
+				name='name'
 				className={styles.form__input}
+				rules={{
+					maxLength: 50,
+					onChange: (event: React.ChangeEvent<HTMLInputElement>) => {
+						const { target } = event;
+						if (target.value.length > 50) {
+							setError('name', { type: 'maxLength', message: '暱稱不能大於50個字' });
+						} else {
+							clearErrors('name');
+						}
+					},
+				}}
 			/>
 			<Button type='submit' disabled={!isValid} className={styles.form__btn}>
 				確認送出
