@@ -7,7 +7,7 @@ type CardData = {
 	photo: string;
 	address: string;
 	rating: number;
-	reviewCounts: string;
+	reviewCounts: number;
 	introduction: string;
 	isLiked?: boolean;
 };
@@ -23,10 +23,13 @@ function CardList({ data }: CardListProps) {
 				return (
 					<Card
 						key={item.id}
+						id={item.id}
 						storeName={item.storeName}
 						rating={item.rating}
 						reviewCounts={item.reviewCounts}
 						introduction={item.introduction}
+						photo={item.photo}
+						isLiked={item.isLiked}
 					/>
 				);
 			})}
