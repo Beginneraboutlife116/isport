@@ -1,31 +1,56 @@
 import { BiSolidMap } from 'react-icons/bi';
-import { BsHeart } from 'react-icons/bs';
+import { BsHeart, BsHeartFill } from 'react-icons/bs';
 import { BsFillTelephoneFill } from 'react-icons/bs';
 import { MdEmail } from 'react-icons/md';
-import gym from '../../assets/Gym.jpg';
 import { useState } from 'react';
 
 import styled from './styles.module.scss';
+import { addLikeStore, deleteLikeStore } from '../../api/like';
 
 type CardProps = {
+	id: number;
 	storeName: string;
 	rating: number;
-	reviewCounts: string;
+	reviewCounts: number;
 	introduction: string;
+	photo: string;
+	isLiked: boolean;
 };
 
-function Card({ storeName, rating, reviewCounts, introduction }: CardProps) {
+function Card({ id, storeName, rating, reviewCounts, introduction, photo, isLiked }: CardProps) {
+	const [isStoreLiked, setIsStoreLiked] = useState(isLiked);
+
 	const [store, setStore] = useState(true);
 	setStore; //為了不報錯暫時放置
+
+	// 新增或取消收藏場館
+	const handleToggleLike = async (storeId: number) => {
+		const authToken =
+			'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJ1c2VyMkBleGFtcGxlLmNvbSIsImF2YXRhciI6Imh0dHBzOi8vaW1ndXIuY29tLzVPTDV3SnQucG5nIiwibmlja25hbWUiOiJ1c2VyMiIsInJvbGUiOiJ1c2VyIiwic3RvcmVOYW1lIjpudWxsLCJjcmVhdGVkQXQiOiIyMDIzLTA3LTEwVDE3OjEyOjMwLjAwMFoiLCJ1cGRhdGVkQXQiOiIyMDIzLTA3LTEwVDE3OjEyOjMwLjAwMFoiLCJpYXQiOjE2ODkyMzYwNTMsImV4cCI6MTY5MTgyODA1M30.ScuJmJpzQoO-95_VM_I7W-VUBnkaXXuWRjE2DsvzvkQ';
+
+		try {
+			if (isStoreLiked) {
+				// 取消收藏
+				await deleteLikeStore(authToken, storeId);
+			} else {
+				// 新增收藏
+				await addLikeStore(authToken, storeId);
+			}
+			setIsStoreLiked((preLiked) => !preLiked);
+		} catch (error) {
+			console.log(error);
+		}
+	};
 	return (
-		<div className={styled.card}>
+		<div className={styled.card} id={id.toString()}>
 			<div className={styled.card__imgWrap}>
-				<img src={gym} alt={storeName} className={styled['card__imgWrap--img']} />
+				<img src={photo} alt={storeName} className={styled['card__imgWrap--img']} />
 			</div>
 
 			{/* info */}
 			<div className={styled.card__infoWrap}>
-				{!store ? (
+				{/* store true or false render */}
+				{store ? (
 					// user page version
 					<>
 						<span className={styled['card__infoWrap--title']}>{storeName}</span>
@@ -44,7 +69,16 @@ function Card({ storeName, rating, reviewCounts, introduction }: CardProps) {
 								</div>
 							</div>
 
-							<BsHeart style={{ fontSize: '24px' }} />
+							{/* 愛心收藏圖案功能 */}
+							<div onClick={() => handleToggleLike(id)}>
+								{!isStoreLiked ? (
+									<BsHeart style={{ fontSize: '24px' }} />
+								) : (
+									<BsHeartFill style={{ fontSize: '24px', color: 'red' }} />
+								)}
+							</div>
+
+							{/* 這裡可以加入商家的鉛筆圖案編輯功能 */}
 						</div>
 
 						<div className={styled['card__infoWrap--text']}>{introduction}</div>
