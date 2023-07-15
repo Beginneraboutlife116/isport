@@ -17,11 +17,16 @@ import {
 import Store from './pages/Store/index.tsx';
 import { UserInfoPage, MyAccountPage, MyPlanPage } from './pages/UserInfo/index.tsx';
 import StoreAccount from './pages/StoreAccount/index.tsx';
+import { AuthProvider } from './contexts/authContext.tsx';
 
 const router = createBrowserRouter([
 	{
 		path: '/',
-		element: <App />,
+		element: (
+			<AuthProvider>
+				<App />
+			</AuthProvider>
+		),
 		children: [
 			{
 				path: '',

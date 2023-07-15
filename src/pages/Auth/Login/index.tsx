@@ -1,11 +1,15 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useForm, FieldValues } from 'react-hook-form';
 import { BsGoogle, BsFacebook } from 'react-icons/bs';
 import Button from '../../../components/Button';
 import styles from '../styles.module.scss';
 import { EmailInput, PasswordInput } from '../../../components/FormInput';
+import { login } from '../../../api/userAuth';
+import { useAuth } from '../../../contexts/authContext';
 
 export default function LoginPage() {
+	const { setToken, setRole, setUserId, setAvatar } = useAuth();
+	const navigate = useNavigate();
 	const {
 		handleSubmit,
 		register,
@@ -15,10 +19,31 @@ export default function LoginPage() {
 		clearErrors,
 	} = useForm();
 
+	async function onSubmit(data: FieldValues) {
+		try {
+			const { email, password } = data;
+			const response = await login({ email, password });
+			if (response.status === 200) {
+				const { token, avatar, role, userId } = response.data;
+				localStorage.setItem('token', token);
+				setToken(token);
+				setRole(role);
+				setUserId(userId);
+				setAvatar(avatar);
+				navigate('/find');
+			} else {
+				setError('email', { type: response.data.type, message: response.data.message });
+				throw new Error(response.data.message);
+			}
+		} catch (error) {
+			console.error(error);
+		}
+	}
+
 	return (
 		<>
 			<h1 className={styles.auth__title}>請先登入愛運動帳戶</h1>
-			<form onSubmit={handleSubmit((data) => console.log(data))}>
+			<form onSubmit={handleSubmit(onSubmit)}>
 				<EmailInput
 					register={register}
 					errors={errors}
