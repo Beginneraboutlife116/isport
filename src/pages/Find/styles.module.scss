@@ -9,6 +9,22 @@
     height: 100%;
     display: grid;
     justify-content: center;
+    position: relative;
   }
 
+  &__loading {
+    border: 6px solid #f3f3f3;
+    border-top: 6px solid #3498db;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spinAnimation 1s linear infinite;  
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    @keyframes spinAnimation {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  }
 }

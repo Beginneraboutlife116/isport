@@ -3,6 +3,8 @@
   color: white;
   border-radius: 20px;
   padding: 5px 10px 5px 10px;
+  width: 20px;
+  text-align: center;
 }
 
 %iconColor {
@@ -20,7 +22,7 @@
   cursor: pointer;
   transition: box-shadow 0.3s ease;
   flex-grow: 1;
-
+  
   &:hover {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
   }
@@ -45,13 +47,14 @@
     &--title {
       font-size: 24px;
       font-weight: bold;
-      padding: 1rem 0 2rem 0.5rem;
+      margin: 1rem 0.5rem;
+      height: 50px;
     }
 
     &__detailWrap {
       display: flex;
       justify-content: space-between;
-      padding: 0 0.5rem 0 0.5rem;
+      padding: 0 0.5rem;
       align-items: center;
       
       &__detail {
@@ -111,6 +114,7 @@
       justify-content: space-between;
       font-size: 24px;
       font-weight: bold;
+      height: 50px;
     }
 
     &--address {
