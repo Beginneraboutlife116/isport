@@ -9,7 +9,7 @@ type CardData = {
 	rating: number;
 	reviewCounts: number;
 	introduction: string;
-	isLiked: boolean;
+	isLiked?: boolean;
 };
 
 type CardListProps = {

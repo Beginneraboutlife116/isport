@@ -17,6 +17,7 @@ import {
 import Store from './pages/Store/index.tsx';
 import { UserInfoPage, MyAccountPage, MyPlanPage } from './pages/UserInfo/index.tsx';
 import StoreAccount from './pages/StoreAccount/index.tsx';
+import StoreFindPage from './pages/StoreFind/index.tsx';
 
 const router = createBrowserRouter([
 	{
@@ -37,10 +38,9 @@ const router = createBrowserRouter([
 					{ path: 'store/signup', element: <StoreSignupPage /> },
 				],
 			},
-			{ path: 'find', element: <Find /> },
+			{ path: 'find', element: <Find />, children: [{ path: ':storeId', element: <Store /> }] },
 			{ path: 'collection', element: <Collection /> },
 			{ path: 'reservation', element: <Reservation /> },
-			{ path: 'store', element: <Store /> },
 			{
 				path: 'user/:id',
 				element: <UserInfoPage />,
@@ -49,7 +49,13 @@ const router = createBrowserRouter([
 					{ path: 'plan', element: <MyPlanPage /> },
 				],
 			},
-			{ path: 'store/account', element: <StoreAccount /> },
+			{
+				path: 'store/:ownerId',
+				children: [
+					{ path: '', element: <StoreAccount /> },
+					{ path: 'find', element: <StoreFindPage /> },
+				],
+			},
 		],
 	},
 	{

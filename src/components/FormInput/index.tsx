@@ -5,16 +5,18 @@ import EmailInput from './EmailInput';
 import PasswordInput from './PasswordInput';
 import ConfirmPasswordInput from './ConfirmPasswordInput';
 
-export type FormInputProps = React.InputHTMLAttributes<HTMLInputElement> & {
-	name: string;
-	label?: string;
-	labelClassName?: string;
-	errors?: FieldErrors<FieldValues>;
-	errorClassName?: string;
-	inputClassName?: string;
-	rules?: RegisterOptions;
-	register: UseFormRegister<FieldValues>;
-};
+// TODO: Turn this input to a pure component!
+export type FormInputProps<TFieldValues extends FieldValues = FieldValues> =
+	React.InputHTMLAttributes<HTMLInputElement> & {
+		name: string;
+		label?: string;
+		labelClassName?: string;
+		errors?: FieldErrors<TFieldValues>;
+		errorClassName?: string;
+		inputClassName?: string;
+		rules?: RegisterOptions;
+		register: UseFormRegister<TFieldValues>;
+	};
 
 export default function FormInput({
 	register,
