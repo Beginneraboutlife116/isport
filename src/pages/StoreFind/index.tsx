@@ -1,6 +1,10 @@
+import { useState } from 'react';
+import { BsPlusCircleFill } from 'react-icons/bs';
 import CardList from '../../components/CardList';
 import SearchBar from '../../components/SearchBar';
+import Button from '../../components/Button';
 import styled from './styles.module.scss';
+import FormDialogWithImage from '../../components/Dialog/FormDialogWithImage';
 
 const data = [
 	{
@@ -85,11 +89,26 @@ const data = [
 	},
 ];
 
-export default function OwnerFindPage() {
+export default function StoreFindPage() {
+	const [toggleDialog, setToggleDialog] = useState(false);
+
 	return (
 		<div className={styled.container}>
 			<div className={styled.container__wrap}>
-				<SearchBar />
+				<div className={styled.container__dialog}>
+					<SearchBar />
+					<Button
+						onClick={() => setToggleDialog(!toggleDialog)}
+						className={styled['btn--openDialog']}
+					>
+						<BsPlusCircleFill />
+					</Button>
+					<FormDialogWithImage
+						status={toggleDialog}
+						handleDialogToggle={setToggleDialog}
+						buttonDescription='送出'
+					/>
+				</div>
 				<CardList data={data} />
 			</div>
 		</div>

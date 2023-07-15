@@ -42,6 +42,7 @@ export default function StoreSignupPage() {
 					className={authStyles.auth__input}
 					rules={{
 						required: true,
+						maxLength: 50,
 						onBlur: (event: React.FocusEvent<HTMLInputElement, Element>) => {
 							if (event.target.value === '') {
 								setError('name', { type: 'required', message: '商家名稱不可為空' });
