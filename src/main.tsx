@@ -19,6 +19,7 @@ import { UserInfoPage, MyAccountPage, MyPlanPage } from './pages/UserInfo/index.
 import StoreAccount from './pages/StoreAccount/index.tsx';
 import StoreFindPage from './pages/StoreFind/index.tsx';
 import { AuthProvider } from './contexts/authContext.tsx';
+import ErrorPage from './pages/Error/index.tsx';
 
 const router = createBrowserRouter([
 	{
@@ -57,11 +58,12 @@ const router = createBrowserRouter([
 					{ path: 'find', element: <StoreFindPage /> },
 				],
 			},
+			{ path: 'role', element: <ErrorPage /> },
 		],
 	},
 	{
 		path: '*',
-		element: <div>404</div>,
+		element: <ErrorPage />,
 	},
 ]);
 

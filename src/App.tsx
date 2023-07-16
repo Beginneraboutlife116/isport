@@ -6,7 +6,6 @@ import { useAuth } from './contexts/authContext';
 import { getUserData } from './api/user';
 
 function App() {
-	// ? 不確定將邏輯寫在這邊是不是可以的？
 	const navigate = useNavigate();
 	const { pathname } = useLocation();
 	const [auth, setAuth] = useAuth();
@@ -29,14 +28,16 @@ function App() {
 									role: 'user',
 									isAuthenticated: true,
 								});
+								navigateToRoleDefaultPage(pathname, 'user', response.data.id);
 							} else {
 								setAuth({
 									...auth,
 									avatar: '',
 									userId: response.data.id,
-									role: 'store',
+									role: 'owner',
 									isAuthenticated: true,
 								});
+								navigateToRoleDefaultPage(pathname, 'owner', response.data.id);
 							}
 						} else {
 							handleLogout();
@@ -44,6 +45,7 @@ function App() {
 						}
 					} else if (auth.token === localToken) {
 						setAuth({ ...auth, isAuthenticated: true });
+						navigateToRoleDefaultPage(pathname, auth.role, auth.userId);
 					} else {
 						handleLogout();
 					}
@@ -67,7 +69,34 @@ function App() {
 			avatar: '',
 			isAuthenticated: false,
 		});
-		navigate('/login');
+		navigateToLogin(pathname);
+	}
+
+	function navigateToLogin(pathname: string) {
+		if (
+			pathname !== '/login' &&
+			pathname !== '/signup' &&
+			pathname !== '/store/login' &&
+			pathname !== '/store/signup'
+		) {
+			navigate('/login');
+		}
+	}
+
+	function navigateToRoleDefaultPage(pathname: string, role: string, userId: number) {
+		if (
+			pathname === '/' ||
+			pathname === '/login' ||
+			pathname === '/signup' ||
+			pathname === '/store/login' ||
+			pathname === '/store/signup'
+		) {
+			navigate(role === 'user' ? `/find` : `/store/${userId}`);
+		} else if (role !== 'user' && !pathname.includes('store')) {
+			navigate('/role');
+		} else if (role === 'user' && pathname.includes('store')) {
+			navigate('/role');
+		}
 	}
 
 	return (
