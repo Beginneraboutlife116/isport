@@ -1,9 +1,12 @@
-import { useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
+import { FieldValues, useForm } from 'react-hook-form';
+import { Link, useNavigate } from 'react-router-dom';
 import { EmailInput, PasswordInput } from '../../../../components/FormInput';
+import Button from '../../../../components/Button';
+import { storeLogin } from '../../../../api/auth';
+import { useAuth } from '../../../../contexts/authContext';
+import { isAxiosError } from '../../../../util/helpers.ts';
 import authStyles from '../../styles.module.scss';
 import styles from '../styles.module.scss';
-import Button from '../../../../components/Button';
 
 export default function StoreLoginPage() {
 	const {
@@ -13,11 +16,38 @@ export default function StoreLoginPage() {
 		setError,
 		clearErrors,
 	} = useForm();
+	const navigate = useNavigate();
+	const [, setAuth] = useAuth();
+
+	async function onSubmit(data: FieldValues) {
+		try {
+			const { email, password } = data;
+			const response = await storeLogin({ email, password });
+			if (response.status === 200) {
+				const { token, userId, role } = response.data;
+				localStorage.setItem('token', token);
+				setAuth({ token, userId, role, isAuthenticated: true, avatar: '' });
+				navigate(`/store/${userId}/find`);
+			}
+		} catch (error) {
+			if (isAxiosError(error)) {
+				const whichInputError = error.response?.data.message.includes('密碼')
+					? 'password'
+					: 'email';
+				setError(whichInputError, {
+					type: error.response?.data.status,
+					message: error.response?.data.message,
+				});
+			} else {
+				console.error(error);
+			}
+		}
+	}
 
 	return (
 		<>
 			<h1 className={authStyles.auth__title}>請先登入愛運動商家帳戶</h1>
-			<form onSubmit={handleSubmit((data) => console.log(data))}>
+			<form onSubmit={handleSubmit(onSubmit)}>
 				<EmailInput
 					register={register}
 					errors={errors}

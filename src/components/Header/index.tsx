@@ -60,7 +60,7 @@ export default function Header({
 								</Button>
 							</Link>
 						)}
-						<Link to={`/user/${currentUserId}`}>
+						<Link to={role === 'user' ? `/user/${currentUserId}` : `/store/${currentUserId}`}>
 							<Button className={styles.header__btn}>我的帳戶</Button>
 						</Link>
 
