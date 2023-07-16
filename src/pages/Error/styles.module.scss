@@ -1,0 +1,23 @@
+.container {
+	text-align: center;
+	margin-block-start: 10rem;
+	font-size: 1.5rem;
+}
+
+.title {
+	font-size: 4.5rem;
+}
+
+.link {
+	display: inline-block;
+	border: 0.125rem solid #d3dae0;
+	font-size: 1.25rem;
+	padding: 0.25em 0.5em;
+	color: #61afdf;
+	transition: background-color 0.25s, color 0.25s;
+
+	&:hover {
+		background-color: #d3dae0;
+		color: #6558f5;
+	}
+}
