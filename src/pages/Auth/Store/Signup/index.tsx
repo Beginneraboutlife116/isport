@@ -1,11 +1,14 @@
-import { useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
+import { FieldValues, useForm } from 'react-hook-form';
+import { Link, useNavigate } from 'react-router-dom';
 import FormInput, {
 	EmailInput,
 	PasswordInput,
 	ConfirmPasswordInput,
 } from '../../../../components/FormInput';
 import Button from '../../../../components/Button';
+import { storeSignup } from '../../../../api/auth';
+import { useAuth } from '../../../../contexts/authContext';
+import { isAxiosError } from '../../../../util/helpers.ts';
 import authStyles from '../../styles.module.scss';
 import styles from '../styles.module.scss';
 
@@ -18,13 +21,36 @@ export default function StoreSignupPage() {
 		setError,
 		clearErrors,
 	} = useForm();
-
+	const [, setAuth] = useAuth();
+	const navigate = useNavigate();
 	const watchingPassword = watch('password');
+
+	async function onSubmit(data: FieldValues) {
+		try {
+			const { email, password, confirmPassword, name } = data;
+			const response = await storeSignup({ email, password, confirmPassword, storeName: name });
+			if (response.status === 200) {
+				const { userId, token } = response.data;
+				localStorage.setItem('token', token);
+				setAuth({ token, userId, avatar: '', isAuthenticated: true, role: 'owner' });
+				navigate(`/store/${userId}/find`);
+			}
+		} catch (error) {
+			if (isAxiosError(error)) {
+				setError('email', {
+					type: error.response?.data.status,
+					message: error.response?.data.message,
+				});
+			} else {
+				console.error(error);
+			}
+		}
+	}
 
 	return (
 		<>
 			<h1 className={authStyles.auth__title}>商家註冊</h1>
-			<form onSubmit={handleSubmit((data) => console.log(data))}>
+			<form onSubmit={handleSubmit(onSubmit)}>
 				<EmailInput
 					register={register}
 					errors={errors}
@@ -74,7 +100,7 @@ export default function StoreSignupPage() {
 					setError={setError}
 					clearErrors={clearErrors}
 					placeholder='請再次輸入確認密碼'
-					name='confirmedPassword'
+					name='confirmPassword'
 					className={authStyles.auth__input}
 				/>
 				<Button type='submit' disabled={!isValid} className={authStyles.auth__btn}>
