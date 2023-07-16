@@ -28,14 +28,16 @@ function App() {
 									role: 'user',
 									isAuthenticated: true,
 								});
+								navigateToRoleDefaultPage(pathname, 'user', response.data.id);
 							} else {
 								setAuth({
 									...auth,
 									avatar: '',
 									userId: response.data.id,
-									role: 'store',
+									role: 'owner',
 									isAuthenticated: true,
 								});
+								navigateToRoleDefaultPage(pathname, 'owner', response.data.id);
 							}
 						} else {
 							handleLogout();
@@ -43,6 +45,7 @@ function App() {
 						}
 					} else if (auth.token === localToken) {
 						setAuth({ ...auth, isAuthenticated: true });
+						navigateToRoleDefaultPage(pathname, auth.role, auth.userId);
 					} else {
 						handleLogout();
 					}
@@ -66,9 +69,33 @@ function App() {
 			avatar: '',
 			isAuthenticated: false,
 		});
-		const authPath = ['/login', '/signup', '/store/login', '/store/signup'];
-		if (!authPath.includes(pathname)) {
+		navigateToLogin(pathname);
+	}
+
+	function navigateToLogin(pathname: string) {
+		if (
+			pathname !== '/login' &&
+			pathname !== '/signup' &&
+			pathname !== '/store/login' &&
+			pathname !== '/store/signup'
+		) {
 			navigate('/login');
+		}
+	}
+
+	function navigateToRoleDefaultPage(pathname: string, role: string, userId: number) {
+		if (
+			pathname === '/' ||
+			pathname === '/login' ||
+			pathname === '/signup' ||
+			pathname === '/store/login' ||
+			pathname === '/store/signup'
+		) {
+			navigate(role === 'user' ? `/find` : `/store/${userId}`);
+		} else if (role !== 'user' && !pathname.includes('store')) {
+			navigate('/role');
+		} else if (role === 'user' && pathname.includes('store')) {
+			navigate('/role');
 		}
 	}
 
