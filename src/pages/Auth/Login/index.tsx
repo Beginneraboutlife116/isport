@@ -26,7 +26,7 @@ export default function LoginPage() {
 			const response = await login({ email, password });
 			if (response.status === 200) {
 				const { token, avatar, role, userId } = response.data;
-				localStorage.setItem('token', token);
+				localStorage.setItem('isport', JSON.stringify({ token, role }));
 				setAuth({ token, role, userId, avatar, isAuthenticated: true });
 				navigate('/find');
 			}

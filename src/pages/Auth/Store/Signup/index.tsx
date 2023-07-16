@@ -31,7 +31,7 @@ export default function StoreSignupPage() {
 			const response = await storeSignup({ email, password, confirmPassword, storeName: name });
 			if (response.status === 200) {
 				const { userId, token } = response.data;
-				localStorage.setItem('token', token);
+				localStorage.setItem('isport', JSON.stringify({ token, role: 'owner' }));
 				setAuth({ token, userId, avatar: '', isAuthenticated: true, role: 'owner' });
 				navigate(`/store/${userId}/find`);
 			}

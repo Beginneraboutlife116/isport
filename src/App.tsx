@@ -4,6 +4,7 @@ import Header from './components/Header';
 import { FindProvider } from './contexts/findContext';
 import { useAuth } from './contexts/authContext';
 import { getUserData } from './api/user';
+import { getOwnerData } from './api/owner';
 
 function App() {
 	const navigate = useNavigate();
@@ -13,44 +14,48 @@ function App() {
 	useEffect(() => {
 		async function authorizeUser() {
 			try {
-				const localToken = localStorage.getItem('token') || '';
-				if (localToken) {
-					if (!auth.token) {
-						const response = await getUserData();
-						if (response.status === 200) {
-							localStorage.setItem('token', localToken);
-							setAuth({ ...auth, token: localToken });
-							if (response.data.hasOwnProperty('avatar')) {
-								setAuth({
-									...auth,
-									avatar: response.data.avatar,
-									userId: response.data.id,
-									role: 'user',
-									isAuthenticated: true,
-								});
-								navigateToRoleDefaultPage(pathname, 'user', response.data.id);
+				const isport = localStorage.getItem('isport');
+				if (!isport) {
+					handleLogout();
+				} else {
+					const { token: localToken, role } = JSON.parse(isport);
+					if (localToken) {
+						if (!auth.token) {
+							const response = role === 'user' ? await getUserData() : await getOwnerData();
+							if (response.status === 200) {
+								const { id, token } = response.data;
+								if (response.data.hasOwnProperty('avatar')) {
+									setAuth({
+										token,
+										avatar: response.data.avatar,
+										userId: id,
+										role: 'user',
+										isAuthenticated: true,
+									});
+									navigateToRoleDefaultPage(pathname, 'user', id);
+								} else {
+									setAuth({
+										token,
+										avatar: '',
+										userId: id,
+										role: 'owner',
+										isAuthenticated: true,
+									});
+									navigateToRoleDefaultPage(pathname, 'owner', id);
+								}
 							} else {
-								setAuth({
-									...auth,
-									avatar: '',
-									userId: response.data.id,
-									role: 'owner',
-									isAuthenticated: true,
-								});
-								navigateToRoleDefaultPage(pathname, 'owner', response.data.id);
+								handleLogout();
+								throw new Error(response.data.message);
 							}
+						} else if (auth.token === localToken) {
+							setAuth({ ...auth, isAuthenticated: true });
+							navigateToRoleDefaultPage(pathname, auth.role, auth.userId);
 						} else {
 							handleLogout();
-							throw new Error(response.data.message);
 						}
-					} else if (auth.token === localToken) {
-						setAuth({ ...auth, isAuthenticated: true });
-						navigateToRoleDefaultPage(pathname, auth.role, auth.userId);
 					} else {
 						handleLogout();
 					}
-				} else {
-					handleLogout();
 				}
 			} catch (error) {
 				console.error(error);
@@ -61,7 +66,7 @@ function App() {
 	}, [pathname]);
 
 	function handleLogout() {
-		localStorage.removeItem('token');
+		localStorage.removeItem('isport');
 		setAuth({
 			token: '',
 			role: '',
@@ -91,7 +96,7 @@ function App() {
 			pathname === '/store/login' ||
 			pathname === '/store/signup'
 		) {
-			navigate(role === 'user' ? `/find` : `/store/${userId}`);
+			navigate(role === 'user' ? `/find` : `/store/${userId}/find`);
 		} else if (role !== 'user' && !pathname.includes('store')) {
 			navigate('/role');
 		} else if (role === 'user' && pathname.includes('store')) {
