@@ -6,6 +6,7 @@ import styles from '../styles.module.scss';
 import { EmailInput, PasswordInput } from '../../../components/FormInput';
 import { login } from '../../../api/auth';
 import { useAuth } from '../../../contexts/authContext';
+import { isAxiosError } from '../../../util/helpers.ts';
 
 export default function LoginPage() {
 	const [, setAuth] = useAuth();
@@ -28,12 +29,19 @@ export default function LoginPage() {
 				localStorage.setItem('token', token);
 				setAuth({ token, role, userId, avatar, isAuthenticated: true });
 				navigate('/find');
-			} else {
-				setError('email', { type: response.data.type, message: response.data.message });
-				throw new Error(response.data.message);
 			}
 		} catch (error) {
-			console.error(error);
+			if (isAxiosError(error)) {
+				const whichInputError = error.response?.data.message.includes('密碼')
+					? 'password'
+					: 'email';
+				setError(whichInputError, {
+					type: error.response?.data.status,
+					message: error.response?.data.message,
+				});
+			} else {
+				console.error(error);
+			}
 		}
 	}
 
