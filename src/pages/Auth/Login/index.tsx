@@ -4,7 +4,7 @@ import { BsGoogle, BsFacebook } from 'react-icons/bs';
 import Button from '../../../components/Button';
 import styles from '../styles.module.scss';
 import { EmailInput, PasswordInput } from '../../../components/FormInput';
-import { login } from '../../../api/userAuth';
+import { login } from '../../../api/auth';
 import { useAuth } from '../../../contexts/authContext';
 
 export default function LoginPage() {

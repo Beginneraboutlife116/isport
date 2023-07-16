@@ -1,10 +1,9 @@
-import axios from 'axios';
+import axios, { isAxiosError } from 'axios';
 
 const baseURL = 'http://i-sport-api-env-1.eba-yaqmmn4t.ap-northeast-2.elasticbeanstalk.com/api';
 
 const instance = axios.create({
 	baseURL,
-	validateStatus: (status) => status >= 200 && status < 501,
 });
 
 instance.interceptors.request.use(
@@ -21,3 +20,4 @@ instance.interceptors.request.use(
 const apiHelper = instance;
 
 export default apiHelper;
+export { isAxiosError };

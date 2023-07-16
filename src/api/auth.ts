@@ -5,9 +5,7 @@ type LoginType = {
 	password: string;
 };
 
-type SignupType = {
-	email: string;
-	password: string;
+type SignupType = LoginType & {
 	confirmPassword: string;
 };
 
@@ -19,4 +17,8 @@ function signup({ email, password, confirmPassword }: SignupType) {
 	return apiHelper.post('/users', { email, password, confirmPassword });
 }
 
-export { login, signup };
+function storeLogin({ email, password }: LoginType) {
+	return apiHelper.post('/owner/signin', { email, password });
+}
+
+export { login, signup, storeLogin };
