@@ -38,14 +38,12 @@ function App() {
 									isAuthenticated: true,
 								});
 							}
-							// navigate(`.${pathname}`);
 						} else {
 							handleLogout();
 							throw new Error(response.data.message);
 						}
 					} else if (auth.token === localToken) {
 						setAuth({ ...auth, isAuthenticated: true });
-						// navigate(`.${pathname}`);
 					} else {
 						handleLogout();
 					}
