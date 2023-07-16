@@ -62,9 +62,10 @@
   }
 
   &__item {
-    display: grid;
-    grid-auto-flow: column;
-    grid-gap: 0.5rem;
+    display: flex;
+    // grid-auto-flow: column;
+    // grid-gap: 0.5rem;
+    justify-content: space-between;
     padding: 1rem 0;
     border-bottom: 2px solid lightgray;
     align-items: center;
@@ -84,6 +85,12 @@
   &__store {
     @include button;
     color: blue;
+    width: 150px;
+  }
+
+  &__class {
+    width: 150px;
+    text-align: center
   }
 
   &__cancel {
@@ -91,6 +98,7 @@
     background-color: lightgray;
     padding: 5px;
     border-radius: 20px;
+    width: 50px;
 
     &:hover {
       background-color: gray;

@@ -18,14 +18,14 @@ export const fetchStoresData = async (authToken: string) => {
 };
 
 // 取得單一場館
-export const fetchStoreData = async (authToken: string, storeId: number) => {
+export const fetchOneStoreData = async (authToken: string, storeId: number) => {
 	try {
 		const response = await axios.get(`${baseUrl}/stores/${storeId}`, {
 			headers: {
 				Authorization: 'Bearer ' + authToken,
 			},
 		});
-
+		
 		return response.data;
 	} catch (error) {
 		console.error('[Get Store Data Failed]: ', error);
@@ -60,15 +60,58 @@ export const fetchCollectionData = async (authToken: string) => {
 				Authorization: 'Bearer ' + authToken,
 			},
 		});
-		console.log(response.data.message);
 		
 		return { res: response.data, noReservations: undefined };
 	} catch (error) {
 		console.error('[Get Reservations Data Failed]: ', error);
 		if((error as any).response.data.status === 'error') {
-			
 			const noReservations = (error as any).response.data.status;				
 			return { res: undefined, noReservations };
 		}
+	}
+};
+
+// 取得單一場館課程資料
+export const fetchStoreClasses = async (authToken: string, storeId: number) => {
+	try {
+		const response = await axios.get(`${baseUrl}/stores/${storeId}/classes`, {
+			headers: {
+				Authorization: 'Bearer ' + authToken,
+			},
+		});
+		
+		return response.data;
+	} catch (error) {
+		console.error('[Get Classes Data Failed]: ', error);
+	}
+};
+
+// 取得場館方案
+export const fetchStorePlan = async (authToken: string, storeId: number) => {
+	try {
+		const response = await axios.get(`${baseUrl}/stores/${storeId}/plans`, {
+			headers: {
+				Authorization: 'Bearer ' + authToken,
+			},
+		});
+		
+		return response.data;
+	} catch (error) {
+		console.error('[Get Plans Data Failed]: ', error);
+	}
+};
+
+// 取得場館評價
+export const fetchStoreReview = async (authToken: string, storeId: number) => {
+	try {
+		const response = await axios.get(`${baseUrl}/stores/${storeId}/reviews`, {
+			headers: {
+				Authorization: 'Bearer ' + authToken,
+			},
+		});
+		
+		return response.data;
+	} catch (error) {
+		console.error('[Get Plans Data Failed]: ', error);
 	}
 };

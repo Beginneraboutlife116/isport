@@ -40,9 +40,11 @@ const router = createBrowserRouter([
 					{ path: 'store/signup', element: <StoreSignupPage /> },
 				],
 			},
-			{ path: 'find', element: <Find />, children: [{ path: ':storeId', element: <Store /> }] },
+			{ path: 'find', element: <Find /> },
+			{ path: 'find/:id', element: <Store /> },
 			{ path: 'collection', element: <Collection /> },
 			{ path: 'reservation', element: <Reservation /> },
+
 			{
 				path: 'user/:id',
 				element: <UserInfoPage />,

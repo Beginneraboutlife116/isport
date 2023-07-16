@@ -6,7 +6,7 @@ import { fetchLikeStoresData } from '../../api/stores';
 import { useStoresData } from '../../contexts/findContext';
 
 function Collection() {
-	const { likeStores, setLikeStores, filteredLike, setFilteredLike } = useStoresData();
+	const { likeStores, setLikeStores, filteredLike, setFilteredLike, setOneStore } = useStoresData();
 	const [noLikeStores, setNoLikeStores] = useState('');
 	const [searchTerm, setSearchTerm] = useState('');
 
@@ -61,6 +61,7 @@ function Collection() {
 			}
 		};
 		fetchData();
+		setOneStore(false);
 	}, []);
 
 	return (

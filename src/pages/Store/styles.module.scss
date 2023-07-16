@@ -14,7 +14,6 @@
   &__status {
     margin-left: 3rem;
     min-width: 600px;
-    // border-bottom: 2px solid gray;
   }
 
   &__titleWrap {
@@ -34,9 +33,14 @@
   &__infoWrap {
     border-top: 2px solid gray;
     margin-top: 0.5rem;
-
     height: 600px;
     overflow-x: auto;
+  }
+
+  &__reviewWrap {
+    border-top: 2px solid gray;
+    margin-top: 0.5rem;
+    height: 600px;
   }
 
 }

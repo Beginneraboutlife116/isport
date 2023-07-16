@@ -1,38 +1,83 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Card from '../../components/Card';
 import styled from './styles.module.scss';
 import Course from '../../components/Course';
 import Plan from '../../components/Plan';
 import Review from '../../components/Review';
 import Booking from '../../components/Booking';
+import { fetchOneStoreData, fetchStoreClasses } from '../../api/stores';
+import { useStoresData } from '../../contexts/findContext';
 
-const data = {
-	id: 1,
-	storeName: 'xx運動館',
-	photo: '0',
-	address: '住址',
-	rating: 9.8,
-	reviewCounts: '1,000',
-	introduction:
-		'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Vel unde quidem mollitia! Quidem totam esse alias? Non officiis sit asperiores distinctio eaque veritatis doloribus consectetur. Voluptates ex modi architecto mollitia!',
-	isLiked: false,
+type StoreData = {
+	id: number;
+	email: string;
+	address: string;
+	introduction: string;
+	phone: string;
+	photo: string;
+	rating: number;
+	reviewCounts: number;
+	storeName: string;
+	isLiked: boolean;
 };
 
 function Store() {
+	const { setOneStore } = useStoresData();
 	const [status, setStatus] = useState<string>('course');
+	const [oneStoreData, setOneStoreData] = useState<StoreData | undefined>();
+	const [storeClass, setStoreClass] = useState<any[]>([]);
+	const mergedData = storeClass.reduce((acc, item) => {
+		const { date } = item;
+		if (!acc[date]) {
+			acc[date] = [item];
+		} else {
+			acc[date].push(item);
+		}
+		return acc;
+	}, {});
 
 	function handleStatus(text: string) {
 		setStatus(text);
 	}
 
+	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				const authToken =
+					'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJ1c2VyMkBleGFtcGxlLmNvbSIsImF2YXRhciI6Imh0dHBzOi8vaW1ndXIuY29tLzVPTDV3SnQucG5nIiwibmlja25hbWUiOiJ1c2VyMiIsInJvbGUiOiJ1c2VyIiwic3RvcmVOYW1lIjpudWxsLCJjcmVhdGVkQXQiOiIyMDIzLTA3LTEwVDE3OjEyOjMwLjAwMFoiLCJ1cGRhdGVkQXQiOiIyMDIzLTA3LTEwVDE3OjEyOjMwLjAwMFoiLCJpYXQiOjE2ODkyMzYwNTMsImV4cCI6MTY5MTgyODA1M30.ScuJmJpzQoO-95_VM_I7W-VUBnkaXXuWRjE2DsvzvkQ';
+
+				// 取得單一場館資料
+				const oneStoreId = localStorage.getItem('oneStoreId');
+				const storeIdNumber = Number(oneStoreId);
+				const oneStoreData = await fetchOneStoreData(authToken, storeIdNumber);
+				setOneStoreData(oneStoreData);
+
+				// 取得場館課程資料
+				const classes = await fetchStoreClasses(authToken, storeIdNumber);
+				setStoreClass(classes);
+			} catch (error) {
+				console.log(error);
+			}
+		};
+		fetchData();
+		setOneStore(true);
+	}, []);
+
 	return (
 		<div className={styled.container}>
 			<div className={styled.container__wrap}>
 				<Card
-					storeName={data.storeName}
-					rating={data.rating}
-					reviewCounts={data.reviewCounts}
-					introduction={data.introduction}
+					key={oneStoreData?.id}
+					id={oneStoreData ? oneStoreData.id : 0}
+					storeName={oneStoreData ? oneStoreData?.storeName : ''}
+					rating={oneStoreData ? oneStoreData.rating : 0}
+					reviewCounts={oneStoreData ? oneStoreData.reviewCounts : 0}
+					introduction={oneStoreData ? oneStoreData.introduction : ''}
+					photo={oneStoreData ? oneStoreData.photo : ''}
+					isLiked={oneStoreData ? oneStoreData.isLiked : false}
+					address={oneStoreData ? oneStoreData.address : ''}
+					email={oneStoreData ? oneStoreData.email : ''}
+					phone={oneStoreData ? oneStoreData.phone : ''}
 				/>
 
 				{/* status */}
@@ -66,15 +111,17 @@ function Store() {
 					)}
 
 					{/* status component */}
-					<div className={styled.container__infoWrap}>
-						{status === 'course' && <Course setStatus={setStatus} />}
+					{status === 'review' ? (
+						<div className={styled.container__reviewWrap}>{status === 'review' && <Review />}</div>
+					) : (
+						<div className={styled.container__infoWrap}>
+							{status === 'course' && <Course setStatus={setStatus} data={mergedData} />}
 
-						{status === 'plan' && <Plan />}
+							{status === 'plan' && <Plan />}
 
-						{status === 'review' && <Review />}
-
-						{status === 'booking' && <Booking />}
-					</div>
+							{status === 'booking' && <Booking />}
+						</div>
+					)}
 				</div>
 			</div>
 		</div>

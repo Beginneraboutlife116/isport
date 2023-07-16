@@ -1,48 +1,93 @@
 import styled from './styles.module.scss';
 
-type setStatus = React.Dispatch<React.SetStateAction<string>>;
-
-type propType = {
-	setStatus: setStatus;
+type InfoProps = {
+	setStatus: React.Dispatch<React.SetStateAction<string>>;
+	id: number;
+	className: string;
+	startTime: string;
+	endTime: string;
+	isClosed: boolean;
+	isReserved: boolean;
+	weekDay?: string;
 };
 
-function CourseInfo({ setStatus }: propType) {
+type DateProps = {
+	date: string;
+	weekDay?: string;
+};
+
+type CourseProps = {
+	setStatus: React.Dispatch<React.SetStateAction<string>>;
+	data: Record<string, InfoProps[]>;
+};
+
+function CourseInfo({
+	setStatus,
+	className,
+	startTime,
+	endTime,
+	isClosed,
+	isReserved,
+	id,
+}: InfoProps) {
 	function handleBooking() {
 		setStatus('booking');
 	}
 
 	return (
-		<div className={styled.container__infoWrap}>
+		<div className={styled.container__infoWrap} key={id}>
 			<div className={styled['container__infoWrap--title']}>
-				<span className={styled['container__infoWrap--text']}>課程名稱</span>
-				<span>15:00 - 16:00</span>
+				<span className={styled['container__infoWrap--text']}>{className}</span>
+				<span>{`${startTime} ~ ${endTime}`}</span>
 
 				{/* 根據狀態顯示或不顯示 */}
-				<div className={styled['container__infoWrap--deadLine']}>已截止</div>
+				{!isClosed ? '' : <div className={styled['container__infoWrap--deadLine']}>已截止</div>}
 			</div>
 
 			<div>
 				{/* 根據狀態顯示不同樣式 */}
-				<button className={styled['container__infoWrap--button']} onClick={handleBooking}>
-					預約
-				</button>
+				{!isReserved ? (
+					<button className={styled['container__infoWrap--button']} onClick={handleBooking}>
+						預約
+					</button>
+				) : (
+					<button className={styled['container__infoWrap--redButton']}>已預約</button>
+				)}
 			</div>
 		</div>
 	);
 }
 
-function Course({ setStatus }: propType) {
+function Date({ date, weekDay }: DateProps) {
+	return (
+		<div className={styled.container__date}>
+			<span>
+				{date}({weekDay})
+			</span>
+		</div>
+	);
+}
+
+function Course({ setStatus, data }: CourseProps) {
 	return (
 		<div className={styled.container}>
-			<div>
-				<div className={styled.container__date}>
-					<span>6/25 (日)</span>
+			{Object.entries(data).map(([date, data]) => (
+				<div key={date}>
+					<Date date={date} weekDay={data[0].weekDay} />
+					{data.map((item) => (
+						<CourseInfo
+							setStatus={setStatus}
+							key={item.id}
+							className={item.className}
+							startTime={item.startTime}
+							endTime={item.endTime}
+							isClosed={item.isClosed}
+							isReserved={item.isReserved}
+							id={item.id}
+						/>
+					))}
 				</div>
-
-				<CourseInfo setStatus={setStatus} />
-				<CourseInfo setStatus={setStatus} />
-				<CourseInfo setStatus={setStatus} />
-			</div>
+			))}
 		</div>
 	);
 }

@@ -1,19 +1,8 @@
+import { fetchCancelStore } from '../../api/cancel';
 import { fetchCollectionData } from '../../api/stores';
 import styled from './styles.module.scss';
-import { useEffect, useState } from 'react';
-
-// data: [
-// 	{
-// 	id,
-// 	class: {
-// 		date,
-// 		startTime,
-// 		endTime,
-// 		storeName,
-// 		storeId,
-// 		className
-// 	}
-// 	},
+import { useEffect, useState, MouseEvent } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 type ItemProps = {
 	date: string;
@@ -21,30 +10,40 @@ type ItemProps = {
 	endTime: string;
 	storeName: string;
 	storeId: number;
+	reservationId: number;
 	className: string;
+	weekDay: string;
+	data: any[];
+	setData: React.Dispatch<React.SetStateAction<any[]>>;
 };
 
-type ReservationData = {
-	id: number;
-	class: {
-		date: string;
-		startTime: string;
-		endTime: string;
-		storeName: string;
-		storeId: number;
-		className: string;
-	};
-};
-
-function Item({ date, startTime, endTime, storeName, storeId, className }: ItemProps) {
+function Item({
+	date,
+	startTime,
+	endTime,
+	storeName,
+	storeId,
+	reservationId,
+	className,
+	weekDay,
+	data,
+	setData,
+}: ItemProps) {
 	const [showModal, setShowModal] = useState(false);
+	const navigate = useNavigate();
 
 	function handleCancel() {
 		setShowModal(true);
 	}
 
-	function handleConfirm() {
-		// 按下確認鍵後撰寫 filter 邏輯
+	async function handleConfirm() {
+		const filterClass = data.filter((item) => item.reservationId !== reservationId);
+		setData(filterClass);
+		const authToken =
+			'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJ1c2VyMkBleGFtcGxlLmNvbSIsImF2YXRhciI6Imh0dHBzOi8vaW1ndXIuY29tLzVPTDV3SnQucG5nIiwibmlja25hbWUiOiJ1c2VyMiIsInJvbGUiOiJ1c2VyIiwic3RvcmVOYW1lIjpudWxsLCJjcmVhdGVkQXQiOiIyMDIzLTA3LTEwVDE3OjEyOjMwLjAwMFoiLCJ1cGRhdGVkQXQiOiIyMDIzLTA3LTEwVDE3OjEyOjMwLjAwMFoiLCJpYXQiOjE2ODkyMzYwNTMsImV4cCI6MTY5MTgyODA1M30.ScuJmJpzQoO-95_VM_I7W-VUBnkaXXuWRjE2DsvzvkQ';
+
+		// 取消預約課程
+		await fetchCancelStore(authToken, reservationId);
 		setShowModal(false);
 	}
 
@@ -52,14 +51,24 @@ function Item({ date, startTime, endTime, storeName, storeId, className }: ItemP
 		setShowModal(false);
 	}
 
+	// 點擊單一場館跳轉頁面
+	const handleStoreClick = (e: MouseEvent<HTMLButtonElement>) => {
+		e.preventDefault();
+		const storeId = localStorage.getItem('oneStoreId');
+		const id = Number(storeId);
+		navigate(`/find/${id}`);
+	};
 	return (
-		<div className={styled.container__item} id={storeId}>
-			<span>{date}</span>
+		<div className={styled.container__item} key={storeId}>
+			<span>{`${date} (${weekDay})`}</span>
 			<span>
 				{startTime} ~ {endTime}
 			</span>
-			<button className={styled.container__store}>{storeName}</button>
-			<span>{className}</span>
+			{/* 點擊跳轉到特定場館頁面 */}
+			<button className={styled.container__store} onClick={handleStoreClick}>
+				{storeName}
+			</button>
+			<span className={styled.container__class}>{className}</span>
 			<button className={styled.container__cancel} onClick={handleCancel}>
 				取消
 			</button>
@@ -81,7 +90,7 @@ function Item({ date, startTime, endTime, storeName, storeId, className }: ItemP
 }
 
 function ReservationList() {
-	const [data, setData] = useState([]);
+	const [data, setData] = useState<any[]>([]);
 	const [dataLength, setDataLength] = useState(0);
 	const [noClasses, setNoClasses] = useState('');
 
@@ -102,6 +111,7 @@ function ReservationList() {
 							setDataLength(res.length);
 						}
 						setData(res);
+
 						setNoClasses(noReservations);
 					}
 				}
@@ -129,8 +139,21 @@ function ReservationList() {
 					{noClasses === 'error' ? (
 						<div className={styled.container__noBooking}>目前無預約課程!!</div>
 					) : (
-						// {data.map}
-						<Item />
+						data.map((item) => (
+							<Item
+								key={item.reservationId}
+								storeId={item.storeId}
+								reservationId={item.reservationId}
+								date={item.date}
+								startTime={item.startTime}
+								endTime={item.endTime}
+								storeName={item.storeName}
+								weekDay={item.weekDay}
+								className={item.className}
+								data={data}
+								setData={setData}
+							/>
+						))
 					)}
 				</div>
 			</div>

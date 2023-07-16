@@ -6,7 +6,7 @@ import { fetchStoresData } from '../../api/stores';
 import { useStoresData } from '../../contexts/findContext';
 
 function Find() {
-	const { storesData, setStoresData, filteredData, setFilteredData } = useStoresData();
+	const { storesData, setStoresData, filteredData, setFilteredData, setOneStore } = useStoresData();
 	const [isLoading, setIsLoading] = useState(true);
 	const [searchTerm, setSearchTerm] = useState('');
 
@@ -55,6 +55,7 @@ function Find() {
 			}
 		};
 		fetchData();
+		setOneStore(false);
 	}, []);
 
 	return (

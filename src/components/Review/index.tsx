@@ -1,35 +1,40 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from './styles.module.scss';
+import { fetchStoreReview } from '../../api/stores';
 
-function ReviewItem() {
+type ItemProps = {
+	id?: number;
+	avatar: string;
+	content: string;
+	createdAt: string;
+	nickname: string;
+	rating: number;
+};
+
+function ReviewItem({ avatar, content, createdAt, nickname, rating }: ItemProps) {
 	return (
 		<div className={styled.container__reviewWrap}>
 			{/* info */}
 			<div className={styled.container__infoWrap}>
 				<div className={styled.container__info}>
 					<div>
-						<img src='' alt='' />
-						大頭照
+						<img src={avatar} alt='avatar' className={styled['container__info--avatar']} />
 					</div>
 
 					<div className={styled.container__name}>
-						<span>暱稱</span>
-						<span>2023-06-25</span>
+						<span>{nickname}</span>
+						<span>{createdAt}</span>
 					</div>
 				</div>
 
 				<div className={styled.container__rating}>
-					<span>9.8</span>
+					<span>{rating}</span>
 				</div>
 			</div>
 
 			{/* text */}
 			<div className={styled.container__textWrap}>
-				<span className={styled['container__textWrap--text']}>
-					評論內容 : Lorem ipsum dolor sit, amet consectetur adipisicing elit. Earum consequatur
-					aperiam ullam laborum ab natus, minus sapiente quibusdam sit distinctio doloremque dolorem
-					eius est cupiditate sequi odio alias in officia.
-				</span>
+				<span className={styled['container__textWrap--text']}>評論內容 : {content}</span>
 			</div>
 		</div>
 	);
@@ -38,6 +43,7 @@ function ReviewItem() {
 function Review() {
 	const [hoverRating, setHoverRating] = useState(0);
 	const [selectedRating, setSelectedRating] = useState(0);
+	const [reviews, setReviews] = useState<ItemProps[]>([]);
 
 	const handleMouseEnter = (rating: number) => {
 		setHoverRating(rating);
@@ -51,13 +57,37 @@ function Review() {
 		setSelectedRating(rating);
 	};
 
+	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				const authToken =
+					'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJ1c2VyMkBleGFtcGxlLmNvbSIsImF2YXRhciI6Imh0dHBzOi8vaW1ndXIuY29tLzVPTDV3SnQucG5nIiwibmlja25hbWUiOiJ1c2VyMiIsInJvbGUiOiJ1c2VyIiwic3RvcmVOYW1lIjpudWxsLCJjcmVhdGVkQXQiOiIyMDIzLTA3LTEwVDE3OjEyOjMwLjAwMFoiLCJ1cGRhdGVkQXQiOiIyMDIzLTA3LTEwVDE3OjEyOjMwLjAwMFoiLCJpYXQiOjE2ODkyMzYwNTMsImV4cCI6MTY5MTgyODA1M30.ScuJmJpzQoO-95_VM_I7W-VUBnkaXXuWRjE2DsvzvkQ';
+
+				// 取得場館館方案
+				const oneStoreId = localStorage.getItem('oneStoreId');
+				const storeIdNumber = Number(oneStoreId);
+				const storeReview = await fetchStoreReview(authToken, storeIdNumber);
+				setReviews(storeReview);
+			} catch (error) {
+				console.log(error);
+			}
+		};
+		fetchData();
+	}, []);
+
 	return (
 		<div className={styled.container}>
 			{/* Reviews */}
-			<ReviewItem />
-			<ReviewItem />
-			<ReviewItem />
-			<ReviewItem />
+			{reviews.map((item) => (
+				<ReviewItem
+					key={item.id}
+					avatar={item.avatar}
+					content={item.content}
+					createdAt={item.createdAt}
+					nickname={item.nickname}
+					rating={item.rating}
+				/>
+			))}
 
 			{/* send review */}
 			<div className={styled.container__replyWrap}>
