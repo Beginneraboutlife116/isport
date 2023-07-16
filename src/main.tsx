@@ -18,6 +18,7 @@ import Store from './pages/Store/index.tsx';
 import { UserInfoPage, MyAccountPage, MyPlanPage } from './pages/UserInfo/index.tsx';
 import StoreAccount from './pages/StoreAccount/index.tsx';
 import StoreFindPage from './pages/StoreFind/index.tsx';
+import { AuthProvider } from './contexts/authContext.tsx';
 
 const router = createBrowserRouter([
 	{
@@ -66,6 +67,8 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
 	<React.StrictMode>
-		<RouterProvider router={router} />
+		<AuthProvider>
+			<RouterProvider router={router} />
+		</AuthProvider>
 	</React.StrictMode>,
 );

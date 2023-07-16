@@ -23,7 +23,7 @@
 		grid-gap: 1rem;
 		grid-auto-flow: column;
 		margin-inline-end: auto;
-		
+
 		&__link {
 			font-weight: bold;
 			opacity: 0.75;
@@ -34,6 +34,12 @@
 				opacity: 1;
 			}
 		}
+	}
+
+	&__avatar {
+		width: 2rem;
+		aspect-ratio: 1;
+		border-radius: 50%;
 	}
 
 	&__btn {
