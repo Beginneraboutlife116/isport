@@ -8,7 +8,7 @@ import { login } from '../../../api/userAuth';
 import { useAuth } from '../../../contexts/authContext';
 
 export default function LoginPage() {
-	const { setToken, setRole, setUserId, setAvatar } = useAuth();
+	const [, setAuth] = useAuth();
 	const navigate = useNavigate();
 	const {
 		handleSubmit,
@@ -26,10 +26,7 @@ export default function LoginPage() {
 			if (response.status === 200) {
 				const { token, avatar, role, userId } = response.data;
 				localStorage.setItem('token', token);
-				setToken(token);
-				setRole(role);
-				setUserId(userId);
-				setAvatar(avatar);
+				setAuth({ token, role, userId, avatar, isAuthenticated: true });
 				navigate('/find');
 			} else {
 				setError('email', { type: response.data.type, message: response.data.message });

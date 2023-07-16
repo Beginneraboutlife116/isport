@@ -22,11 +22,7 @@ import { AuthProvider } from './contexts/authContext.tsx';
 const router = createBrowserRouter([
 	{
 		path: '/',
-		element: (
-			<AuthProvider>
-				<App />
-			</AuthProvider>
-		),
+		element: <App />,
 		children: [
 			{
 				path: '',
@@ -65,6 +61,8 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
 	<React.StrictMode>
-		<RouterProvider router={router} />
+		<AuthProvider>
+			<RouterProvider router={router} />
+		</AuthProvider>
 	</React.StrictMode>,
 );

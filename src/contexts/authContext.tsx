@@ -1,30 +1,27 @@
 import { ReactNode, SetStateAction, createContext, useContext, useState, Dispatch } from 'react';
 
-type AuthContextProps = {
+type AuthType = {
 	token: string;
-	setToken: Dispatch<SetStateAction<string>>;
 	role: string;
-	setRole: Dispatch<SetStateAction<string>>;
-	userId: number;
-	setUserId: Dispatch<SetStateAction<number>>;
+	userId: 0;
 	avatar: string;
-	setAvatar: Dispatch<SetStateAction<string>>;
+	isAuthenticated: boolean;
 };
+
+type AuthContextProps = [AuthType, Dispatch<SetStateAction<AuthType>>];
 
 const AuthContext = createContext<AuthContextProps | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-	const [token, setToken] = useState('');
-	const [role, setRole] = useState('');
-	const [userId, setUserId] = useState(0);
-	const [avatar, setAvatar] = useState('');
-	return (
-		<AuthContext.Provider
-			value={{ token, setToken, role, setRole, userId, setUserId, avatar, setAvatar }}
-		>
-			{children}
-		</AuthContext.Provider>
-	);
+	const [auth, setAuth] = useState<AuthType>({
+		token: '',
+		role: '',
+		userId: 0,
+		avatar: '',
+		isAuthenticated: false,
+	});
+
+	return <AuthContext.Provider value={[auth, setAuth]}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {
