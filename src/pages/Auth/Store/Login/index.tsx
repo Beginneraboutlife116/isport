@@ -25,7 +25,7 @@ export default function StoreLoginPage() {
 			const response = await storeLogin({ email, password });
 			if (response.status === 200) {
 				const { token, userId, role } = response.data;
-				localStorage.setItem('token', token);
+				localStorage.setItem('isport', JSON.stringify({ token, role }));
 				setAuth({ token, userId, role, isAuthenticated: true, avatar: '' });
 				navigate(`/store/${userId}/find`);
 			}

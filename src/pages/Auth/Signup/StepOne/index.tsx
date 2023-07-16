@@ -28,7 +28,7 @@ export default function SignupStepOnePage() {
 			const response = await signup({ email, password, confirmPassword });
 			if (response.status === 200) {
 				const { token, userId, role } = response.data;
-				localStorage.setItem('token', token);
+				localStorage.setItem('isport', JSON.stringify({ token, role }));
 				setAuth({ token, role, userId, isAuthenticated: true, avatar: '' });
 				navigate(`/signup/${userId}`);
 			}
