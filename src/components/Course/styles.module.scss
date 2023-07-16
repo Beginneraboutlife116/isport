@@ -1,3 +1,10 @@
+%button {
+  outline: none;
+  padding: 5px 1.5rem;
+  border-radius: 20px;
+  color: white;
+}
+
 .container {
   width: 100%;
 
@@ -29,16 +36,20 @@
     }
 
     &--button {
-      outline: none;
+      @extend %button;
+
       border: 2px solid rgb(110, 110, 239);
-      background-color: lightblue;
-      color: white;
-      padding: 5px 1.5rem;
-      border-radius: 20px;
+      background-color: lightblue;   
 
       &:hover {
         background-color: rgb(23, 180, 233);
       }
+    }
+
+    &--redButton {
+      @extend %button;
+      border: 2px solid lightgray;
+      background-color: lightcoral;
     }
 
     &--deadLine {
@@ -47,6 +58,7 @@
       background-color: rgb(201, 197, 197);
       text-align: center;
       color: white;
+      width: 80px;
     }
   }
 }

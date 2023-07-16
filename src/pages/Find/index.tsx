@@ -6,7 +6,7 @@ import { fetchStoresData } from '../../api/stores';
 import { useStoresData } from '../../contexts/findContext';
 
 function Find() {
-	const { storesData, setStoresData, filteredData, setFilteredData } = useStoresData();
+	const { storesData, setStoresData, filteredData, setFilteredData, setOneStore } = useStoresData();
 	const [isLoading, setIsLoading] = useState(true);
 	const [searchTerm, setSearchTerm] = useState('');
 
@@ -42,11 +42,15 @@ function Find() {
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const authToken =
-					'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJ1c2VyMkBleGFtcGxlLmNvbSIsImF2YXRhciI6Imh0dHBzOi8vaW1ndXIuY29tLzVPTDV3SnQucG5nIiwibmlja25hbWUiOiJ1c2VyMiIsInJvbGUiOiJ1c2VyIiwic3RvcmVOYW1lIjpudWxsLCJjcmVhdGVkQXQiOiIyMDIzLTA3LTEwVDE3OjEyOjMwLjAwMFoiLCJ1cGRhdGVkQXQiOiIyMDIzLTA3LTEwVDE3OjEyOjMwLjAwMFoiLCJpYXQiOjE2ODkyMzYwNTMsImV4cCI6MTY5MTgyODA1M30.ScuJmJpzQoO-95_VM_I7W-VUBnkaXXuWRjE2DsvzvkQ';
+				const storedData = localStorage.getItem('isport');
+				let dataObject: { token?: string } = {};
+				if (storedData) {
+					dataObject = JSON.parse(storedData);
+				}
+				const authToken = dataObject.token;
 
 				// 取得所有場館
-				const res = await fetchStoresData(authToken);
+				const res = await fetchStoresData(authToken || '');
 
 				setStoresData(res);
 				setIsLoading(false);
@@ -55,6 +59,7 @@ function Find() {
 			}
 		};
 		fetchData();
+		setOneStore(false);
 	}, []);
 
 	return (

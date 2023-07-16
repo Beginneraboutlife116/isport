@@ -2,10 +2,11 @@ import { BiSolidMap } from 'react-icons/bi';
 import { BsHeart, BsHeartFill } from 'react-icons/bs';
 import { BsFillTelephoneFill } from 'react-icons/bs';
 import { MdEmail } from 'react-icons/md';
-import { useState } from 'react';
-
+import { useState, MouseEvent } from 'react';
 import styled from './styles.module.scss';
 import { addLikeStore, deleteLikeStore } from '../../api/like';
+import { useNavigate } from 'react-router-dom';
+import { useStoresData } from '../../contexts/findContext';
 
 type CardProps = {
 	id: number;
@@ -14,14 +15,27 @@ type CardProps = {
 	reviewCounts: number;
 	introduction: string;
 	photo: string;
-	isLiked: boolean;
+	isLiked?: boolean;
+	address?: string;
+	email?: string;
+	phone?: string;
 };
 
-function Card({ id, storeName, rating, reviewCounts, introduction, photo, isLiked }: CardProps) {
+function Card({
+	id,
+	storeName,
+	rating,
+	reviewCounts,
+	introduction,
+	photo,
+	isLiked,
+	address,
+	email,
+	phone,
+}: CardProps) {
+	const { oneStore } = useStoresData();
 	const [isStoreLiked, setIsStoreLiked] = useState(isLiked);
-
-	const [store, setStore] = useState(true);
-	setStore; //為了不報錯暫時放置
+	const navigate = useNavigate();
 
 	// 新增或取消收藏場館
 	const handleToggleLike = async (storeId: number) => {
@@ -41,17 +55,30 @@ function Card({ id, storeName, rating, reviewCounts, introduction, photo, isLike
 			console.log(error);
 		}
 	};
+
+	// 點擊單一場館跳轉頁面
+	const handleCardClick = (e: MouseEvent<HTMLDivElement>) => {
+		e.preventDefault();
+		navigate(`/find/${id}`);
+		localStorage.setItem('oneStoreId', String(id));
+	};
+
 	return (
-		<div className={styled.card} id={id.toString()}>
+		<div className={styled.card} key={id}>
 			<div className={styled.card__imgWrap}>
-				<img src={photo} alt={storeName} className={styled['card__imgWrap--img']} />
+				<img
+					src={photo}
+					alt={storeName}
+					className={styled['card__imgWrap--img']}
+					onClick={handleCardClick}
+				/>
 			</div>
 
 			{/* info */}
 			<div className={styled.card__infoWrap}>
 				{/* store true or false render */}
-				{store ? (
-					// user page version
+				{!oneStore ? (
+					// stores version
 					<>
 						<span className={styled['card__infoWrap--title']}>{storeName}</span>
 
@@ -84,18 +111,27 @@ function Card({ id, storeName, rating, reviewCounts, introduction, photo, isLike
 						<div className={styled['card__infoWrap--text']}>{introduction}</div>
 					</>
 				) : (
-					// store page version
+					// one store version
 					<div className={styled.card__storeInfoWrap}>
 						{/* store-name */}
 						<div className={styled['card__storeInfoWrap--title']}>
 							<span>{storeName}</span>
-							<BsHeart style={{ fontSize: '24px' }} />
+							{/* 愛心收藏圖案功能 */}
+							<div onClick={() => handleToggleLike(id)}>
+								{!isStoreLiked ? (
+									<BsHeart style={{ fontSize: '24px' }} />
+								) : (
+									<BsHeartFill style={{ fontSize: '24px', color: 'red' }} />
+								)}
+							</div>
+
+							{/* 這裡可以加入商家的鉛筆圖案編輯功能 */}
 						</div>
 
 						{/* address */}
 						<div className={styled['card__storeInfoWrap--address']}>
 							<BiSolidMap className={styled['card__storeInfoWrap--addressIcon']} />
-							<span>542南投縣草屯鎮虎山路819號2F</span>
+							<span>{address}</span>
 						</div>
 
 						{/* review */}
@@ -109,13 +145,13 @@ function Card({ id, storeName, rating, reviewCounts, introduction, photo, isLike
 						{/* phone */}
 						<div className={styled['card__storeInfoWrap--phone']}>
 							<BsFillTelephoneFill className={styled['card__storeInfoWrap--phoneIcon']} />
-							<span>02-1122-3344</span>
+							<span>{phone}</span>
 						</div>
 
 						{/* email */}
 						<div className={styled['card__storeInfoWrap--email']}>
 							<MdEmail className={styled['card__storeInfoWrap--emailIcon']} />
-							<span>gym@example.com</span>
+							<span>{email}</span>
 						</div>
 					</div>
 				)}
