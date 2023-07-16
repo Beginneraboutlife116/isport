@@ -39,7 +39,12 @@ function Item({
 	async function handleConfirm() {
 		const filterClass = data.filter((item) => item.reservationId !== reservationId);
 		setData(filterClass);
-		const authToken = localStorage.getItem('token');
+		const storedData = localStorage.getItem('isport');
+		let dataObject: { token?: string } = {};
+		if (storedData) {
+			dataObject = JSON.parse(storedData);
+		}
+		const authToken = dataObject.token;
 
 		// 取消預約課程
 		await fetchCancelStore(authToken || '', reservationId);
@@ -96,7 +101,12 @@ function ReservationList() {
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const authToken = localStorage.getItem('token');
+				const storedData = localStorage.getItem('isport');
+				let dataObject: { token?: string } = {};
+				if (storedData) {
+					dataObject = JSON.parse(storedData);
+				}
+				const authToken = dataObject.token;
 
 				// 取得使用者預約課程
 				const result = await fetchCollectionData(authToken || '');

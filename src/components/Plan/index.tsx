@@ -14,7 +14,12 @@ function Plan() {
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const authToken = localStorage.getItem('token');
+				const storedData = localStorage.getItem('isport');
+				let dataObject: { token?: string } = {};
+				if (storedData) {
+					dataObject = JSON.parse(storedData);
+				}
+				const authToken = dataObject.token;
 
 				// 取得場館館方案
 				const oneStoreId = localStorage.getItem('oneStoreId');

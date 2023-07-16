@@ -42,7 +42,12 @@ function Collection() {
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const authToken = localStorage.getItem('token');
+				const storedData = localStorage.getItem('isport');
+				let dataObject: { token?: string } = {};
+				if (storedData) {
+					dataObject = JSON.parse(storedData);
+				}
+				const authToken = dataObject.token;
 				// 取得收藏場館
 				const result = await fetchLikeStoresData(authToken || '');
 

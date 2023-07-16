@@ -71,7 +71,12 @@ function Review() {
 	const [comment, setComment] = useState('');
 	const oneStoreId = localStorage.getItem('oneStoreId');
 	const storeIdNumber = Number(oneStoreId);
-	const authToken = localStorage.getItem('token');
+	const storedData = localStorage.getItem('isport');
+	let dataObject: { token?: string } = {};
+	if (storedData) {
+		dataObject = JSON.parse(storedData);
+	}
+	const authToken = dataObject.token;
 
 	const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
 		const inputValue = e.target.value;
