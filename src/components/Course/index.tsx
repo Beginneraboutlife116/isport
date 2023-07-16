@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import styled from './styles.module.scss';
 
 type InfoProps = {
@@ -14,6 +15,7 @@ type InfoProps = {
 type DateProps = {
 	date: string;
 	weekDay?: string;
+	handleToggleExpand: () => void;
 };
 
 type CourseProps = {
@@ -58,9 +60,9 @@ function CourseInfo({
 	);
 }
 
-function Date({ date, weekDay }: DateProps) {
+function Date({ date, weekDay, handleToggleExpand }: DateProps) {
 	return (
-		<div className={styled.container__date}>
+		<div className={styled.container__date} onClick={handleToggleExpand}>
 			<span>
 				{date}({weekDay})
 			</span>
@@ -69,23 +71,39 @@ function Date({ date, weekDay }: DateProps) {
 }
 
 function Course({ setStatus, data }: CourseProps) {
+	const [expandedIndexes, setExpandedIndexes] = useState<number[]>([]);
+
+	const handleToggleExpand = (index: number) => {
+		const isExpanded = expandedIndexes.includes(index);
+		if (isExpanded) {
+			setExpandedIndexes(expandedIndexes.filter((i) => i !== index));
+		} else {
+			setExpandedIndexes([...expandedIndexes, index]);
+		}
+	};
+
 	return (
 		<div className={styled.container}>
-			{Object.entries(data).map(([date, data]) => (
+			{Object.entries(data).map(([date, data], index) => (
 				<div key={date}>
-					<Date date={date} weekDay={data[0].weekDay} />
-					{data.map((item) => (
-						<CourseInfo
-							setStatus={setStatus}
-							key={item.id}
-							className={item.className}
-							startTime={item.startTime}
-							endTime={item.endTime}
-							isClosed={item.isClosed}
-							isReserved={item.isReserved}
-							id={item.id}
-						/>
-					))}
+					<Date
+						date={date}
+						weekDay={data[0].weekDay}
+						handleToggleExpand={() => handleToggleExpand(index)}
+					/>
+					{!expandedIndexes.includes(index) &&
+						data.map((item) => (
+							<CourseInfo
+								setStatus={setStatus}
+								key={item.id}
+								className={item.className}
+								startTime={item.startTime}
+								endTime={item.endTime}
+								isClosed={item.isClosed}
+								isReserved={item.isReserved}
+								id={item.id}
+							/>
+						))}
 				</div>
 			))}
 		</div>

@@ -43,17 +43,16 @@ function Store() {
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const authToken =
-					'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJ1c2VyMkBleGFtcGxlLmNvbSIsImF2YXRhciI6Imh0dHBzOi8vaW1ndXIuY29tLzVPTDV3SnQucG5nIiwibmlja25hbWUiOiJ1c2VyMiIsInJvbGUiOiJ1c2VyIiwic3RvcmVOYW1lIjpudWxsLCJjcmVhdGVkQXQiOiIyMDIzLTA3LTEwVDE3OjEyOjMwLjAwMFoiLCJ1cGRhdGVkQXQiOiIyMDIzLTA3LTEwVDE3OjEyOjMwLjAwMFoiLCJpYXQiOjE2ODkyMzYwNTMsImV4cCI6MTY5MTgyODA1M30.ScuJmJpzQoO-95_VM_I7W-VUBnkaXXuWRjE2DsvzvkQ';
+				const authToken = localStorage.getItem('token');
 
 				// 取得單一場館資料
 				const oneStoreId = localStorage.getItem('oneStoreId');
 				const storeIdNumber = Number(oneStoreId);
-				const oneStoreData = await fetchOneStoreData(authToken, storeIdNumber);
+				const oneStoreData = await fetchOneStoreData(authToken || '', storeIdNumber);
 				setOneStoreData(oneStoreData);
 
 				// 取得場館課程資料
-				const classes = await fetchStoreClasses(authToken, storeIdNumber);
+				const classes = await fetchStoreClasses(authToken || '', storeIdNumber);
 				setStoreClass(classes);
 			} catch (error) {
 				console.log(error);
@@ -112,7 +111,9 @@ function Store() {
 
 					{/* status component */}
 					{status === 'review' ? (
-						<div className={styled.container__reviewWrap}>{status === 'review' && <Review />}</div>
+						<div className={styled.container__reviewWrap}>
+							<Review />
+						</div>
 					) : (
 						<div className={styled.container__infoWrap}>
 							{status === 'course' && <Course setStatus={setStatus} data={mergedData} />}

@@ -78,7 +78,7 @@ function Card({
 			<div className={styled.card__infoWrap}>
 				{/* store true or false render */}
 				{!oneStore ? (
-					// user page version
+					// stores version
 					<>
 						<span className={styled['card__infoWrap--title']}>{storeName}</span>
 
@@ -111,7 +111,7 @@ function Card({
 						<div className={styled['card__infoWrap--text']}>{introduction}</div>
 					</>
 				) : (
-					// one store page version
+					// one store version
 					<div className={styled.card__storeInfoWrap}>
 						{/* store-name */}
 						<div className={styled['card__storeInfoWrap--title']}>

@@ -39,11 +39,10 @@ function Item({
 	async function handleConfirm() {
 		const filterClass = data.filter((item) => item.reservationId !== reservationId);
 		setData(filterClass);
-		const authToken =
-			'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJ1c2VyMkBleGFtcGxlLmNvbSIsImF2YXRhciI6Imh0dHBzOi8vaW1ndXIuY29tLzVPTDV3SnQucG5nIiwibmlja25hbWUiOiJ1c2VyMiIsInJvbGUiOiJ1c2VyIiwic3RvcmVOYW1lIjpudWxsLCJjcmVhdGVkQXQiOiIyMDIzLTA3LTEwVDE3OjEyOjMwLjAwMFoiLCJ1cGRhdGVkQXQiOiIyMDIzLTA3LTEwVDE3OjEyOjMwLjAwMFoiLCJpYXQiOjE2ODkyMzYwNTMsImV4cCI6MTY5MTgyODA1M30.ScuJmJpzQoO-95_VM_I7W-VUBnkaXXuWRjE2DsvzvkQ';
+		const authToken = localStorage.getItem('token');
 
 		// 取消預約課程
-		await fetchCancelStore(authToken, reservationId);
+		await fetchCancelStore(authToken || '', reservationId);
 		setShowModal(false);
 	}
 
@@ -97,11 +96,10 @@ function ReservationList() {
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const authToken =
-					'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJ1c2VyMkBleGFtcGxlLmNvbSIsImF2YXRhciI6Imh0dHBzOi8vaW1ndXIuY29tLzVPTDV3SnQucG5nIiwibmlja25hbWUiOiJ1c2VyMiIsInJvbGUiOiJ1c2VyIiwic3RvcmVOYW1lIjpudWxsLCJjcmVhdGVkQXQiOiIyMDIzLTA3LTEwVDE3OjEyOjMwLjAwMFoiLCJ1cGRhdGVkQXQiOiIyMDIzLTA3LTEwVDE3OjEyOjMwLjAwMFoiLCJpYXQiOjE2ODkyMzYwNTMsImV4cCI6MTY5MTgyODA1M30.ScuJmJpzQoO-95_VM_I7W-VUBnkaXXuWRjE2DsvzvkQ';
+				const authToken = localStorage.getItem('token');
 
 				// 取得使用者預約課程
-				const result = await fetchCollectionData(authToken);
+				const result = await fetchCollectionData(authToken || '');
 
 				// 判斷使用者有無預約課程
 				if (result) {

@@ -14,13 +14,12 @@ function Plan() {
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const authToken =
-					'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJ1c2VyMkBleGFtcGxlLmNvbSIsImF2YXRhciI6Imh0dHBzOi8vaW1ndXIuY29tLzVPTDV3SnQucG5nIiwibmlja25hbWUiOiJ1c2VyMiIsInJvbGUiOiJ1c2VyIiwic3RvcmVOYW1lIjpudWxsLCJjcmVhdGVkQXQiOiIyMDIzLTA3LTEwVDE3OjEyOjMwLjAwMFoiLCJ1cGRhdGVkQXQiOiIyMDIzLTA3LTEwVDE3OjEyOjMwLjAwMFoiLCJpYXQiOjE2ODkyMzYwNTMsImV4cCI6MTY5MTgyODA1M30.ScuJmJpzQoO-95_VM_I7W-VUBnkaXXuWRjE2DsvzvkQ';
+				const authToken = localStorage.getItem('token');
 
 				// 取得場館館方案
 				const oneStoreId = localStorage.getItem('oneStoreId');
 				const storeIdNumber = Number(oneStoreId);
-				const storePlans = await fetchStorePlan(authToken, storeIdNumber);
+				const storePlans = await fetchStorePlan(authToken || '', storeIdNumber);
 				setPlans(storePlans);
 			} catch (error) {
 				console.log(error);

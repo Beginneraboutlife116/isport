@@ -68,6 +68,13 @@
       padding: 10px; 
       margin-top: 1rem;
       border-radius: 5px;
+      resize: none;
+      height: 50px;
+    }
+
+    &--comment {
+      color: red;
+      font-size: 16px;
     }
   }
 
@@ -97,8 +104,7 @@
    grid-gap: 5px;
    font-size: 20px;
    
-   &--star {
-    font-size: 30px;
-   }
   }
+
+
 }

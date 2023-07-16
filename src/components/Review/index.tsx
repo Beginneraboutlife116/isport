@@ -1,6 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, SetStateAction } from 'react';
 import styled from './styles.module.scss';
 import { fetchStoreReview } from '../../api/stores';
+import Rating from '@mui/material/Rating';
+import Stack from '@mui/material/Stack';
+import { addComment } from '../../api/comment';
 
 type ItemProps = {
 	id?: number;
@@ -8,6 +11,11 @@ type ItemProps = {
 	content: string;
 	createdAt: string;
 	nickname: string;
+	rating: number;
+};
+
+type StarRatingProps = {
+	setRating: React.Dispatch<SetStateAction<number>>;
 	rating: number;
 };
 
@@ -40,33 +48,54 @@ function ReviewItem({ avatar, content, createdAt, nickname, rating }: ItemProps)
 	);
 }
 
+function StarRating({ rating, setRating }: StarRatingProps) {
+	return (
+		<Stack spacing={1}>
+			<Rating
+				name='half-rating'
+				value={rating}
+				precision={0.5}
+				onChange={(_, newValue) => {
+					if (newValue !== null) {
+						setRating(newValue);
+					}
+				}}
+			/>
+		</Stack>
+	);
+}
+
 function Review() {
-	const [hoverRating, setHoverRating] = useState(0);
-	const [selectedRating, setSelectedRating] = useState(0);
 	const [reviews, setReviews] = useState<ItemProps[]>([]);
+	const [rating, setRating] = useState(0);
+	const [comment, setComment] = useState('');
+	const oneStoreId = localStorage.getItem('oneStoreId');
+	const storeIdNumber = Number(oneStoreId);
+	const authToken = localStorage.getItem('token');
 
-	const handleMouseEnter = (rating: number) => {
-		setHoverRating(rating);
+	const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+		const inputValue = e.target.value;
+		if (inputValue.length <= 100) {
+			setComment(inputValue);
+		}
 	};
 
-	const handleMouseLeave = () => {
-		setHoverRating(0);
-	};
-
-	const handleClick = (rating: number) => {
-		setSelectedRating(rating);
+	const handleSendComment = async () => {
+		// 送出評論
+		if (rating !== 0 && comment !== '') {
+			await addComment(authToken || '', storeIdNumber, rating, comment);
+			const storeReview = await fetchStoreReview(authToken || '', storeIdNumber);
+			setReviews(storeReview);
+			setRating(0);
+			setComment('');
+		}
 	};
 
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const authToken =
-					'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJ1c2VyMkBleGFtcGxlLmNvbSIsImF2YXRhciI6Imh0dHBzOi8vaW1ndXIuY29tLzVPTDV3SnQucG5nIiwibmlja25hbWUiOiJ1c2VyMiIsInJvbGUiOiJ1c2VyIiwic3RvcmVOYW1lIjpudWxsLCJjcmVhdGVkQXQiOiIyMDIzLTA3LTEwVDE3OjEyOjMwLjAwMFoiLCJ1cGRhdGVkQXQiOiIyMDIzLTA3LTEwVDE3OjEyOjMwLjAwMFoiLCJpYXQiOjE2ODkyMzYwNTMsImV4cCI6MTY5MTgyODA1M30.ScuJmJpzQoO-95_VM_I7W-VUBnkaXXuWRjE2DsvzvkQ';
-
-				// 取得場館館方案
-				const oneStoreId = localStorage.getItem('oneStoreId');
-				const storeIdNumber = Number(oneStoreId);
-				const storeReview = await fetchStoreReview(authToken, storeIdNumber);
+				// 取得場館評論
+				const storeReview = await fetchStoreReview(authToken || '', storeIdNumber);
 				setReviews(storeReview);
 			} catch (error) {
 				console.log(error);
@@ -92,37 +121,36 @@ function Review() {
 			{/* send review */}
 			<div className={styled.container__replyWrap}>
 				<h2>我要評價</h2>
-				<input
-					type='text'
+				<textarea
 					placeholder='請輸入評論'
+					value={comment}
+					onChange={handleInputChange}
 					className={styled['container__replyWrap--input']}
 				/>
+				{comment === '' && (
+					<span className={styled['container__replyWrap--comment']}>送出前評論欄不能空白!</span>
+				)}
+				{comment.length >= 100 && (
+					<span className={styled['container__replyWrap--comment']}>不能超過100字!</span>
+				)}
 
 				<div className={styled.container__buttonWrap}>
 					<div className={styled.container__starWrap}>
 						<span>請點選評分</span>
 
 						{/* star icon */}
-						<div className={styled['container__starWrap--star']}>
-							{[1, 2, 3, 4, 5].map((rating) => (
-								<span
-									key={rating}
-									onMouseEnter={() => handleMouseEnter(rating)}
-									onMouseLeave={handleMouseLeave}
-									onClick={() => handleClick(rating)}
-									style={{
-										color: (hoverRating || selectedRating) >= rating ? 'gold' : 'gray',
-										cursor: 'pointer',
-									}}
-								>
-									★
-								</span>
-							))}
+						<div>
+							<StarRating rating={rating} setRating={setRating} />
+							{rating === 0 && (
+								<span className={styled['container__replyWrap--comment']}>送出前請選擇評分!</span>
+							)}
 						</div>
 					</div>
 
 					<div>
-						<button className={styled['container__buttonWrap--button']}>送出</button>
+						<button onClick={handleSendComment} className={styled['container__buttonWrap--button']}>
+							送出
+						</button>
 					</div>
 				</div>
 			</div>
