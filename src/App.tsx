@@ -6,7 +6,6 @@ import { useAuth } from './contexts/authContext';
 import { getUserData } from './api/user';
 
 function App() {
-	// ? 不確定將邏輯寫在這邊是不是可以的？
 	const navigate = useNavigate();
 	const { pathname } = useLocation();
 	const [auth, setAuth] = useAuth();
@@ -67,7 +66,10 @@ function App() {
 			avatar: '',
 			isAuthenticated: false,
 		});
-		navigate('/login');
+		const authPath = ['/login', '/signup', '/store/login', '/store/signup'];
+		if (!authPath.includes(pathname)) {
+			navigate('/login');
+		}
 	}
 
 	return (
