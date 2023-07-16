@@ -1,0 +1,32 @@
+.container {
+	padding-top: 2rem;
+	width: fit-content;
+	margin-inline: auto;
+
+	&__wrap {
+		display: grid;
+		justify-content: center;
+		position: relative;
+	}
+
+	&__dialog {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		position: relative;
+	}
+}
+
+.btn--openDialog {
+	// position: absolute;
+	// right: 0;
+	width: 2.25rem;
+	aspect-ratio: 1;
+	padding-inline: 0;
+
+	& > svg {
+		width: 100%;
+		height: 100%;
+		color: #3488d9;
+	}
+}

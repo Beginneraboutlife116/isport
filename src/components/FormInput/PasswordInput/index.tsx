@@ -23,12 +23,7 @@ export default function PasswordInput({
 				setError(name, { type: 'required', message: '密碼不可為空' });
 			}
 		},
-		onChange: (event: React.ChangeEvent<HTMLInputElement>) => {
-			const { target } = event;
-			if (target.value !== '') {
-				clearErrors(name);
-			}
-		},
+		onChange: () => clearErrors(name),
 	};
 	return (
 		<FormInput

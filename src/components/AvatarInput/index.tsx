@@ -67,7 +67,7 @@ export default function AvatarInput({
 				<input
 					type='file'
 					{...register(name)}
-					accept='./jpg, ./png, ./jpeg, image/*'
+					accept='./jpg, ./png, ./jpeg'
 					className='hidden'
 					tabIndex={-1}
 				/>

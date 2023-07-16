@@ -20,14 +20,7 @@ export default function ConfirmPasswordInput({
 	const rules = {
 		required: true,
 		validate: {
-			different: (v: string) => {
-				if (v !== watchingPassword) {
-					setError(name, { type: 'different', message: '密碼不一致' });
-					return false;
-				}
-				clearErrors(name);
-				return true;
-			},
+			different: (v: string) => v === watchingPassword,
 		},
 		onBlur: (event: React.FocusEvent<HTMLInputElement, Element>) => {
 			const { target } = event;
@@ -37,7 +30,9 @@ export default function ConfirmPasswordInput({
 		},
 		onChange: (event: React.ChangeEvent<HTMLInputElement>) => {
 			const { target } = event;
-			if (target.value !== '') {
+			if (target.value !== watchingPassword) {
+				setError(name, { type: 'different', message: '密碼不一致' });
+			} else {
 				clearErrors(name);
 			}
 		},
