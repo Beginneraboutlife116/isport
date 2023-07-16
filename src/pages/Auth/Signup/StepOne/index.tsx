@@ -30,7 +30,7 @@ export default function SignupStepOnePage() {
 				const { token, userId, role } = response.data;
 				localStorage.setItem('token', token);
 				setAuth({ token, role, userId, isAuthenticated: true, avatar: '' });
-				navigate('/find');
+				navigate(`/signup/${userId}`);
 			}
 		} catch (error) {
 			if (isAxiosError(error)) {
