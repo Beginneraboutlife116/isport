@@ -32,16 +32,36 @@
     padding: 1rem;
     font-size: 20px;
     width: 100%;
+    resize: none;
+  }
+
+  &__span {
+    color: red;
   }
 
   &__buttonWrap {
     display: flex;
-    justify-self: flex-end;
+    justify-content: space-between;
+
+    &--done {
+      font-size: 20px;
+      color: red;
+      font-weight: bold;
+    }
   }
 
   &__button {
     border: none;
     background-color: lightblue;
+    border-radius: 20px;
+    padding: 0.5rem 1rem;
+    font-size: 20px;
+    cursor: pointer;
+  }
+
+  &__backButton {
+    border: none;
+    background-color: lightgray;
     border-radius: 20px;
     padding: 0.5rem 1rem;
     font-size: 20px;

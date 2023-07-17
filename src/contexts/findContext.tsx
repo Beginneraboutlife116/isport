@@ -11,6 +11,8 @@ interface FindContextProps {
 	setFilteredLike: React.Dispatch<React.SetStateAction<any[]>>;
 	oneStore: boolean;
 	setOneStore: React.Dispatch<React.SetStateAction<boolean>>;
+	classData: any[];
+	setClassData: React.Dispatch<React.SetStateAction<any[]>>;
 }
 
 const FindContext = createContext<FindContextProps>({
@@ -24,6 +26,8 @@ const FindContext = createContext<FindContextProps>({
 	setFilteredLike: () => {},
 	oneStore: false,
 	setOneStore: () => {},
+	classData: [],
+	setClassData: () => {},
 });
 
 export const FindProvider = ({ children }: { children: ReactNode }) => {
@@ -32,6 +36,7 @@ export const FindProvider = ({ children }: { children: ReactNode }) => {
 	const [likeStores, setLikeStores] = useState<any[]>([]);
 	const [filteredLike, setFilteredLike] = useState<any[]>([]);
 	const [oneStore, setOneStore] = useState(false);
+	const [classData, setClassData] = useState<any[]>([]);
 
 	const value = {
 		storesData,
@@ -44,6 +49,8 @@ export const FindProvider = ({ children }: { children: ReactNode }) => {
 		setFilteredLike,
 		oneStore,
 		setOneStore,
+		classData,
+		setClassData,
 	};
 
 	return <FindContext.Provider value={value}>{children}</FindContext.Provider>;
