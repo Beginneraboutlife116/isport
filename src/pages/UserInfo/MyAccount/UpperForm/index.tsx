@@ -47,7 +47,6 @@ export default function UpperForm() {
 			const { email, name, avatar } = data;
 			let fakeAvatar = '';
 			if (email !== auth.email || name !== auth.name || isAvatarChanged) {
-				console.log(data);
 				const formData = new FormData();
 				formData.append('email', email);
 				formData.append('nickname', name);
@@ -55,9 +54,6 @@ export default function UpperForm() {
 					const file = avatar ? avatar[0] : null;
 					fakeAvatar = file ? URL.createObjectURL(file) : '';
 					formData.append('avatar', file);
-				}
-				for (const [key, value] of formData.entries()) {
-					console.log(key, value);
 				}
 				const response = await updateUserAccount(formData);
 				if (response.status === 200) {
