@@ -88,7 +88,6 @@ function PasswordInput() {
 	const [text, setText] = useState('');
 
 	const onSubmit = async (data: PasswordData) => {
-		console.log(data);
 		const storedData = localStorage.getItem('isport');
 		let dataObject: { token?: string } = {};
 		if (storedData) {
