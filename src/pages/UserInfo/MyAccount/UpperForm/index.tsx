@@ -30,10 +30,7 @@ export default function UpperForm() {
 				}
 			} catch (error) {
 				if (isAxiosError(error)) {
-					setError('email', {
-						type: error.response?.data.status,
-						message: error.response?.data.message,
-					});
+					console.error(error);
 				} else {
 					console.error(error);
 				}
@@ -65,7 +62,8 @@ export default function UpperForm() {
 			}
 		} catch (error) {
 			if (isAxiosError(error)) {
-				setError('email', {
+				const whichInputError = error.response?.data.message.includes('email') ? 'email' : 'name';
+				setError(whichInputError, {
 					type: error.response?.data.status,
 					message: error.response?.data.message,
 				});
