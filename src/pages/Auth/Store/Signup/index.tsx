@@ -32,7 +32,7 @@ export default function StoreSignupPage() {
 			if (response.status === 200) {
 				const { userId, token } = response.data;
 				localStorage.setItem('isport', JSON.stringify({ token, role: 'owner' }));
-				setAuth({ token, userId, avatar: '', isAuthenticated: true, role: 'owner' });
+				setAuth({ token, userId, avatar: '', isAuthenticated: true, role: 'owner', email: '', name: '' });
 				navigate(`/store/${userId}/find`);
 			}
 		} catch (error) {
