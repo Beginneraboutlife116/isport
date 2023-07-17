@@ -1,7 +1,8 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, SetStateAction, Dispatch } from 'react';
 import { BiSolidUserCircle, BiPlus, BiRedo } from 'react-icons/bi';
-import styles from './styles.module.scss';
 import { UseFormRegister, FieldValues, UseFormWatch, UseFormResetField } from 'react-hook-form';
+import Button from '../Button';
+import styles from './styles.module.scss';
 
 type AvatarInputProps = {
 	register: UseFormRegister<FieldValues>;
@@ -9,16 +10,22 @@ type AvatarInputProps = {
 	watch: UseFormWatch<FieldValues>;
 	resetField: UseFormResetField<FieldValues>;
 	name?: string;
+	changeIsAvatarChanged?: Dispatch<SetStateAction<boolean>>;
+	authAvatar?: string;
 };
 
 export default function AvatarInput({
 	register,
 	className,
-	watch,
 	resetField,
 	name = 'avatar',
+	changeIsAvatarChanged,
+	authAvatar,
 }: AvatarInputProps) {
-	const [{ imgSrc, imgName }, setImgInfo] = useState({ imgSrc: '', imgName: '' });
+	const [imgInfo, setImgInfo] = useState({
+		imgSrc: authAvatar || '',
+		imgName: '',
+	});
 	const [errorKey, setErrorKey] = useState('pass');
 	const labelRef = useRef<HTMLLabelElement>(null);
 	const errors: { [key: string]: string } = {
@@ -26,29 +33,20 @@ export default function AvatarInput({
 		pass: '',
 	};
 
-	const files = watch('avatar', null);
 	useEffect(() => {
-		if (files && files.length > 0) {
-			const validateFormat = ['image/jpg', 'image/png', 'image/jpeg'];
-			const fileData = files[0];
-			setErrorKey('pass');
-			if (validateFormat.includes(fileData.type)) {
-				setImgInfo({ imgSrc: URL.createObjectURL(fileData), imgName: fileData.name });
-			} else {
-				resetField('avatar');
-				setImgInfo({ imgSrc: '', imgName: '' });
-				setErrorKey('notSupport');
+		setImgInfo({ ...imgInfo, imgSrc: authAvatar || '' });
+	}, [authAvatar]);
+
+	function handleCleanClick() {
+		if (imgInfo.imgSrc) {
+			resetField(name);
+			setImgInfo({ imgSrc: '', imgName: '' });
+			if (changeIsAvatarChanged) {
+				changeIsAvatarChanged(true);
 			}
 		} else {
-			setImgInfo({ imgSrc: '', imgName: '' });
-		}
-	}, [files]);
-
-	function handleClick() {
-		if (imgSrc) {
-			resetField('avatar');
-		} else {
 			labelRef.current?.click();
+			setErrorKey('pass');
 		}
 	}
 
@@ -62,19 +60,43 @@ export default function AvatarInput({
 					setErrorKey('pass');
 				}}
 			>
-				{imgSrc ? <img src={imgSrc} alt={imgName} /> : <BiSolidUserCircle />}
+				{imgInfo.imgSrc ? (
+					<img src={imgInfo.imgSrc} alt={imgInfo.imgName} />
+				) : (
+					<BiSolidUserCircle />
+				)}
 				{errors[errorKey] && <p className={styles['previewAvatar--error']}>{errors[errorKey]}</p>}
 				<input
 					type='file'
-					{...register(name)}
-					accept='./jpg, ./png, ./jpeg'
+					accept='image/jpg, image/png, image/jpeg'
+					{...register(name, {
+						onChange: (event) => {
+							const file = event.target.files[0];
+							const validateFormat = ['image/jpg', 'image/png', 'image/jpeg'];
+							if (file) {
+								if (validateFormat.includes(file.type) && changeIsAvatarChanged) {
+									setImgInfo({
+										imgSrc: URL.createObjectURL(file),
+										imgName: file.name,
+									});
+									changeIsAvatarChanged(true);
+								} else {
+									resetField(name);
+									setErrorKey('notSupport');
+								}
+							} else {
+								resetField(name);
+								setImgInfo({ imgSrc: '', imgName: '' });
+							}
+						},
+					})}
 					className='hidden'
 					tabIndex={-1}
 				/>
 			</label>
-			<div className={styles['previewAvatar--btn']} onClick={handleClick}>
-				{imgSrc ? <BiRedo className={styles['previewAvatar--btn-icon']} /> : <BiPlus />}
-			</div>
+			<Button type='button' className={styles['previewAvatar--btn']} onClick={handleCleanClick}>
+				{imgInfo.imgSrc ? <BiRedo className={styles['previewAvatar--btn-icon']} /> : <BiPlus />}
+			</Button>
 		</div>
 	);
 }

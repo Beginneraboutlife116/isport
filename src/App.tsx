@@ -23,12 +23,12 @@ function App() {
 						if (!auth.token) {
 							const response = role === 'user' ? await getUserData() : await getOwnerData();
 							if (response.status === 200) {
-								const { id, token, email } = response.data;
+								const { id, email } = response.data;
 								if (response.data.hasOwnProperty('avatar')) {
 									setAuth({
 										name: response.data.nickname,
 										email,
-										token,
+										token: localToken,
 										avatar: response.data.avatar,
 										userId: id,
 										role: 'user',
@@ -39,7 +39,7 @@ function App() {
 									setAuth({
 										name: response.data.storeName,
 										email,
-										token,
+										token: localToken,
 										avatar: '',
 										userId: id,
 										role: 'owner',

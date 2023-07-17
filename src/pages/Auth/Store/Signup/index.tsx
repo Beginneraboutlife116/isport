@@ -28,11 +28,26 @@ export default function StoreSignupPage() {
 	async function onSubmit(data: FieldValues) {
 		try {
 			const { email, password, confirmPassword, name } = data;
+			if (password !== confirmPassword) {
+				setError('confirmPassword', {
+					type: 'different',
+					message: '密碼不一致',
+				});
+				return;
+			}
 			const response = await storeSignup({ email, password, confirmPassword, storeName: name });
 			if (response.status === 200) {
 				const { userId, token } = response.data;
 				localStorage.setItem('isport', JSON.stringify({ token, role: 'owner' }));
-				setAuth({ token, userId, avatar: '', isAuthenticated: true, role: 'owner', email: '', name: '' });
+				setAuth({
+					token,
+					userId,
+					avatar: '',
+					isAuthenticated: true,
+					role: 'owner',
+					email: '',
+					name: '',
+				});
 				navigate(`/store/${userId}/find`);
 			}
 		} catch (error) {

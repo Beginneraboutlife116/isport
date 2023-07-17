@@ -25,11 +25,18 @@ export default function SignupStepOnePage() {
 	async function onSubmit(data: FieldValues) {
 		try {
 			const { email, password, confirmPassword } = data;
+			if (password !== confirmPassword) {
+				setError('confirmPassword', {
+					type: 'different',
+					message: '密碼不一致',
+				});
+				return;
+			}
 			const response = await signup({ email, password, confirmPassword });
 			if (response.status === 200) {
 				const { token, userId, role } = response.data;
 				localStorage.setItem('isport', JSON.stringify({ token, role }));
-				setAuth({ token, role, userId, isAuthenticated: true, avatar: '', name: '', email: '' });
+				setAuth({ token, role, userId, isAuthenticated: true, avatar: '', email: '', name: '' });
 				navigate(`/signup/${userId}`);
 			}
 		} catch (error) {
