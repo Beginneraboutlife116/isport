@@ -26,7 +26,7 @@ export default function UpperForm() {
 			try {
 				const response = await getUserData();
 				if (response.status === 200) {
-					setAuth({ ...auth, email: response.data.email, name: response.data.nickname });
+					setAuth((a) => ({ ...a, email: response.data.email, name: response.data.nickname }));
 				}
 			} catch (error) {
 				if (isAxiosError(error)) {
@@ -39,9 +39,7 @@ export default function UpperForm() {
 				}
 			}
 		}
-		if (!auth.email && !auth.name) {
-			fetchUserData();
-		}
+		fetchUserData();
 	}, []);
 
 	async function onSubmit(data: FieldValues) {
@@ -63,7 +61,10 @@ export default function UpperForm() {
 				}
 				const response = await updateUserAccount(formData);
 				if (response.status === 200) {
-					setAuth({ ...auth, email, name, avatar: fakeAvatar });
+					setAuth({ ...auth, email, name });
+					if (isAvatarChanged) {
+						setAuth({ ...auth, avatar: fakeAvatar });
+					}
 				}
 			}
 		} catch (error) {
