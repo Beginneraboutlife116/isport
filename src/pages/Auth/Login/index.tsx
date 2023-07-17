@@ -27,7 +27,7 @@ export default function LoginPage() {
 			if (response.status === 200) {
 				const { token, avatar, role, userId } = response.data;
 				localStorage.setItem('isport', JSON.stringify({ token, role }));
-				setAuth({ token, role, userId, avatar, isAuthenticated: true });
+				setAuth({ token, role, userId, avatar, isAuthenticated: true, email: '', name: '' });
 				navigate('/find');
 			}
 		} catch (error) {

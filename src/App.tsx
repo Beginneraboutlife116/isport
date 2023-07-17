@@ -23,10 +23,12 @@ function App() {
 						if (!auth.token) {
 							const response = role === 'user' ? await getUserData() : await getOwnerData();
 							if (response.status === 200) {
-								const { id, token } = response.data;
+								const { id, email } = response.data;
 								if (response.data.hasOwnProperty('avatar')) {
 									setAuth({
-										token,
+										name: response.data.nickname,
+										email,
+										token: localToken,
 										avatar: response.data.avatar,
 										userId: id,
 										role: 'user',
@@ -35,7 +37,9 @@ function App() {
 									navigateToRoleDefaultPage(pathname, 'user', id);
 								} else {
 									setAuth({
-										token,
+										name: response.data.storeName,
+										email,
+										token: localToken,
 										avatar: '',
 										userId: id,
 										role: 'owner',
@@ -68,6 +72,8 @@ function App() {
 	function handleLogout() {
 		localStorage.removeItem('isport');
 		setAuth({
+			name: '',
+			email: '',
 			token: '',
 			role: '',
 			userId: 0,

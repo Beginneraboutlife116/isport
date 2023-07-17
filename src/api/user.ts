@@ -4,4 +4,8 @@ function getUserData() {
 	return apiHelper.get('/users/account');
 }
 
-export { getUserData };
+function updateUserAccount(data: FormData) {
+	return apiHelper.put('/users/account', data);
+}
+
+export { getUserData, updateUserAccount };
