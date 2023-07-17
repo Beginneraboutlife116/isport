@@ -125,7 +125,7 @@ function Store() {
 
 							{status === 'plan' && <Plan />}
 
-							{status === 'booking' && <Booking />}
+							{status === 'booking' && <Booking setStatus={setStatus} />}
 						</div>
 					)}
 				</div>

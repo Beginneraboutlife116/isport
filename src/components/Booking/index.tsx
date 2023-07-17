@@ -3,7 +3,11 @@ import { useStoresData } from '../../contexts/findContext';
 import styled from './styles.module.scss';
 import { bookingClass, fetchUserPlans } from '../../api/plan';
 
-function Booking() {
+type BookingProps = {
+	setStatus: React.Dispatch<React.SetStateAction<string>>;
+};
+
+function Booking({ setStatus }: BookingProps) {
 	const { classData } = useStoresData();
 	const [userPlans, setUserPlans] = useState<any[]>([]);
 	const [noPlans, setNoPlans] = useState('');
@@ -46,7 +50,7 @@ function Booking() {
 	};
 
 	const handleBackClick = () => {
-		location.reload();
+		setStatus('course');
 	};
 
 	useEffect(() => {
@@ -95,13 +99,6 @@ function Booking() {
 							))}
 						</>
 					)}
-
-					{/* {userPlans.map((item) => (
-						<option value={item.id} key={item.id}>
-							{item.planName}(剩餘{item.amountLeft}
-							{item.expireDate ? '天' : '堂'})
-						</option>
-					))} */}
 				</select>
 			</div>
 
@@ -122,9 +119,11 @@ function Booking() {
 					返回課程
 				</button>
 
-				{done === '預約成功' && (
-					<span className={styled['container__buttonWrap--done']}>{done}!</span>
-				)}
+				{noPlans || userPlanId === 0
+					? null
+					: done === '預約成功' && (
+							<span className={styled['container__buttonWrap--done']}>{done}!</span>
+					  )}
 
 				<button onClick={handleBooking} className={styled.container__button}>
 					送出預約
