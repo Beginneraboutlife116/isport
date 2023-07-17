@@ -1,16 +1,12 @@
 import { Link } from 'react-router-dom';
+import { UserPlanType } from '..';
 import styles from './styles.module.scss';
-
-type PlanItem = {
-	planName: string;
-	planType: string;
-	amountLeft: number;
-};
+import { Fragment } from 'react';
 
 type PlanItemProps = {
 	id: number;
 	storeName: string;
-	plans: PlanItem[];
+	plans: UserPlanType[];
 };
 
 export default function PlanItem({ id, storeName, plans }: PlanItemProps) {
@@ -24,7 +20,7 @@ export default function PlanItem({ id, storeName, plans }: PlanItemProps) {
 			<ul aria-label={`${storeName} 目前剩餘方案狀況`}>
 				<li>
 					{plans.map((plan) => (
-						<>
+						<Fragment key={plan.id}>
 							<div className={`${styles.item__planType} ${styles.item__row}`}>
 								<p>{plan.planName}</p>
 								<p>{plan.planType}</p>
@@ -35,7 +31,7 @@ export default function PlanItem({ id, storeName, plans }: PlanItemProps) {
 									{plan.planType.includes('次') ? `${plan.amountLeft} 次` : `${plan.amountLeft} 天`}
 								</p>
 							</div>
-						</>
+						</Fragment>
 					))}
 				</li>
 			</ul>

@@ -28,7 +28,7 @@ function UserInfoPage() {
 					<h2>我的方案</h2>
 				</Link>
 			</div>
-			<div>
+			<div className={styles.content}>
 				<Outlet />
 			</div>
 		</main>
