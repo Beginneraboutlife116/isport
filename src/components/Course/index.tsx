@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import styled from './styles.module.scss';
+import { useStoresData } from '../../contexts/findContext';
 
 type InfoProps = {
 	setStatus: React.Dispatch<React.SetStateAction<string>>;
@@ -10,6 +11,7 @@ type InfoProps = {
 	isClosed: boolean;
 	isReserved: boolean;
 	weekDay?: string;
+	date?: string;
 };
 
 type DateProps = {
@@ -31,9 +33,22 @@ function CourseInfo({
 	isClosed,
 	isReserved,
 	id,
+	date,
+	weekDay,
 }: InfoProps) {
+	const { setClassData } = useStoresData();
 	function handleBooking() {
 		setStatus('booking');
+		setClassData([
+			{
+				date: date,
+				weekDay: weekDay,
+				className: className,
+				startTime: startTime,
+				endTime: endTime,
+				id: id,
+			},
+		]);
 	}
 
 	return (
@@ -102,6 +117,8 @@ function Course({ setStatus, data }: CourseProps) {
 								isClosed={item.isClosed}
 								isReserved={item.isReserved}
 								id={item.id}
+								date={date}
+								weekDay={data[0].weekDay}
 							/>
 						))}
 				</div>
