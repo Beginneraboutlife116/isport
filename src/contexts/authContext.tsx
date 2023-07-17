@@ -2,6 +2,8 @@ import { ReactNode, SetStateAction, createContext, useContext, useState, Dispatc
 
 type AuthType = {
 	token: string;
+	email: string;
+	name: string;
 	role: string;
 	userId: 0;
 	avatar: string;
@@ -14,6 +16,8 @@ const AuthContext = createContext<AuthContextProps | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
 	const [auth, setAuth] = useState<AuthType>({
+		email: '',
+		name: '',
 		token: '',
 		role: '',
 		userId: 0,
