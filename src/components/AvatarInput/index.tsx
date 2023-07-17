@@ -10,7 +10,7 @@ type AvatarInputProps = {
 	watch: UseFormWatch<FieldValues>;
 	resetField: UseFormResetField<FieldValues>;
 	name?: string;
-	changeIsAvatarChanged?: Dispatch<SetStateAction<boolean>>;
+	changeIsAvatarChanged: Dispatch<SetStateAction<boolean>>;
 	authAvatar?: string;
 };
 
