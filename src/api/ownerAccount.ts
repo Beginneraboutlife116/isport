@@ -28,7 +28,6 @@ export const editOwnerAccount = async (authToken: string, email: string, storeNa
 				Authorization: 'Bearer ' + authToken,
 			},
 		});
-    console.log(response);
     
 		return response.data;
 	} catch (error) {
@@ -47,7 +46,6 @@ export const editOwnerPassword = async (authToken: string, password: string, con
 				Authorization: 'Bearer ' + authToken,
 			},
 		});
-    console.log(response);
     
 		return response.data;
 	} catch (error) {

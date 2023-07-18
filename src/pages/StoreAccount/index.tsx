@@ -82,6 +82,7 @@ function PasswordInput() {
 		register,
 		handleSubmit,
 		watch,
+		setValue,
 		formState: { errors },
 	} = useForm<PasswordData>();
 	const [success, setSuccess] = useState(false);
@@ -97,6 +98,8 @@ function PasswordInput() {
 		await editOwnerPassword(authToken || '', data.password, data.confirmPassword);
 
 		setSuccess(true);
+		setValue('password', ''); // 清空密码字段的值
+		setValue('confirmPassword', ''); // 清空确认密码字段的值
 		setText('更新成功!');
 
 		setTimeout(() => {
