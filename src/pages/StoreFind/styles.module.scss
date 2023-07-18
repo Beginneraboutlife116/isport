@@ -1,11 +1,14 @@
 .container {
 	padding-top: 2rem;
-	width: fit-content;
 	margin-inline: auto;
+	width: fit-content;
+
+	&:has(h2[data-title="no store"]) {
+		width: 80%;
+	}
 
 	&__wrap {
 		display: grid;
-		justify-content: center;
 		position: relative;
 	}
 

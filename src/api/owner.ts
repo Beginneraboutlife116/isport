@@ -4,4 +4,8 @@ function getOwnerData() {
 	return apiHelper.get('/owner/users/account');
 }
 
-export { getOwnerData };
+function getOwnerStores() {
+	return apiHelper.get('/owner/stores');
+}
+
+export { getOwnerData, getOwnerStores };
