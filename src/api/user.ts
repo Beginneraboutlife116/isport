@@ -9,6 +9,10 @@ function getUserData() {
 	return apiHelper.get('/users/account');
 }
 
+function getUserPlans() {
+	return apiHelper.get('/users/plans');
+}
+
 function updateUserAccount(data: FormData) {
 	return apiHelper.put('/users/account', data);
 }
@@ -17,4 +21,4 @@ function updateUserPassword({ password, confirmPassword }: updateUserPasswordPro
 	return apiHelper.put('/users/password', { password, confirmPassword });
 }
 
-export { getUserData, updateUserAccount, updateUserPassword };
+export { getUserData, updateUserAccount, updateUserPassword, getUserPlans };

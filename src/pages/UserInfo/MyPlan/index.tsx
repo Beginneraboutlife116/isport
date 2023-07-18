@@ -1,47 +1,63 @@
+import { useEffect, useState } from 'react';
 import PlanItem from './PlanItem';
 import styles from './styles.module.scss';
+import { getUserPlans } from '../../../api/user';
+import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 
-const dummyData = [
-	{
-		storeName: 'xxx 場館',
-		storeId: 1,
-		plans: [
-			{
-				planName: '30堂方案',
-				planType: '次數方案',
-				amountLeft: 5,
-			},
-			{
-				planName: '30天方案',
-				planType: '天數方案',
-				amountLeft: 25,
-			},
-		],
-	},
-	{
-		storeName: 'xxx 場館',
-		storeId: 2,
-		plans: [
-			{
-				planName: '8堂方案',
-				planType: '次數方案',
-				amountLeft: 7,
-			},
-		],
-	},
-];
+export type UserPlanType = {
+	id: number;
+	amountLeft: number;
+	expireDate: string | null;
+	planName: string;
+	planType: string;
+	StoreName: string;
+};
+
+type PlanType = {
+	storeId: number;
+	storeName: string;
+	UserPlans: UserPlanType[];
+};
 
 export default function MyPlanPage() {
+	const [plans, setPlans] = useState<PlanType[] | []>([]);
+	const [isFetching, setIsFetching] = useState<boolean>(false);
+
+	useEffect(() => {
+		async function fetchUserPlans() {
+			try {
+				setIsFetching(true);
+				const response = await getUserPlans();
+				if (response.status === 200) {
+					const { data } = response;
+					setPlans(data);
+				}
+			} catch (error) {
+				console.error(error);
+			} finally {
+				setIsFetching(false);
+			}
+		}
+
+		fetchUserPlans();
+	}, []);
+
 	return (
 		<ul className={styles.myPlan}>
-			{dummyData.map((data) => (
-				<PlanItem
-					key={data.storeId}
-					storeName={data.storeName}
-					id={data.storeId}
-					plans={data.plans}
-				/>
-			))}
+			{isFetching ? (
+				<AiOutlineLoading3Quarters className={styles.loading} />
+			) : plans.length ? (
+				plans.map((plan) => (
+					<PlanItem
+						key={plan.storeId}
+						storeName={plan.storeName}
+						id={plan.storeId}
+						plans={plan['UserPlans']}
+					/>
+				))
+			) : (
+				<h3 className={styles.noPlan}>目前無有效方案</h3>
+			)}
 		</ul>
 	);
 }
