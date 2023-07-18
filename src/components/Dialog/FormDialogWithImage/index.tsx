@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, Dispatch, ReactNode } from 'react';
-import { useForm } from 'react-hook-form';
+import { FieldValues, useForm, UseFormSetError } from 'react-hook-form';
 import { IoMdCloseCircle } from 'react-icons/io';
 import FormInput, { EmailInput } from '../../FormInput';
 import Button from '../../Button';
@@ -9,12 +9,14 @@ type FormDialogWithImageProps = {
 	buttonDescription: string;
 	status: boolean;
 	handleDialogToggle: Dispatch<boolean>;
+	onSubmit: (data: FieldValues, setError: UseFormSetError<FieldValues>) => void;
 };
 
 export default function FormDialogWithImage({
 	buttonDescription,
 	status,
 	handleDialogToggle,
+	onSubmit,
 }: FormDialogWithImageProps) {
 	const {
 		register,
@@ -89,7 +91,7 @@ export default function FormDialogWithImage({
 				<IoMdCloseCircle />
 			</Button>
 
-			<form onSubmit={handleSubmit((data) => console.log(data))} className={styles.form}>
+			<form onSubmit={handleSubmit((data) => onSubmit(data, setError))} className={styles.form}>
 				<FormInput
 					label='場館名稱'
 					labelClassName={styles.label}
@@ -208,7 +210,7 @@ export default function FormDialogWithImage({
 						/>
 					</div>
 
-					<label htmlFor='image' className={styles['btn--image']}>
+					<label htmlFor='photo' className={styles['btn--image']}>
 						請選擇檔案
 					</label>
 
@@ -228,9 +230,9 @@ export default function FormDialogWithImage({
 					<input
 						className='hidden'
 						type='file'
-						id='image'
+						id='photo'
 						accept='./jpg, ./png, ./jpeg, image/*'
-						{...register('image', {
+						{...register('photo', {
 							required: true,
 							validate: {
 								pattern: (value) => {

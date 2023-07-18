@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
 import { BsPlusCircleFill } from 'react-icons/bs';
+import { FieldValues, UseFormSetError } from 'react-hook-form';
 import CardList from '../../components/CardList';
 import SearchBar from '../../components/SearchBar';
 import Button from '../../components/Button';
-import styled from './styles.module.scss';
 import FormDialogWithImage from '../../components/Dialog/FormDialogWithImage';
-import { getOwnerStores } from '../../api/owner';
+import { getOwnerStores, createStore } from '../../api/owner';
 import { useStoresData } from '../../contexts/findContext';
 import { isAxiosError } from '../../util/helpers';
-import { FieldValues } from 'react-hook-form';
+import styled from './styles.module.scss';
 
 type StoreType = {
 	id: number;
@@ -52,6 +52,35 @@ export default function StoreFindPage() {
 		}
 	}
 
+	async function onDialogSubmit(data: FieldValues, setError: UseFormSetError<FieldValues>) {
+		try {
+			const formData = new FormData();
+			const fakeStore = { ...data };
+			for (const [key, value] of Object.entries(data)) {
+				console.log(key, value);
+				if (key === 'photo') {
+					const file = value[0];
+					fakeStore[key] = URL.createObjectURL(file);
+					formData.append(key, file);
+				} else {
+					formData.append(key, value);
+				}
+			}
+			const response = await createStore(formData);
+			console.log(response);
+		} catch (error) {
+			if (isAxiosError(error)) {
+				console.log(error.response);
+				setError('error', {
+					type: error.response?.data.status,
+					message: error.response?.data.message,
+				});
+			} else {
+				console.error(error);
+			}
+		}
+	}
+
 	return (
 		<div className={styled.container}>
 			<div className={styled.container__wrap}>
@@ -76,9 +105,10 @@ export default function StoreFindPage() {
 						status={toggleDialog}
 						handleDialogToggle={setToggleDialog}
 						buttonDescription='送出'
+						onSubmit={onDialogSubmit}
 					/>
 				</div>
-				{stores.length ? <CardList data={stores} /> : <h2 data-title="no store">沒有建立之場館</h2>}
+				{stores.length ? <CardList data={stores} /> : <h2 data-title='no store'>沒有建立之場館</h2>}
 			</div>
 		</div>
 	);

@@ -8,4 +8,8 @@ function getOwnerStores() {
 	return apiHelper.get('/owner/stores');
 }
 
-export { getOwnerData, getOwnerStores };
+function createStore(data: FormData) {
+	return apiHelper.post('/owner/stores', data);
+}
+
+export { getOwnerData, getOwnerStores, createStore };
