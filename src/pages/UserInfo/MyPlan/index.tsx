@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import PlanItem from './PlanItem';
 import styles from './styles.module.scss';
 import { getUserPlans } from '../../../api/user';
+import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 
 export type UserPlanType = {
 	id: number;
@@ -20,9 +21,12 @@ type PlanType = {
 
 export default function MyPlanPage() {
 	const [plans, setPlans] = useState<PlanType[] | []>([]);
+	const [isFetching, setIsFetching] = useState<boolean>(false);
+
 	useEffect(() => {
 		async function fetchUserPlans() {
 			try {
+				setIsFetching(true);
 				const response = await getUserPlans();
 				if (response.status === 200) {
 					const { data } = response;
@@ -30,6 +34,8 @@ export default function MyPlanPage() {
 				}
 			} catch (error) {
 				console.error(error);
+			} finally {
+				setIsFetching(false);
 			}
 		}
 
@@ -38,7 +44,9 @@ export default function MyPlanPage() {
 
 	return (
 		<ul className={styles.myPlan}>
-			{plans.length ? (
+			{isFetching ? (
+				<AiOutlineLoading3Quarters className={styles.loading} />
+			) : plans.length ? (
 				plans.map((plan) => (
 					<PlanItem
 						key={plan.storeId}
