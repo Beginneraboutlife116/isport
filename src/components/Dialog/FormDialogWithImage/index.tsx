@@ -3,10 +3,13 @@ import { useForm } from 'react-hook-form';
 import type { FieldValues } from 'react-hook-form';
 import { IoMdCloseCircle } from 'react-icons/io';
 import FormInput, { EmailInput, NameInput } from '../../FormInput';
+import { createStore, updateStore } from '../../../api/owner';
+import { useStoresData } from '../../../contexts/findContext';
+import { isAxiosError } from '../../../util/helpers';
 import Button from '../../Button';
 import styles from './styles.module.scss';
 
-type StoreType = {
+export type StoreType = {
 	id: number;
 	storeName: string;
 	photo: string;
@@ -18,100 +21,161 @@ type StoreType = {
 
 type FormDialogWithImageProps = {
 	status: boolean;
-	handleDialogToggle: Dispatch<boolean>;
-	onSubmit: (data: FieldValues) => void;
 	editingStore?: StoreType;
-	fetchStatus: {
-		type: 'idle' | 'pending' | 'success' | 'error';
-		error: { type: string; message: string } | null;
-	};
+	setEditingStore: Dispatch<StoreType | {}>;
+	closeDialog: () => void;
+	searchTerm?: string;
 };
 
 export default function FormDialogWithImage({
 	status,
-	handleDialogToggle,
-	onSubmit,
 	editingStore,
-	fetchStatus,
+	setEditingStore,
+	closeDialog,
+	searchTerm,
 }: FormDialogWithImageProps) {
-	const {
-		email = '',
-		phone = '',
-		introduction = '',
-		address = '',
-		storeName = '',
-		photo = null,
-		id = 0,
-	} = editingStore || {};
+	const { storesData, setStoresData, filteredData, setFilteredData } = useStoresData();
+	const { email, phone, introduction, address, storeName, photo, id = 0 } = editingStore || {};
 	const {
 		register,
 		handleSubmit,
-		formState: { errors, isValid, isSubmitting },
+		formState: { errors, isValid, isSubmitting, dirtyFields },
 		setError,
 		clearErrors,
 		resetField,
 		reset,
+		watch,
 	} = useForm<FieldValues>({
-		values: { email, phone, introduction, address, storeName, photo },
+		values: {
+			email: email || '',
+			phone: phone || '',
+			introduction: introduction || '',
+			address: address || '',
+			storeName: storeName || '',
+			photo: null,
+		},
 	});
-	const [textCount, setTextCount] = useState(0);
 	const [{ imgSrc, imgName }, setImgInfo] = useState({
 		imgSrc: photo,
 		imgName: storeName,
 	});
 	const dialogRef = useRef<HTMLDialogElement>(null);
-	const { type, error } = fetchStatus;
+	const [photoChanged, setPhotoChanged] = useState(false);
 
 	useEffect(() => {
+		setImgInfo({ imgSrc: photo, imgName: storeName });
 		const dialog = dialogRef.current;
 		if (dialog) {
 			if (status && !dialog.open) {
 				dialog.show();
 			} else if (!status) {
 				dialog.close();
-				setImgInfo({ imgSrc: '', imgName: '' });
+				// setImgInfo({ imgSrc: '', imgName: '' });
 			}
 		}
 
-		if (type === 'success') {
-			reset();
-			setImgInfo({ imgSrc: '', imgName: '' });
-		}
+		// return () => {
+		// 	const dialog = dialogRef.current;
+		// 	if (dialog) {
+		// 		dialog.close();
+		// 		setImgInfo({ imgSrc: '', imgName: '' });
+		// 		reset();
+		// 	}
+		// };
+	}, [status]);
 
-		if (type === 'error' && error) {
-			const { type, message } = error;
-			const whichTypeInput = message.includes('地址') ? 'address' : 'storeName';
-			setError(whichTypeInput, {
-				type,
-				message,
-			});
-		}
-
-		return () => {
-			const dialog = dialogRef.current;
-			if (dialog) {
-				dialog.close();
-				setImgInfo({ imgSrc: '', imgName: '' });
-				reset();
-			}
-		};
-	}, [status, type, error]);
-
-	function handleBlur(name: string) {
+	function handleBlur(name: string, label: string) {
 		return (event: React.FocusEvent<HTMLInputElement, Element>) => {
 			const { target } = event;
 			if (target.value === '') {
-				setError(name, { type: 'required', message: `必須輸入${name}` });
+				setError(name, { type: 'required', message: `必須輸入${label}` });
 			}
 		};
+	}
+
+	async function onSubmitToCreate(data: FieldValues) {
+		try {
+			const formData = new FormData();
+			const fakeStore: { [key: string]: unknown } = {};
+			for (const [key, value] of Object.entries(data)) {
+				if (key === 'photo') {
+					const file = value[0];
+					fakeStore[key] = URL.createObjectURL(file);
+					formData.append(key, file);
+				} else {
+					formData.append(key, value);
+					if (key !== 'email' && key !== 'phone') {
+						fakeStore[key] = value;
+					}
+				}
+			}
+			const response = await createStore(formData);
+			if (response.status === 200) {
+				reset();
+				closeDialog();
+				fakeStore.id = response.data.id;
+				fakeStore.rating = 0;
+				fakeStore.reviewCounts = 0;
+				setStoresData([...storesData, fakeStore]);
+				if (searchTerm) {
+					if (data.storeName.includes(searchTerm)) {
+						setFilteredData([...filteredData, fakeStore]);
+					}
+				} else {
+					setFilteredData([...filteredData, fakeStore]);
+				}
+			}
+		} catch (error) {
+			if (isAxiosError(error) && error.response) {
+				const { data } = error.response;
+				const whichTypeInput = data.message.includes('地址') ? 'address' : 'storeName';
+				setError(whichTypeInput, {
+					type: data.status,
+					message: data.message,
+				});
+			} else {
+				console.error(error);
+			}
+		}
+	}
+
+	async function onSubmitToUpdate(id: number, data: FieldValues) {
+		try {
+			if (Object.values(dirtyFields).some((item) => item)) {
+				const formData = new FormData();
+				// let fakePhoto = null;
+				if (photoChanged) {
+					// formData.append('photo', file);
+				}
+				for (const [key, value] of Object.entries(data)) {
+					console.log(key, value);
+					if (key === 'photo') {
+						const file = data.photo ? data.photo[0] : null;
+						formData.append(key, file);
+					}
+					formData.append(key, value);
+				}
+				const response = await updateStore(id, formData);
+				console.log(response);
+			}
+		} catch (error) {
+			console.error(error);
+		}
+	}
+
+	let btnDisabled = false;
+	if (id === 0) {
+		btnDisabled = !isValid || isSubmitting;
+	} else {
+		btnDisabled = !Object.values(dirtyFields).some((item) => item);
 	}
 
 	return (
 		<dialog ref={dialogRef} className={styles.dialog} key={id}>
 			<Button
 				onClick={() => {
-					reset();
-					handleDialogToggle(false);
+					setEditingStore({});
+					closeDialog();
 				}}
 				className={styles['btn--close']}
 			>
@@ -119,7 +183,13 @@ export default function FormDialogWithImage({
 			</Button>
 
 			<form
-				onSubmit={handleSubmit(onSubmit)}
+				onSubmit={handleSubmit((data) => {
+					if (id === 0) {
+						onSubmitToCreate(data);
+					} else {
+						onSubmitToUpdate(id, data);
+					}
+				})}
 				className={styles.form}
 			>
 				<NameInput
@@ -153,7 +223,7 @@ export default function FormDialogWithImage({
 					rules={{
 						required: true,
 						pattern: /^0\d{8,}$/,
-						onBlur: handleBlur('phone'),
+						onBlur: handleBlur('phone', '場館電話'),
 						onChange: (event: React.ChangeEvent<HTMLInputElement>) => {
 							const { target } = event;
 							const pattern = /^0\d{8,}$/;
@@ -181,10 +251,9 @@ export default function FormDialogWithImage({
 						{...register('introduction', {
 							required: true,
 							maxLength: 300,
-							onBlur: handleBlur('introduction'),
+							onBlur: handleBlur('introduction', '場館介紹'),
 							onChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => {
 								const { target } = event;
-								setTextCount(target.value.length);
 								if (target.value.length > 300) {
 									setError('introduction', {
 										type: 'maxLength',
@@ -202,7 +271,7 @@ export default function FormDialogWithImage({
 								{errors['introduction'].message as ReactNode}
 							</span>
 						)}
-						<span>{textCount} / 300</span>
+						<span>{watch('introduction').length} / 300</span>
 					</p>
 				</label>
 				<div className={styles.uploadImage}>
@@ -230,6 +299,7 @@ export default function FormDialogWithImage({
 								resetField('photo');
 								setImgInfo({ imgSrc: '', imgName: '' });
 								setError('photo', { type: 'required', message: '請選擇圖片' });
+								setPhotoChanged(true);
 							}
 						}}
 						className={styles['btn--reset']}
@@ -244,21 +314,24 @@ export default function FormDialogWithImage({
 						id='photo'
 						accept='image/jpg, image/png, image/jpeg'
 						{...register('photo', {
-							required: true,
+							required: id === 0,
 							validate: {
 								fileType: (value) => {
-									const file = value[0];
-									const validateFormat = ['image/jpg', 'image/png', 'image/jpeg'];
-									return validateFormat.includes(file.type);
+									if (id === 0) {
+										const file = value[0];
+										const validateFormat = ['image/jpg', 'image/png', 'image/jpeg'];
+										return validateFormat.includes(file.type);
+									}
 								},
 							},
-							onBlur: handleBlur('photo'),
+							onBlur: handleBlur('photo', '場館照片'),
 							onChange: (event: React.ChangeEvent<HTMLInputElement>) => {
 								const file = event.target.files?.[0];
 								if (file) {
 									const validateFormat = ['image/jpg', 'image/png', 'image/jpeg'];
 									if (validateFormat.includes(file.type)) {
 										setImgInfo({ imgSrc: URL.createObjectURL(file), imgName: file.name });
+										setPhotoChanged(true);
 										clearErrors('photo');
 									} else {
 										resetField('photo');
@@ -272,7 +345,7 @@ export default function FormDialogWithImage({
 						})}
 					/>
 				</div>
-				<Button type='submit' className={styles['btn--submit']} disabled={!isValid || isSubmitting}>
+				<Button type='submit' className={styles['btn--submit']} disabled={btnDisabled}>
 					{isSubmitting ? '送出中...' : id ? '修改送出' : '送出'}
 				</Button>
 			</form>

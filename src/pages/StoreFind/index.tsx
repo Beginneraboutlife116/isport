@@ -1,31 +1,29 @@
 import { useEffect, useState } from 'react';
 import { BsPlusCircleFill } from 'react-icons/bs';
-import { FieldValues } from 'react-hook-form';
-import CardList, { type CardData } from '../../components/CardList';
+import CardList from '../../components/CardList';
 import SearchBar from '../../components/SearchBar';
 import Button from '../../components/Button';
 import FormDialogWithImage from '../../components/Dialog/FormDialogWithImage';
-import { getOwnerStores, createStore } from '../../api/owner';
+import { getOwnerStores, getOneStore } from '../../api/owner';
 import { useStoresData } from '../../contexts/findContext';
 import { isAxiosError } from '../../util/helpers';
+import { StoreType } from '../../components/Dialog/FormDialogWithImage';
 import styled from './styles.module.scss';
 
 export default function StoreFindPage() {
 	const [toggleDialog, setToggleDialog] = useState(false);
 	const [searchTerm, setSearchTerm] = useState('');
-	const { storesData, setStoresData } = useStoresData();
-	const [stores, setStores] = useState<CardData[] | []>([]);
-	const [fetchStatus, setFetchStatus] = useState<{
-		type: 'idle' | 'pending' | 'success' | 'error';
-		error: { type: string; message: string } | null;
-	}>({ type: 'idle', error: null });
+	const { storesData, setStoresData, filteredData, setFilteredData } = useStoresData();
+	const [editedStores, setEditedStores] = useState<StoreType[] | []>([]);
+	const [editingStore, setEditingStore] = useState<StoreType | {}>({});
+	const [id, setId] = useState(0);
 
 	useEffect(() => {
 		async function fetchOwnerStores() {
 			try {
 				const response = await getOwnerStores();
 				setStoresData(response.data);
-				setStores(response.data);
+				setFilteredData(response.data);
 			} catch (error) {
 				if (isAxiosError(error)) {
 					console.error(error);
@@ -39,61 +37,42 @@ export default function StoreFindPage() {
 
 	function handleSearch() {
 		if (searchTerm) {
-			setStores(storesData.filter((item) => item.storeName.includes(searchTerm)));
+			setFilteredData(storesData.filter((item) => item.storeName.includes(searchTerm)));
 		} else {
-			setStores(storesData);
+			setFilteredData(storesData);
 		}
 	}
 
-	async function onDialogSubmit(data: FieldValues) {
+	function handleEdit(id: number) {
+		setId(id);
+		const store = editedStores.find((item) => item.id === id);
+		if (!store) {
+			fetchOneStore(id);
+		} else {
+			setToggleDialog(!toggleDialog);
+			setEditingStore(store);
+		}
+	}
+
+	async function fetchOneStore(storeId: number) {
 		try {
-			const formData = new FormData();
-			const fakeStore: { [key: string]: unknown } = {};
-			for (const [key, value] of Object.entries(data)) {
-				if (key === 'photo') {
-					const file = value[0];
-					fakeStore[key] = URL.createObjectURL(file);
-					formData.append(key, file);
-				} else {
-					formData.append(key, value);
-					if (key !== 'email' && key !== 'phone') {
-						fakeStore[key] = value;
-					}
-				}
-			}
-			setFetchStatus({ type: 'pending', error: null });
-			const response = await createStore(formData);
-			if (response.status === 200) {
-				setToggleDialog(!toggleDialog);
-				setFetchStatus({ type: 'success', error: null });
-				fakeStore.id = response.data.id;
-				fakeStore.rating = 0;
-				fakeStore.reviewCounts = 0;
-				setStoresData([...storesData, fakeStore]);
-				if (searchTerm) {
-					if ((fakeStore.storeName as string).includes(searchTerm)) {
-						setStores([...stores, fakeStore as CardData]);
-					}
-				} else {
-					setStores([...stores, fakeStore as CardData]);
-				}
-			}
+			const { data } = await getOneStore(storeId);
+			const editingStore = {
+				id: data.id,
+				storeName: data.storeName,
+				photo: data.photo,
+				address: data.address,
+				introduction: data.introduction,
+				email: data.email,
+				phone: data.phone,
+			};
+			setEditingStore(editingStore);
+			setEditedStores([...editedStores, editingStore]);
+			setToggleDialog(!toggleDialog);
 		} catch (error) {
-			if (isAxiosError(error)) {
-				setFetchStatus({ type: 'error', error: error.response?.data });
-			} else {
-				console.error(error);
-			}
+			console.error(error);
 		}
 	}
-
-	/**
-	 * 按下個別卡片的編輯按鈕
-	 * 需要去取得該卡片的資料
-	 * 利用 id 去取得資訊，因為有一些資訊是在這一次 fetchOwnerStores 取不到的
-	 * 取完得到資料後，可以先暫存在一個地方，可供使用者後續點擊使用，所以每次點擊都要先看有沒有該筆資料
-	 * 就是要把該資料取出來，丟進 dialog
-	 */
 
 	return (
 		<div className={styled.container}>
@@ -117,13 +96,19 @@ export default function StoreFindPage() {
 					</Button>
 
 					<FormDialogWithImage
+						key={id || 0}
 						status={toggleDialog}
-						handleDialogToggle={setToggleDialog}
-						onSubmit={onDialogSubmit}
-						fetchStatus={fetchStatus}
+						closeDialog={() => setToggleDialog(!toggleDialog)}
+						editingStore={editingStore as StoreType}
+						setEditingStore={setEditingStore}
+						searchTerm={searchTerm}
 					/>
 				</div>
-				{stores.length ? <CardList data={stores} /> : <h2 data-title='no store'>沒有建立之場館</h2>}
+				{filteredData.length ? (
+					<CardList data={filteredData} handleClick={handleEdit} />
+				) : (
+					<h2 data-title='no store'>沒有建立之場館</h2>
+				)}
 			</div>
 		</div>
 	);

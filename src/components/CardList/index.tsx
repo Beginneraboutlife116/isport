@@ -14,9 +14,10 @@ export type CardData = {
 
 type CardListProps = {
 	data: CardData[];
+	handleClick?: (id: number) => void;
 };
 
-function CardList({ data }: CardListProps) {
+function CardList({ data, handleClick }: CardListProps) {
 	return (
 		<div className={styled.container}>
 			{data.map((item) => {
@@ -30,6 +31,7 @@ function CardList({ data }: CardListProps) {
 						introduction={item.introduction}
 						photo={item.photo}
 						isLiked={item.isLiked}
+						onClick={handleClick}
 					/>
 				);
 			})}

@@ -18,6 +18,7 @@ type CardProps = {
 	address?: string;
 	email?: string;
 	phone?: string;
+	onClick?: (id: number) => void;
 };
 
 function Card({
@@ -31,6 +32,7 @@ function Card({
 	address,
 	email,
 	phone,
+	onClick,
 }: CardProps) {
 	const { oneStore } = useStoresData();
 	const [isStoreLiked, setIsStoreLiked] = useState(isLiked);
@@ -108,7 +110,14 @@ function Card({
 									)}
 								</div>
 							) : (
-								<MdEdit onClick={() => console.log('click')} style={{ fontSize: '24px' }} />
+								<MdEdit
+									onClick={() => {
+										if (onClick) {
+											onClick(id);
+										}
+									}}
+									style={{ fontSize: '24px' }}
+								/>
 							)}
 						</div>
 
