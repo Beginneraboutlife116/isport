@@ -89,7 +89,9 @@ function Card({
 									<span>Map</span>
 								</div>
 
-								<div className={styled['card__infoWrap__detailWrap__detail--rating']}>{rating}</div>
+								<div className={styled['card__infoWrap__detailWrap__detail--rating']}>
+									{rating ?? 0}
+								</div>
 
 								<div className={styled['card__infoWrap__detailWrap__detail--review']}>
 									{reviewCounts}則評論
