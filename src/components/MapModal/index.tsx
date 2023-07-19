@@ -44,7 +44,7 @@ const MapComponent = ({ lat, lng, storeName }: MapProps) => {
 };
 
 function Marker({ lat, lng, map, storeName }: MapProps) {
-	const [marker, setMarker] = useState<google.maps.Marker | null>(null);
+	const markerRef = useRef<google.maps.Marker | null>(null);
 
 	useEffect(() => {
 		const markerOptions = {
@@ -53,7 +53,7 @@ function Marker({ lat, lng, map, storeName }: MapProps) {
 		};
 
 		const newMarker = new window.google.maps.Marker(markerOptions);
-		setMarker(newMarker);
+		markerRef.current = newMarker;
 
 		// 標記資訊
 		const infoWindowOptions = {
@@ -68,11 +68,11 @@ function Marker({ lat, lng, map, storeName }: MapProps) {
 		});
 
 		return () => {
-			if (marker) {
-				marker.setMap(null);
+			if (markerRef.current) {
+				markerRef.current.setMap(null);
 			}
 		};
-	}, [lat, lng, map, marker]);
+	}, [lat, lng, map]);
 
 	return null;
 }
