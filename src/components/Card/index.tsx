@@ -1,11 +1,10 @@
 import { BiSolidMap } from 'react-icons/bi';
-import { BsHeart, BsHeartFill } from 'react-icons/bs';
-import { BsFillTelephoneFill } from 'react-icons/bs';
-import { MdEmail } from 'react-icons/md';
+import { BsHeart, BsHeartFill, BsFillTelephoneFill } from 'react-icons/bs';
+import { MdEmail, MdEdit } from 'react-icons/md';
 import { useState, MouseEvent } from 'react';
 import styled from './styles.module.scss';
 import { addLikeStore, deleteLikeStore } from '../../api/like';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useStoresData } from '../../contexts/findContext';
 
 type CardProps = {
@@ -36,6 +35,7 @@ function Card({
 	const { oneStore } = useStoresData();
 	const [isStoreLiked, setIsStoreLiked] = useState(isLiked);
 	const navigate = useNavigate();
+	const { pathname } = useLocation();
 
 	// 新增或取消收藏場館
 	const handleToggleLike = async (storeId: number) => {
@@ -97,15 +97,17 @@ function Card({
 							</div>
 
 							{/* 愛心收藏圖案功能 */}
-							<div onClick={() => handleToggleLike(id)}>
-								{!isStoreLiked ? (
-									<BsHeart style={{ fontSize: '24px' }} />
-								) : (
-									<BsHeartFill style={{ fontSize: '24px', color: 'red' }} />
-								)}
-							</div>
-
-							{/* 這裡可以加入商家的鉛筆圖案編輯功能 */}
+							{pathname !== '/store/find' ? (
+								<div onClick={() => handleToggleLike(id)}>
+									{!isStoreLiked ? (
+										<BsHeart style={{ fontSize: '24px' }} />
+									) : (
+										<BsHeartFill style={{ fontSize: '24px', color: 'red' }} />
+									)}
+								</div>
+							) : (
+								<MdEdit onClick={() => console.log('click')} style={{ fontSize: '24px' }} />
+							)}
 						</div>
 
 						<div className={styled['card__infoWrap--text']}>{introduction}</div>

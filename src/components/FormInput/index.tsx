@@ -2,6 +2,7 @@ import { ReactNode } from 'react';
 import { RegisterOptions, UseFormRegister, FieldErrors, FieldValues } from 'react-hook-form';
 import styles from './styles.module.scss';
 import EmailInput from './EmailInput';
+import NameInput from './NameInput';
 import PasswordInput from './PasswordInput';
 import ConfirmPasswordInput from './ConfirmPasswordInput';
 
@@ -59,4 +60,4 @@ export default function FormInput({
 	);
 }
 
-export { EmailInput, PasswordInput, ConfirmPasswordInput };
+export { EmailInput, NameInput, PasswordInput, ConfirmPasswordInput };

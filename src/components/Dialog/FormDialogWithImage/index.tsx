@@ -1,39 +1,66 @@
 import { useState, useRef, useEffect, Dispatch, ReactNode } from 'react';
-import { FieldValues, useForm, UseFormSetError } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
+import type { FieldValues } from 'react-hook-form';
 import { IoMdCloseCircle } from 'react-icons/io';
-import FormInput, { EmailInput } from '../../FormInput';
+import FormInput, { EmailInput, NameInput } from '../../FormInput';
 import Button from '../../Button';
 import styles from './styles.module.scss';
 
+type StoreType = {
+	id: number;
+	storeName: string;
+	photo: string;
+	address: string;
+	email: string;
+	phone: string;
+	introduction: string;
+};
+
 type FormDialogWithImageProps = {
-	buttonDescription: string;
 	status: boolean;
 	handleDialogToggle: Dispatch<boolean>;
-	onSubmit: (data: FieldValues, setError: UseFormSetError<FieldValues>) => void;
+	onSubmit: (data: FieldValues) => void;
+	editingStore?: StoreType;
+	fetchStatus: {
+		type: 'idle' | 'pending' | 'success' | 'error';
+		error: { type: string; message: string } | null;
+	};
 };
 
 export default function FormDialogWithImage({
-	buttonDescription,
 	status,
 	handleDialogToggle,
 	onSubmit,
+	editingStore,
+	fetchStatus,
 }: FormDialogWithImageProps) {
+	const {
+		email = '',
+		phone = '',
+		introduction = '',
+		address = '',
+		storeName = '',
+		photo = null,
+		id = 0,
+	} = editingStore || {};
 	const {
 		register,
 		handleSubmit,
-		formState: { errors, isValid },
-		watch,
+		formState: { errors, isValid, isSubmitting },
 		setError,
 		clearErrors,
 		resetField,
 		reset,
-	} = useForm();
+	} = useForm<FieldValues>({
+		values: { email, phone, introduction, address, storeName, photo },
+	});
 	const [textCount, setTextCount] = useState(0);
 	const [{ imgSrc, imgName }, setImgInfo] = useState({
-		imgSrc: '',
-		imgName: '',
+		imgSrc: photo,
+		imgName: storeName,
 	});
 	const dialogRef = useRef<HTMLDialogElement>(null);
+	const { type, error } = fetchStatus;
 
 	useEffect(() => {
 		const dialog = dialogRef.current;
@@ -42,33 +69,33 @@ export default function FormDialogWithImage({
 				dialog.show();
 			} else if (!status) {
 				dialog.close();
+				setImgInfo({ imgSrc: '', imgName: '' });
 			}
 		}
+
+		if (type === 'success') {
+			reset();
+			setImgInfo({ imgSrc: '', imgName: '' });
+		}
+
+		if (type === 'error' && error) {
+			const { type, message } = error;
+			const whichTypeInput = message.includes('地址') ? 'address' : 'storeName';
+			setError(whichTypeInput, {
+				type,
+				message,
+			});
+		}
+
 		return () => {
 			const dialog = dialogRef.current;
 			if (dialog) {
 				dialog.close();
+				setImgInfo({ imgSrc: '', imgName: '' });
+				reset();
 			}
 		};
-	}, [status]);
-
-	const files = watch('image', null);
-
-	useEffect(() => {
-		if (files && files.length > 0) {
-			const validateFormat = ['image/jpg', 'image/png', 'image/jpeg'];
-			const fileData = files[0];
-			if (validateFormat.includes(fileData.type)) {
-				setImgInfo({ imgSrc: URL.createObjectURL(fileData), imgName: fileData.name });
-				clearErrors('image');
-			} else {
-				setImgInfo({ imgSrc: '', imgName: '' });
-				setError('image', { type: 'pattern', message: '不支援的圖片格式' });
-			}
-		} else {
-			setImgInfo({ imgSrc: '', imgName: '' });
-		}
-	}, [files]);
+	}, [status, type, error]);
 
 	function handleBlur(name: string) {
 		return (event: React.FocusEvent<HTMLInputElement, Element>) => {
@@ -80,7 +107,7 @@ export default function FormDialogWithImage({
 	}
 
 	return (
-		<dialog ref={dialogRef} className={styles.dialog}>
+		<dialog ref={dialogRef} className={styles.dialog} key={id}>
 			<Button
 				onClick={() => {
 					reset();
@@ -91,48 +118,30 @@ export default function FormDialogWithImage({
 				<IoMdCloseCircle />
 			</Button>
 
-			<form onSubmit={handleSubmit((data) => onSubmit(data, setError))} className={styles.form}>
-				<FormInput
+			<form
+				onSubmit={handleSubmit(onSubmit)}
+				className={styles.form}
+			>
+				<NameInput
 					label='場館名稱'
 					labelClassName={styles.label}
 					inputClassName={styles.input}
-					name='name'
+					name='storeName'
 					register={register}
 					errors={errors}
-					rules={{
-						required: true,
-						maxLength: 50,
-						onBlur: handleBlur('name'),
-						onChange: (event: React.ChangeEvent<HTMLInputElement>) => {
-							const { target } = event;
-							if (target.value.length > 50) {
-								setError('name', { type: 'maxLength', message: '場館名稱不可超過 50 字元' });
-							} else {
-								clearErrors('name');
-							}
-						},
-					}}
+					setError={setError}
+					clearErrors={clearErrors}
 				/>
-				<FormInput
+				<NameInput
 					label='場館地址'
 					labelClassName={styles.label}
 					inputClassName={styles.input}
 					name='address'
 					register={register}
 					errors={errors}
-					rules={{
-						required: true,
-						maxLength: 100,
-						onBlur: handleBlur('address'),
-						onChange: (event: React.ChangeEvent<HTMLInputElement>) => {
-							const { target } = event;
-							if (target.value.length > 100) {
-								setError('address', { type: 'maxLength', message: '場館地址不可超過 100 字元' });
-							} else {
-								clearErrors('address');
-							}
-						},
-					}}
+					setError={setError}
+					clearErrors={clearErrors}
+					maxLength={100}
 				/>
 				<FormInput
 					label='場館電話'
@@ -143,11 +152,11 @@ export default function FormDialogWithImage({
 					errors={errors}
 					rules={{
 						required: true,
-						pattern: /^09\d{8}$/,
+						pattern: /^0\d{8,}$/,
 						onBlur: handleBlur('phone'),
 						onChange: (event: React.ChangeEvent<HTMLInputElement>) => {
 							const { target } = event;
-							const pattern = /^09\d{8}$/;
+							const pattern = /^0\d{8,}$/;
 							if (!pattern.test(target.value)) {
 								setError('phone', { type: 'pattern', message: '電話號碼格式錯誤' });
 							} else {
@@ -197,14 +206,14 @@ export default function FormDialogWithImage({
 					</p>
 				</label>
 				<div className={styles.uploadImage}>
-					{errors['image'] && (
+					{errors['photo'] && (
 						<span className={styles.uploadImage__error}>
-							{errors['image'].message as ReactNode}
+							{errors['photo'].message as ReactNode}
 						</span>
 					)}
 					<div>
 						<img
-							src={imgSrc || 'https://fakeimg.pl/320x180/?text=Hello'}
+							src={imgSrc || 'https://fakeimg.pl/320x180/?text=PICTURE'}
 							alt={imgName || '場館照片'}
 							className={styles.uploadImage__image}
 						/>
@@ -218,7 +227,9 @@ export default function FormDialogWithImage({
 						type='button'
 						onClick={() => {
 							if (imgSrc) {
-								resetField('image');
+								resetField('photo');
+								setImgInfo({ imgSrc: '', imgName: '' });
+								setError('photo', { type: 'required', message: '請選擇圖片' });
 							}
 						}}
 						className={styles['btn--reset']}
@@ -231,21 +242,38 @@ export default function FormDialogWithImage({
 						className='hidden'
 						type='file'
 						id='photo'
-						accept='./jpg, ./png, ./jpeg, image/*'
+						accept='image/jpg, image/png, image/jpeg'
 						{...register('photo', {
 							required: true,
 							validate: {
-								pattern: (value) => {
+								fileType: (value) => {
 									const file = value[0];
 									const validateFormat = ['image/jpg', 'image/png', 'image/jpeg'];
 									return validateFormat.includes(file.type);
 								},
 							},
+							onBlur: handleBlur('photo'),
+							onChange: (event: React.ChangeEvent<HTMLInputElement>) => {
+								const file = event.target.files?.[0];
+								if (file) {
+									const validateFormat = ['image/jpg', 'image/png', 'image/jpeg'];
+									if (validateFormat.includes(file.type)) {
+										setImgInfo({ imgSrc: URL.createObjectURL(file), imgName: file.name });
+										clearErrors('photo');
+									} else {
+										resetField('photo');
+										setError('photo', { type: 'fileType', message: '不支援的圖片格式' });
+									}
+								} else {
+									resetField('photo');
+									setImgInfo({ imgSrc: '', imgName: '' });
+								}
+							},
 						})}
 					/>
 				</div>
-				<Button type='submit' className={styles['btn--submit']} disabled={!isValid}>
-					{buttonDescription}
+				<Button type='submit' className={styles['btn--submit']} disabled={!isValid || isSubmitting}>
+					{isSubmitting ? '送出中...' : id ? '修改送出' : '送出'}
 				</Button>
 			</form>
 		</dialog>

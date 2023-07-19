@@ -1,7 +1,7 @@
 import Card from '../Card';
 import styled from './styles.module.scss';
 
-type CardData = {
+export type CardData = {
 	id: number;
 	storeName: string;
 	photo: string;

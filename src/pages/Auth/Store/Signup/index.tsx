@@ -1,7 +1,8 @@
 import { FieldValues, useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
-import FormInput, {
+import {
 	EmailInput,
+	NameInput,
 	PasswordInput,
 	ConfirmPasswordInput,
 } from '../../../../components/FormInput';
@@ -27,7 +28,7 @@ export default function StoreSignupPage() {
 
 	async function onSubmit(data: FieldValues) {
 		try {
-			const { email, password, confirmPassword, name } = data;
+			const { email, password, confirmPassword, storeName } = data;
 			if (password !== confirmPassword) {
 				setError('confirmPassword', {
 					type: 'different',
@@ -35,7 +36,7 @@ export default function StoreSignupPage() {
 				});
 				return;
 			}
-			const response = await storeSignup({ email, password, confirmPassword, storeName: name });
+			const response = await storeSignup({ email, password, confirmPassword, storeName });
 			if (response.status === 200) {
 				const { userId, token } = response.data;
 				localStorage.setItem('isport', JSON.stringify({ token, role: 'owner' }));
@@ -45,10 +46,10 @@ export default function StoreSignupPage() {
 					avatar: '',
 					isAuthenticated: true,
 					role: 'owner',
-					email: '',
-					name: '',
+					email,
+					name: storeName,
 				});
-				navigate(`/store/${userId}/find`);
+				navigate(`/store/find`);
 			}
 		} catch (error) {
 			if (isAxiosError(error)) {
@@ -75,29 +76,14 @@ export default function StoreSignupPage() {
 					placeholder='請輸入註冊Email'
 					className={authStyles.auth__input}
 				/>
-				<FormInput
+				<NameInput
 					register={register}
 					errors={errors}
-					name='name'
+					setError={setError}
+					clearErrors={clearErrors}
+					name='storeName'
 					placeholder='請輸入商家名稱'
 					className={authStyles.auth__input}
-					rules={{
-						required: true,
-						maxLength: 50,
-						onBlur: (event: React.FocusEvent<HTMLInputElement, Element>) => {
-							if (event.target.value === '') {
-								setError('name', { type: 'required', message: '商家名稱不可為空' });
-							}
-						},
-						onChange: (event: React.ChangeEvent<HTMLInputElement>) => {
-							const { target } = event;
-							if (target.value.length > 50) {
-								setError('name', { type: 'maxLength', message: '商家名稱不能大於50個字' });
-							} else {
-								clearErrors('name');
-							}
-						},
-					}}
 				/>
 				<PasswordInput
 					register={register}

@@ -27,7 +27,7 @@ export default function StoreLoginPage() {
 				const { token, userId, role } = response.data;
 				localStorage.setItem('isport', JSON.stringify({ token, role }));
 				setAuth({ token, userId, role, isAuthenticated: true, avatar: '', email: '', name: '' });
-				navigate(`/store/${userId}/find`);
+				navigate(`/store/find`);
 			}
 		} catch (error) {
 			if (isAxiosError(error)) {

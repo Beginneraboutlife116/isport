@@ -27,7 +27,7 @@ export default function Header({
 
 				<div className={styles.header__linkWrap}>
 					{role && (
-						<Link to={role === 'user' ? '/find' : `/store/${currentUserId}/find`}>
+						<Link to={`/${role !== 'user' && 'store/'}find`}>
 							<Button className={styles.header__linkWrap__link}>找場館</Button>
 						</Link>
 					)}
@@ -60,7 +60,7 @@ export default function Header({
 								</Button>
 							</Link>
 						)}
-						<Link to={role === 'user' ? `/user/${currentUserId}` : `/store/${currentUserId}`}>
+						<Link to={`/${role === 'user' ? 'user' : 'store'}/account`}>
 							<Button className={styles.header__btn}>我的帳戶</Button>
 						</Link>
 

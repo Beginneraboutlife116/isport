@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { FieldValues, useForm } from 'react-hook-form';
 import AvatarInput from '../../../../components/AvatarInput';
-import FormInput, { EmailInput } from '../../../../components/FormInput';
+import { EmailInput, NameInput } from '../../../../components/FormInput';
 import Button from '../../../../components/Button';
 import { useAuth } from '../../../../contexts/authContext';
 import { getUserData, updateUserAccount } from '../../../../api/user';
@@ -18,7 +18,7 @@ export default function UpperForm() {
 		resetField,
 		setError,
 		clearErrors,
-	} = useForm<FieldValues>({ values: { email: auth.email, name: auth.name, avatar: null } });
+	} = useForm<FieldValues>({ values: { email: auth.email, nickname: auth.name, avatar: null } });
 	const [isAvatarChanged, setIsAvatarChanged] = useState<boolean>(false);
 
 	useEffect(() => {
@@ -41,12 +41,12 @@ export default function UpperForm() {
 
 	async function onSubmit(data: FieldValues) {
 		try {
-			const { email, name, avatar } = data;
+			const { email, nickname, avatar } = data;
 			let fakeAvatar = '';
-			if (email !== auth.email || name !== auth.name || isAvatarChanged) {
+			if (email !== auth.email || nickname !== auth.name || isAvatarChanged) {
 				const formData = new FormData();
 				formData.append('email', email);
-				formData.append('nickname', name);
+				formData.append('nickname', nickname);
 				if (isAvatarChanged) {
 					const file = avatar ? avatar[0] : null;
 					fakeAvatar = file ? URL.createObjectURL(file) : '';
@@ -54,7 +54,7 @@ export default function UpperForm() {
 				}
 				const response = await updateUserAccount(formData);
 				if (response.status === 200) {
-					setAuth({ ...auth, email, name });
+					setAuth({ ...auth, email, name: nickname });
 					if (isAvatarChanged) {
 						setAuth({ ...auth, avatar: fakeAvatar });
 					}
@@ -93,23 +93,14 @@ export default function UpperForm() {
 				setError={setError}
 				clearErrors={clearErrors}
 			/>
-			<FormInput
+			<NameInput
 				register={register}
 				errors={errors}
 				label='暱稱'
-				name='name'
+				name='nickname'
 				className={styles.form__input}
-				rules={{
-					maxLength: 50,
-					onChange: (event: React.ChangeEvent<HTMLInputElement>) => {
-						const { target } = event;
-						if (target.value.length > 50) {
-							setError('name', { type: 'maxLength', message: '暱稱不能大於50個字' });
-						} else {
-							clearErrors('name');
-						}
-					},
-				}}
+				setError={setError}
+				clearErrors={clearErrors}
 			/>
 			<Button type='submit' disabled={!isValid || isSubmitting} className={styles.form__btn}>
 				{isSubmitting ? '送出中...' : '確認送出'}

@@ -34,7 +34,7 @@ function App() {
 										role: 'user',
 										isAuthenticated: true,
 									});
-									navigateToRoleDefaultPage(pathname, 'user', id);
+									navigateToRoleDefaultPage(pathname, 'user');
 								} else {
 									setAuth({
 										name: response.data.storeName,
@@ -45,7 +45,7 @@ function App() {
 										role: 'owner',
 										isAuthenticated: true,
 									});
-									navigateToRoleDefaultPage(pathname, 'owner', id);
+									navigateToRoleDefaultPage(pathname, 'owner');
 								}
 							} else {
 								handleLogout();
@@ -53,7 +53,7 @@ function App() {
 							}
 						} else if (auth.token === localToken) {
 							setAuth({ ...auth, isAuthenticated: true });
-							navigateToRoleDefaultPage(pathname, auth.role, auth.userId);
+							navigateToRoleDefaultPage(pathname, auth.role);
 						} else {
 							handleLogout();
 						}
@@ -94,15 +94,16 @@ function App() {
 		}
 	}
 
-	function navigateToRoleDefaultPage(pathname: string, role: string, userId: number) {
+	function navigateToRoleDefaultPage(pathname: string, role: string) {
 		if (
 			pathname === '/' ||
 			pathname === '/login' ||
 			pathname === '/signup' ||
+			pathname === '/store' ||
 			pathname === '/store/login' ||
 			pathname === '/store/signup'
 		) {
-			navigate(role === 'user' ? `/find` : `/store/${userId}/find`);
+			navigate(role === 'user' ? `/find` : `/store/find`);
 		} else if (role !== 'user' && !pathname.includes('store')) {
 			navigate('/role');
 		} else if (role === 'user' && pathname.includes('store')) {

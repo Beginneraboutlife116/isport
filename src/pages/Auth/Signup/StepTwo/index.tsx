@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm, FieldValues } from 'react-hook-form';
-import FormInput from '../../../../components/FormInput';
+import { NameInput } from '../../../../components/FormInput';
 import Button from '../../../../components/Button';
 import { useAuth } from '../../../../contexts/authContext';
 import authStyles from '../../styles.module.scss';
@@ -11,6 +11,7 @@ import { updateUserAccount } from '../../../../api/user';
 import { isAxiosError } from '../../../../util/helpers';
 
 export default function SignupStepTwoPage() {
+	const [auth, setAuth] = useAuth();
 	const {
 		register,
 		handleSubmit,
@@ -19,18 +20,18 @@ export default function SignupStepTwoPage() {
 		resetField,
 		setError,
 		clearErrors,
-	} = useForm();
-	const [auth, setAuth] = useAuth();
+	} = useForm<FieldValues>({ values: { nickname: auth.name } });
+
 	const [isAvatarChanged, setIsAvatarChanged] = useState<boolean>(false);
 	const navigate = useNavigate();
 
 	async function onSubmit(data: FieldValues) {
 		try {
-			const { name, avatar } = data;
+			const { nickname, avatar } = data;
 			let fakeAvatar = '';
-			if (name !== auth.name || isAvatarChanged) {
+			if (nickname !== auth.name || isAvatarChanged) {
 				const formData = new FormData();
-				formData.append('nickname', name);
+				formData.append('nickname', nickname);
 				formData.append('email', auth.email);
 				if (isAvatarChanged) {
 					const file = avatar ? avatar[0] : null;
@@ -39,13 +40,13 @@ export default function SignupStepTwoPage() {
 				}
 				const response = await updateUserAccount(formData);
 				if (response.status === 200) {
-					setAuth({ ...auth, name, avatar: fakeAvatar });
+					setAuth({ ...auth, name: nickname, avatar: fakeAvatar });
 					navigate('/find');
 				}
 			}
 		} catch (error) {
 			if (isAxiosError(error)) {
-				setError('name', {
+				setError('nickname', {
 					type: error.response?.data.status,
 					message: error.response?.data.message,
 				});
@@ -66,23 +67,14 @@ export default function SignupStepTwoPage() {
 					resetField={resetField}
 					changeIsAvatarChanged={setIsAvatarChanged}
 				/>
-				<FormInput
+				<NameInput
 					register={register}
 					errors={errors}
-					name='name'
+					name='nickname'
+					setError={setError}
+					clearErrors={clearErrors}
 					placeholder='請輸入暱稱'
 					className={authStyles.auth__input}
-					rules={{
-						maxLength: 50,
-						onChange: (event: React.ChangeEvent<HTMLInputElement>) => {
-							const { target } = event;
-							if (target.value.length > 50) {
-								setError('name', { type: 'maxLength', message: '暱稱不能大於50個字' });
-							} else {
-								clearErrors('name');
-							}
-						},
-					}}
 				/>
 				<Button type='submit' disabled={!isValid || isSubmitting} className={authStyles.auth__btn}>
 					{isSubmitting ? '發送中...' : '確認送出'}
