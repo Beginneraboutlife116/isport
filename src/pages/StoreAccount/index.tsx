@@ -100,6 +100,7 @@ function PasswordInput() {
 		setSuccess(true);
 		setValue('password', '');
 		setValue('confirmPassword', '');
+		setText('更新成功!');
 
 		setTimeout(() => {
 			setText('');
