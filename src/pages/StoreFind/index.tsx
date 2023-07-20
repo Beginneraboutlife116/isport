@@ -14,7 +14,6 @@ export default function StoreFindPage() {
 	const [toggleDialog, setToggleDialog] = useState(false);
 	const [searchTerm, setSearchTerm] = useState('');
 	const { storesData, setStoresData, filteredData, setFilteredData } = useStoresData();
-	const [editedStores, setEditedStores] = useState<StoreType[] | []>([]);
 	const [editingStore, setEditingStore] = useState<StoreType | {}>({});
 	const [id, setId] = useState(0);
 
@@ -45,13 +44,7 @@ export default function StoreFindPage() {
 
 	function handleEdit(id: number) {
 		setId(id);
-		const store = editedStores.find((item) => item.id === id);
-		if (!store) {
-			fetchOneStore(id);
-		} else {
-			setToggleDialog(!toggleDialog);
-			setEditingStore(store);
-		}
+		fetchOneStore(id);
 	}
 
 	async function fetchOneStore(storeId: number) {
@@ -67,7 +60,6 @@ export default function StoreFindPage() {
 				phone: data.phone,
 			};
 			setEditingStore(editingStore);
-			setEditedStores([...editedStores, editingStore]);
 			setToggleDialog(!toggleDialog);
 		} catch (error) {
 			console.error(error);

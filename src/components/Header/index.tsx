@@ -27,7 +27,7 @@ export default function Header({
 
 				<div className={styles.header__linkWrap}>
 					{role && (
-						<Link to={`/${role !== 'user' && 'store/'}find`}>
+						<Link to={`/${role !== 'user' ? 'store/' : ''}find`}>
 							<Button className={styles.header__linkWrap__link}>找場館</Button>
 						</Link>
 					)}
