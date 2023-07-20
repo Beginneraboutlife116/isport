@@ -33,6 +33,7 @@ const router = createBrowserRouter([
 					{ path: 'login', element: <LoginPage /> },
 					{ path: 'signup', element: <SignupStepOnePage /> },
 					{
+						// TODO 應該可以直接 two step, 利用 status 轉換就好，所以去除掉 `:id`
 						path: 'signup/:id',
 						element: <SignupStepTwoPage />,
 					},
@@ -44,22 +45,16 @@ const router = createBrowserRouter([
 			{ path: 'find/:id', element: <Store /> },
 			{ path: 'collection', element: <Collection /> },
 			{ path: 'reservation', element: <Reservation /> },
-
 			{
-				path: 'user/:id',
+				path: 'user',
 				element: <UserInfoPage />,
 				children: [
-					{ path: '', element: <MyAccountPage /> },
+					{ path: 'account', element: <MyAccountPage /> },
 					{ path: 'plan', element: <MyPlanPage /> },
 				],
 			},
-			{
-				path: 'store/:ownerId',
-				children: [
-					{ path: '', element: <StoreAccount /> },
-					{ path: 'find', element: <StoreFindPage /> },
-				],
-			},
+			{ path: 'store/account', element: <StoreAccount /> },
+			{ path: 'store/find', element: <StoreFindPage /> },
 			{ path: 'role', element: <ErrorPage /> },
 		],
 	},

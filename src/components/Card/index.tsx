@@ -1,11 +1,10 @@
 import { BiSolidMap } from 'react-icons/bi';
-import { BsHeart, BsHeartFill } from 'react-icons/bs';
-import { BsFillTelephoneFill } from 'react-icons/bs';
-import { MdEmail } from 'react-icons/md';
+import { BsHeart, BsHeartFill, BsFillTelephoneFill } from 'react-icons/bs';
+import { MdEmail, MdEdit } from 'react-icons/md';
 import { useState, MouseEvent } from 'react';
 import styled from './styles.module.scss';
 import { addLikeStore, deleteLikeStore } from '../../api/like';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useStoresData } from '../../contexts/findContext';
 import MapModal from '../MapModal';
 
@@ -20,6 +19,7 @@ type CardProps = {
 	address?: string;
 	email?: string;
 	phone?: string;
+	onClick?: (id: number) => void;
 	lat: number;
 	lng: number;
 };
@@ -35,6 +35,7 @@ function Card({
 	address,
 	email,
 	phone,
+	onClick,
 	lat,
 	lng,
 }: CardProps) {
@@ -42,6 +43,7 @@ function Card({
 	const [isStoreLiked, setIsStoreLiked] = useState(isLiked);
 	const [isMapOpen, setIsMapOpen] = useState(false);
 	const navigate = useNavigate();
+	const { pathname } = useLocation();
 
 	// 新增或取消收藏場館
 	const handleToggleLike = async (storeId: number) => {
@@ -103,12 +105,13 @@ function Card({
 									<span>Map</span>
 								</div>
 
+								<div className={styled['card__infoWrap__detailWrap__detail--rating']}>
+									{rating ?? 0}
+								</div>
 								{/* google map */}
 								{isMapOpen && (
 									<MapModal onClose={handleMapClick} storeName={storeName} lat={lat} lng={lng} />
 								)}
-
-								<div className={styled['card__infoWrap__detailWrap__detail--rating']}>{rating}</div>
 
 								<div className={styled['card__infoWrap__detailWrap__detail--review']}>
 									{reviewCounts}則評論
@@ -116,15 +119,24 @@ function Card({
 							</div>
 
 							{/* 愛心收藏圖案功能 */}
-							<div onClick={() => handleToggleLike(id)}>
-								{!isStoreLiked ? (
-									<BsHeart style={{ fontSize: '24px' }} />
-								) : (
-									<BsHeartFill style={{ fontSize: '24px', color: 'red' }} />
-								)}
-							</div>
-
-							{/* 這裡可以加入商家的鉛筆圖案編輯功能 */}
+							{pathname !== '/store/find' ? (
+								<div onClick={() => handleToggleLike(id)}>
+									{!isStoreLiked ? (
+										<BsHeart style={{ fontSize: '24px' }} />
+									) : (
+										<BsHeartFill style={{ fontSize: '24px', color: 'red' }} />
+									)}
+								</div>
+							) : (
+								<MdEdit
+									onClick={() => {
+										if (onClick) {
+											onClick(id);
+										}
+									}}
+									style={{ fontSize: '24px' }}
+								/>
+							)}
 						</div>
 
 						<div className={styled['card__infoWrap--text']}>{introduction}</div>

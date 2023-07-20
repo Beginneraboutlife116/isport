@@ -1,20 +1,19 @@
 import styles from './styles.module.scss';
-import { Link, Outlet, useLocation, useParams } from 'react-router-dom';
+import { Link, Outlet, useLocation } from 'react-router-dom';
 import MyAccountPage from './MyAccount';
 import MyPlanPage from './MyPlan';
 
 function UserInfoPage() {
 	const { pathname } = useLocation();
-	const { id: userId } = useParams();
 
 	return (
 		<main className={styles.container}>
 			<h1 className='hidden'>我的帳戶資訊</h1>
 			<div className={styles.header}>
 				<Link
-					to={`/user/${userId}`}
+					to={`./account`}
 					className={`${styles.header__title} ${
-						pathname === `/user/${userId}` ? styles.currentElement : ''
+						pathname === `/user/account` ? styles.currentElement : ''
 					}`.trim()}
 				>
 					<h2>我的帳戶</h2>
@@ -22,7 +21,7 @@ function UserInfoPage() {
 				<Link
 					to='./plan'
 					className={`${styles.header__title} ${
-						pathname === `/user/${userId}/plan` ? styles.currentElement : ''
+						pathname === `/user/plan` ? styles.currentElement : ''
 					}`.trim()}
 				>
 					<h2>我的方案</h2>

@@ -1,7 +1,7 @@
 import Card from '../Card';
 import styled from './styles.module.scss';
 
-type CardData = {
+export type CardData = {
 	id: number;
 	storeName: string;
 	photo: string;
@@ -16,9 +16,10 @@ type CardData = {
 
 type CardListProps = {
 	data: CardData[];
+	handleClick?: (id: number) => void;
 };
 
-function CardList({ data }: CardListProps) {
+function CardList({ data, handleClick }: CardListProps) {
 	return (
 		<div className={styled.container}>
 			{data.map((item) => {
@@ -32,6 +33,7 @@ function CardList({ data }: CardListProps) {
 						introduction={item.introduction}
 						photo={item.photo}
 						isLiked={item.isLiked}
+						onClick={handleClick}
 						lat={item.lat}
 						lng={item.lng}
 					/>
