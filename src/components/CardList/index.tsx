@@ -10,6 +10,8 @@ type CardData = {
 	reviewCounts: number;
 	introduction: string;
 	isLiked?: boolean;
+	lat: number;
+	lng: number;
 };
 
 type CardListProps = {
@@ -30,6 +32,8 @@ function CardList({ data }: CardListProps) {
 						introduction={item.introduction}
 						photo={item.photo}
 						isLiked={item.isLiked}
+						lat={item.lat}
+						lng={item.lng}
 					/>
 				);
 			})}
