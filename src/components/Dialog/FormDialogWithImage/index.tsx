@@ -39,7 +39,7 @@ export default function FormDialogWithImage({
 	const {
 		register,
 		handleSubmit,
-		formState: { errors, isValid, isSubmitting, dirtyFields },
+		formState: { errors, isValid, dirtyFields },
 		setError,
 		clearErrors,
 		resetField,
@@ -61,6 +61,7 @@ export default function FormDialogWithImage({
 	});
 	const dialogRef = useRef<HTMLDialogElement>(null);
 	const [photoChanged, setPhotoChanged] = useState(false);
+	const [isPending, setIsPending] = useState(false);
 
 	useEffect(() => {
 		setImgInfo({ imgSrc: photo, imgName: storeName });
@@ -70,18 +71,9 @@ export default function FormDialogWithImage({
 				dialog.show();
 			} else if (!status) {
 				dialog.close();
-				// setImgInfo({ imgSrc: '', imgName: '' });
 			}
 		}
 
-		// return () => {
-		// 	const dialog = dialogRef.current;
-		// 	if (dialog) {
-		// 		dialog.close();
-		// 		setImgInfo({ imgSrc: '', imgName: '' });
-		// 		reset();
-		// 	}
-		// };
 	}, [status]);
 
 	function handleBlur(name: string, label: string) {
@@ -109,6 +101,7 @@ export default function FormDialogWithImage({
 					}
 				}
 			}
+			setIsPending(true);
 			const response = await createStore(formData);
 			if (response.status === 200) {
 				reset();
@@ -136,38 +129,75 @@ export default function FormDialogWithImage({
 			} else {
 				console.error(error);
 			}
+		} finally {
+			setIsPending(false);
 		}
 	}
 
 	async function onSubmitToUpdate(id: number, data: FieldValues) {
 		try {
-			if (Object.values(dirtyFields).some((item) => item)) {
+			if (Object.values(dirtyFields).some((value) => value)) {
 				const formData = new FormData();
-				// let fakePhoto = null;
-				if (photoChanged) {
-					// formData.append('photo', file);
-				}
+				let fakePhoto: string = editingStore?.photo || '';
 				for (const [key, value] of Object.entries(data)) {
-					console.log(key, value);
-					if (key === 'photo') {
-						const file = data.photo ? data.photo[0] : null;
+					if (key === 'photo' && photoChanged) {
+						const file = data.photo[0];
 						formData.append(key, file);
+						fakePhoto = URL.createObjectURL(file);
 					}
 					formData.append(key, value);
 				}
+				setIsPending(true);
 				const response = await updateStore(id, formData);
-				console.log(response);
+				if (response.status === 200) {
+					closeDialog();
+					setEditingStore({});
+					setStoresData(
+						storesData.map((store) => {
+							if (store.id === id) {
+								const { storeName, address, introduction } = data;
+								return { ...store, storeName, address, introduction, photo: fakePhoto };
+							}
+							return store;
+						}),
+					);
+					if (searchTerm !== '') {
+						if (data.storeName.includes(searchTerm)) {
+							setFilteredData(
+								filteredData.map((store) => {
+									if (store.id === id) {
+										const { storeName, address, introduction } = data;
+										return { ...store, storeName, address, introduction, photo: fakePhoto };
+									}
+									return store;
+								}),
+							);
+						}
+					} else {
+						setFilteredData(
+							filteredData.map((store) => {
+								if (store.id === id) {
+									const { storeName, address, introduction } = data;
+									return { ...store, storeName, address, introduction, photo: fakePhoto };
+								}
+								return store;
+							}),
+						);
+					}
+				}
 			}
 		} catch (error) {
 			console.error(error);
+		} finally {
+			setIsPending(false);
 		}
 	}
 
 	let btnDisabled = false;
 	if (id === 0) {
-		btnDisabled = !isValid || isSubmitting;
+		btnDisabled = !isValid || isPending;
 	} else {
-		btnDisabled = !Object.values(dirtyFields).some((item) => item);
+		btnDisabled = !Object.values(dirtyFields).some((item) => item) || isPending;
 	}
 
 	return (
@@ -346,7 +376,7 @@ export default function FormDialogWithImage({
 					/>
 				</div>
 				<Button type='submit' className={styles['btn--submit']} disabled={btnDisabled}>
-					{isSubmitting ? '送出中...' : id ? '修改送出' : '送出'}
+					{isPending ? '送出中...' : id ? '修改送出' : '送出'}
 				</Button>
 			</form>
 		</dialog>
