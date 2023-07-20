@@ -6,6 +6,7 @@ import styled from './styles.module.scss';
 import { addLikeStore, deleteLikeStore } from '../../api/like';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useStoresData } from '../../contexts/findContext';
+import MapModal from '../MapModal';
 
 type CardProps = {
 	id: number;
@@ -19,6 +20,8 @@ type CardProps = {
 	email?: string;
 	phone?: string;
 	onClick?: (id: number) => void;
+	lat: number;
+	lng: number;
 };
 
 function Card({
@@ -33,9 +36,12 @@ function Card({
 	email,
 	phone,
 	onClick,
+	lat,
+	lng,
 }: CardProps) {
 	const { oneStore } = useStoresData();
 	const [isStoreLiked, setIsStoreLiked] = useState(isLiked);
+	const [isMapOpen, setIsMapOpen] = useState(false);
 	const navigate = useNavigate();
 	const { pathname } = useLocation();
 
@@ -65,6 +71,11 @@ function Card({
 		localStorage.setItem('oneStoreId', String(id));
 	};
 
+	const handleMapClick = (e: MouseEvent<HTMLDivElement>) => {
+		e.stopPropagation();
+		setIsMapOpen(!isMapOpen);
+	};
+
 	return (
 		<div className={styled.card} key={id}>
 			<div className={styled.card__imgWrap}>
@@ -86,7 +97,10 @@ function Card({
 
 						<div className={styled.card__infoWrap__detailWrap}>
 							<div className={styled.card__infoWrap__detailWrap__detail}>
-								<div className={styled.card__infoWrap__detailWrap__detail__map}>
+								<div
+									className={styled.card__infoWrap__detailWrap__detail__map}
+									onClick={handleMapClick}
+								>
 									<BiSolidMap className={styled['card__infoWrap__detailWrap__detail__map--logo']} />
 									<span>Map</span>
 								</div>
@@ -94,6 +108,10 @@ function Card({
 								<div className={styled['card__infoWrap__detailWrap__detail--rating']}>
 									{rating ?? 0}
 								</div>
+								{/* google map */}
+								{isMapOpen && (
+									<MapModal onClose={handleMapClick} storeName={storeName} lat={lat} lng={lng} />
+								)}
 
 								<div className={styled['card__infoWrap__detailWrap__detail--review']}>
 									{reviewCounts}則評論

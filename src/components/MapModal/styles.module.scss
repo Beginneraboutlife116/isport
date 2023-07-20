@@ -1,0 +1,30 @@
+.container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+
+  &__modal {
+    width: 400px;
+    height: 320px;
+    position: fixed;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 1rem 1rem 3rem 1rem;
+    z-index: 999;
+    border-radius: 20px;
+    border: 1px solid black;
+    font-size: 18px;
+    font-weight: bold;
+  }
+
+
+}

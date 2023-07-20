@@ -10,6 +10,8 @@ export type CardData = {
 	reviewCounts: number;
 	introduction: string;
 	isLiked?: boolean;
+	lat: number;
+	lng: number;
 };
 
 type CardListProps = {
@@ -32,6 +34,8 @@ function CardList({ data, handleClick }: CardListProps) {
 						photo={item.photo}
 						isLiked={item.isLiked}
 						onClick={handleClick}
+						lat={item.lat}
+						lng={item.lng}
 					/>
 				);
 			})}

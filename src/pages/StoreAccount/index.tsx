@@ -98,8 +98,8 @@ function PasswordInput() {
 		await editOwnerPassword(authToken || '', data.password, data.confirmPassword);
 
 		setSuccess(true);
-		setValue('password', ''); // 清空密码字段的值
-		setValue('confirmPassword', ''); // 清空确认密码字段的值
+		setValue('password', '');
+		setValue('confirmPassword', '');
 		setText('更新成功!');
 
 		setTimeout(() => {
