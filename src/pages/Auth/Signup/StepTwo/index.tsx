@@ -77,7 +77,7 @@ export default function SignupStepTwoPage() {
 					className={authStyles.auth__input}
 				/>
 				<Button type='submit' disabled={!isValid || isSubmitting} className={authStyles.auth__btn}>
-					{isSubmitting ? '發送中...' : '確認送出'}
+					{isSubmitting ? '送出中...' : '確認送出'}
 				</Button>
 			</form>
 			<Link to='/find'>

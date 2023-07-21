@@ -14,7 +14,6 @@ export default function LoginPage() {
 	const {
 		handleSubmit,
 		register,
-		// `isSubmitting` is for waiting data from server while user tries to log in.
 		formState: { isValid, isSubmitting, errors },
 		setError,
 		clearErrors,
@@ -67,8 +66,8 @@ export default function LoginPage() {
 					className={styles.auth__input}
 					name={'password'}
 				/>
-				<Button type='submit' disabled={!isValid} className={styles.auth__btn}>
-					登入
+				<Button type='submit' disabled={!isValid || isSubmitting} className={styles.auth__btn}>
+					{isSubmitting ? '登入中...' : '登入'}
 				</Button>
 			</form>
 			<div className={styles.auth__otherMethods}>

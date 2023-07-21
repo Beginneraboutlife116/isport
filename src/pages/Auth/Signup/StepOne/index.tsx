@@ -83,8 +83,8 @@ export default function SignupStepOnePage() {
 					name='confirmPassword'
 					className={styles.auth__input}
 				/>
-				<Button type='submit' disabled={!isValid} className={styles.auth__btn}>
-					註冊
+				<Button type='submit' disabled={!isValid || isSubmitting} className={styles.auth__btn}>
+					{isSubmitting ? '註冊中...' : '註冊'}
 				</Button>
 			</form>
 			<div className={styles.auth__otherMethods}>
