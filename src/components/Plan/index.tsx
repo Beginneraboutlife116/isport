@@ -38,7 +38,6 @@ function Plan() {
 			plan.planName,
 			storeIdNumber,
 		);
-		console.log(plan);
 
 		setFormData({
 			...formData,
