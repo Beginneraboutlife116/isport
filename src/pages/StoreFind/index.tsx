@@ -66,6 +66,50 @@ export default function StoreFindPage() {
 		}
 	}
 
+	async function updateStores(data: StoreType) {
+		const findStore = storesData.find((item) => item.id === data.id);
+		if (findStore) {
+			setStoresData(
+				storesData.map((store) => {
+					if (store.id === data.id) {
+						return { ...store, ...data };
+					}
+					return store;
+				}),
+			);
+			if (searchTerm) {
+				if (data.storeName.includes(searchTerm)) {
+					setFilteredData(
+						filteredData.map((store) => {
+							if (store.id === data.id) {
+								return { ...store, ...data };
+							}
+							return store;
+						}),
+					);
+				}
+			} else {
+				setFilteredData(
+					filteredData.map((store) => {
+						if (store.id === data.id) {
+							return { ...store, ...data };
+						}
+						return store;
+					}),
+				);
+			}
+		} else {
+			setStoresData([...storesData, data]);
+			if (searchTerm) {
+				if (data.storeName.includes(searchTerm)) {
+					setFilteredData([...filteredData, data]);
+				}
+			} else {
+				setFilteredData([...filteredData, data]);
+			}
+		}
+	}
+
 	return (
 		<div className={styled.container}>
 			<div className={styled.container__wrap}>
@@ -93,7 +137,7 @@ export default function StoreFindPage() {
 						closeDialog={() => setToggleDialog(!toggleDialog)}
 						editingStore={editingStore as StoreType}
 						setEditingStore={setEditingStore}
-						searchTerm={searchTerm}
+						updateFn={updateStores}
 					/>
 				</div>
 				{filteredData.length ? (

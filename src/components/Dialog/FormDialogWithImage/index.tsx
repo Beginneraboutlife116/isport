@@ -1,10 +1,9 @@
-import { useState, useRef, useEffect, Dispatch, ReactNode } from 'react';
+import { useState, useRef, useEffect, ReactNode } from 'react';
 import { useForm } from 'react-hook-form';
 import type { FieldValues } from 'react-hook-form';
 import { IoMdCloseCircle } from 'react-icons/io';
-import FormInput, { EmailInput, NameInput } from '../../FormInput';
+import { EmailInput, NameInput } from '../../FormInput';
 import { createStore, updateStore } from '../../../api/owner';
-import { useStoresData } from '../../../contexts/findContext';
 import { isAxiosError } from '../../../util/helpers';
 import Button from '../../Button';
 import styles from './styles.module.scss';
@@ -22,9 +21,9 @@ export type StoreType = {
 type FormDialogWithImageProps = {
 	status: boolean;
 	editingStore?: StoreType;
-	setEditingStore: Dispatch<StoreType | {}>;
+	setEditingStore: Function;
 	closeDialog: () => void;
-	searchTerm?: string;
+	updateFn: Function;
 };
 
 export default function FormDialogWithImage({
@@ -32,9 +31,8 @@ export default function FormDialogWithImage({
 	editingStore,
 	setEditingStore,
 	closeDialog,
-	searchTerm,
+	updateFn,
 }: FormDialogWithImageProps) {
-	const { storesData, setStoresData, filteredData, setFilteredData } = useStoresData();
 	const { email, phone, introduction, address, storeName, photo, id = 0 } = editingStore || {};
 	const {
 		register,
@@ -73,7 +71,6 @@ export default function FormDialogWithImage({
 				dialog.close();
 			}
 		}
-
 	}, [status]);
 
 	function handleBlur(name: string, label: string) {
@@ -109,14 +106,7 @@ export default function FormDialogWithImage({
 				fakeStore.id = response.data.id;
 				fakeStore.rating = 0;
 				fakeStore.reviewCounts = 0;
-				setStoresData([...storesData, fakeStore]);
-				if (searchTerm) {
-					if (data.storeName.includes(searchTerm)) {
-						setFilteredData([...filteredData, fakeStore]);
-					}
-				} else {
-					setFilteredData([...filteredData, fakeStore]);
-				}
+				updateFn(fakeStore);
 			}
 		} catch (error) {
 			if (isAxiosError(error) && error.response) {
@@ -152,38 +142,7 @@ export default function FormDialogWithImage({
 				if (response.status === 200) {
 					closeDialog();
 					setEditingStore({});
-					setStoresData(
-						storesData.map((store) => {
-							if (store.id === id) {
-								const { storeName, address, introduction } = data;
-								return { ...store, storeName, address, introduction, photo: fakePhoto };
-							}
-							return store;
-						}),
-					);
-					if (searchTerm !== '') {
-						if (data.storeName.includes(searchTerm)) {
-							setFilteredData(
-								filteredData.map((store) => {
-									if (store.id === id) {
-										const { storeName, address, introduction } = data;
-										return { ...store, storeName, address, introduction, photo: fakePhoto };
-									}
-									return store;
-								}),
-							);
-						}
-					} else {
-						setFilteredData(
-							filteredData.map((store) => {
-								if (store.id === id) {
-									const { storeName, address, introduction } = data;
-									return { ...store, storeName, address, introduction, photo: fakePhoto };
-								}
-								return store;
-							}),
-						);
-					}
+					updateFn({ ...data, photo: fakePhoto, id });
 				}
 			}
 		} catch (error) {
@@ -243,27 +202,15 @@ export default function FormDialogWithImage({
 					clearErrors={clearErrors}
 					maxLength={100}
 				/>
-				<FormInput
+				<NameInput
 					label='場館電話'
 					labelClassName={styles.label}
 					inputClassName={styles.input}
 					name='phone'
 					register={register}
 					errors={errors}
-					rules={{
-						required: true,
-						pattern: /^0\d{8,}$/,
-						onBlur: handleBlur('phone', '場館電話'),
-						onChange: (event: React.ChangeEvent<HTMLInputElement>) => {
-							const { target } = event;
-							const pattern = /^0\d{8,}$/;
-							if (!pattern.test(target.value)) {
-								setError('phone', { type: 'pattern', message: '電話號碼格式錯誤' });
-							} else {
-								clearErrors('phone');
-							}
-						},
-					}}
+					setError={setError}
+					clearErrors={clearErrors}
 				/>
 				<EmailInput
 					label='場館Email'

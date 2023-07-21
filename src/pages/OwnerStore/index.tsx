@@ -7,6 +7,8 @@ import Button from '../../components/Button';
 import OwnerClass from '../../components/OwnerClass';
 import { useStoresData } from '../../contexts/findContext';
 import styles from './styles.module.scss';
+import FormDialogWithImage from '../../components/Dialog/FormDialogWithImage';
+import { StoreType } from '../../components/Dialog/FormDialogWithImage';
 
 export type DayClassesType = {
 	id: number;
@@ -22,8 +24,16 @@ type ClassType = DayClassesType & {
 
 export default function OwnerStore() {
 	const [currentNav, setCurrentNav] = useState('course');
-	const [classes, setClasses] = useState<ClassType[] | []>([]);
-	const { storeId } = useParams();
+	const [toggleImgDialog, setToggleImgDialog] = useState(false);
+	const [editingStore, setEditingStore] = useState<StoreType>({
+		id: 0,
+		storeName: '',
+		introduction: '',
+		photo: '',
+		address: '',
+		email: '',
+		phone: '',
+	});
 	const [store, setStore] = useState<CardProps>({
 		id: 0,
 		storeName: '',
@@ -35,6 +45,8 @@ export default function OwnerStore() {
 		email: '',
 		phone: '',
 	});
+	const [classes, setClasses] = useState<ClassType[]>([]);
+	const { storeId } = useParams();
 	const { setOneStore } = useStoresData();
 	const eachDayClasses: { [key: string]: DayClassesType[] } = classes.reduce(
 		(accu: { [key: string]: DayClassesType[] }, curr: ClassType) => {
@@ -62,8 +74,20 @@ export default function OwnerStore() {
 			}
 			return accu;
 		},
-		{},
+		{} as { [key: string]: DayClassesType[] },
 	);
+
+	function updateStore({ storeName, introduction, photo, address, email, phone }: StoreType) {
+		setStore({
+			...store,
+			storeName,
+			introduction,
+			photo,
+			address,
+			email,
+			phone,
+		});
+	}
 
 	async function deleteClassById(id: number) {
 		try {
@@ -112,7 +136,21 @@ export default function OwnerStore() {
 
 	return (
 		<main className={styles.container}>
-			<Card {...store} />
+			<Card
+				{...store}
+				onClick={() => {
+					setEditingStore({
+						id: store.id,
+						storeName: store.storeName,
+						introduction: store.introduction,
+						photo: store.photo,
+						address: store.address || '',
+						email: store.email || '',
+						phone: store.phone || '',
+					});
+					setToggleImgDialog(!toggleImgDialog);
+				}}
+			/>
 			<div className={styles.content}>
 				<nav className={styles.nav}>
 					<ul className={styles.nav__list}>
@@ -163,6 +201,13 @@ export default function OwnerStore() {
 				{currentNav === 'plan' && <section>方案</section>}
 				{currentNav === 'review' && <section>評價</section>}
 			</div>
+			<FormDialogWithImage
+				status={toggleImgDialog}
+				closeDialog={() => setToggleImgDialog(!toggleImgDialog)}
+				editingStore={editingStore as StoreType}
+				setEditingStore={setEditingStore}
+				updateFn={updateStore}
+			/>
 		</main>
 	);
 }

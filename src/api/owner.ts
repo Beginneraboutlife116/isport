@@ -20,7 +20,7 @@ function createStore(data: FormData) {
 }
 
 function updateStore(id: number, data: FormData) {
-	return apiHelper.put(`owner/stores/${id}}`, data);
+	return apiHelper.put(`owner/stores/${id}`, data);
 }
 
 function deleteClass(id: number) {
