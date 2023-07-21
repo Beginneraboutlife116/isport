@@ -1,0 +1,64 @@
+.container {
+  position: fixed;
+  top: 30%;
+  left: 60%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  height: 250px;
+  border: 5px solid lightgray;
+  border-radius: 15px;
+  background-color: white;
+
+  &__modal {
+    display: grid;
+    grid-gap: 1rem;
+    padding: 1rem;
+
+    &--xButton {
+      display: flex;
+      justify-self: end;
+    }
+  }
+
+  &__info {
+    display: grid;
+    grid-gap: 1rem;
+    margin-top: 2rem;
+    font-size: 20px;
+
+    &--text {
+      display: flex;
+      justify-content: space-evenly;
+    }
+  }
+
+  &__buttonWrap {
+    display: grid;
+    grid-auto-flow: column;
+    grid-gap: 5px;
+    justify-content: space-between;
+
+    &--confirm {
+      border: none;
+      background-color: lightskyblue;
+      width: 200px;
+      padding: 10px;
+      border-radius: 5px;
+      color: white;
+      
+      &:hover {
+        background-color: rgb(90, 90, 218);
+      }
+    }
+
+    &--cancel {
+      border: none;
+      width: 150px;
+      border-radius: 5px;
+
+      &:hover {
+        background-color: gray;
+      }
+    }
+  }
+}

@@ -47,16 +47,20 @@ function Card({
 
 	// 新增或取消收藏場館
 	const handleToggleLike = async (storeId: number) => {
-		const authToken =
-			'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJ1c2VyMkBleGFtcGxlLmNvbSIsImF2YXRhciI6Imh0dHBzOi8vaW1ndXIuY29tLzVPTDV3SnQucG5nIiwibmlja25hbWUiOiJ1c2VyMiIsInJvbGUiOiJ1c2VyIiwic3RvcmVOYW1lIjpudWxsLCJjcmVhdGVkQXQiOiIyMDIzLTA3LTEwVDE3OjEyOjMwLjAwMFoiLCJ1cGRhdGVkQXQiOiIyMDIzLTA3LTEwVDE3OjEyOjMwLjAwMFoiLCJpYXQiOjE2ODkyMzYwNTMsImV4cCI6MTY5MTgyODA1M30.ScuJmJpzQoO-95_VM_I7W-VUBnkaXXuWRjE2DsvzvkQ';
+		const storedData = localStorage.getItem('isport');
+		let dataObject: { token?: string } = {};
+		if (storedData) {
+			dataObject = JSON.parse(storedData);
+		}
+		const authToken = dataObject.token;
 
 		try {
 			if (isStoreLiked) {
 				// 取消收藏
-				await deleteLikeStore(authToken, storeId);
+				await deleteLikeStore(authToken || '', storeId);
 			} else {
 				// 新增收藏
-				await addLikeStore(authToken, storeId);
+				await addLikeStore(authToken || '', storeId);
 			}
 			setIsStoreLiked((preLiked) => !preLiked);
 		} catch (error) {
