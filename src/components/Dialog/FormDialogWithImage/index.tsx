@@ -1,10 +1,10 @@
 import { useState, useRef, useEffect, ReactNode } from 'react';
 import { useForm } from 'react-hook-form';
 import type { FieldValues } from 'react-hook-form';
-import { IoMdCloseCircle } from 'react-icons/io';
 import { EmailInput, NameInput } from '../../FormInput';
 import { createStore, updateStore } from '../../../api/owner';
 import { isAxiosError } from '../../../util/helpers';
+import Dialog from '../../Dialog';
 import Button from '../../Button';
 import styles from './styles.module.scss';
 
@@ -19,21 +19,27 @@ export type StoreType = {
 };
 
 type FormDialogWithImageProps = {
-	status: boolean;
+	isOpen: boolean;
 	editingStore?: StoreType;
-	setEditingStore: Function;
 	closeDialog: () => void;
 	updateFn: Function;
 };
 
 export default function FormDialogWithImage({
-	status,
+	isOpen,
 	editingStore,
-	setEditingStore,
 	closeDialog,
 	updateFn,
 }: FormDialogWithImageProps) {
-	const { email, phone, introduction, address, storeName, photo, id = 0 } = editingStore || {};
+	const {
+		email = '',
+		phone = '',
+		introduction = '',
+		address = '',
+		storeName = '',
+		photo = null,
+		id = 0,
+	} = editingStore || {};
 	const {
 		register,
 		handleSubmit,
@@ -45,12 +51,12 @@ export default function FormDialogWithImage({
 		watch,
 	} = useForm<FieldValues>({
 		values: {
-			email: email || '',
-			phone: phone || '',
-			introduction: introduction || '',
-			address: address || '',
-			storeName: storeName || '',
-			photo: null,
+			email,
+			phone,
+			introduction,
+			address,
+			storeName,
+			photo,
 		},
 	});
 	const [{ imgSrc, imgName }, setImgInfo] = useState({
@@ -65,13 +71,22 @@ export default function FormDialogWithImage({
 		setImgInfo({ imgSrc: photo, imgName: storeName });
 		const dialog = dialogRef.current;
 		if (dialog) {
-			if (status && !dialog.open) {
+			if (isOpen && !dialog.open) {
 				dialog.show();
-			} else if (!status) {
+			} else if (!isOpen) {
 				dialog.close();
+				setImgInfo({ imgSrc: '', imgName: '' });
+				setPhotoChanged(false);
 			}
 		}
-	}, [status]);
+		return () => {
+			if (dialog && dialog.open) {
+				dialog.close();
+				setImgInfo({ imgSrc: '', imgName: '' });
+				setPhotoChanged(false);
+			}
+		};
+	}, [isOpen]);
 
 	function handleBlur(name: string, label: string) {
 		return (event: React.FocusEvent<HTMLInputElement, Element>) => {
@@ -101,11 +116,11 @@ export default function FormDialogWithImage({
 			setIsPending(true);
 			const response = await createStore(formData);
 			if (response.status === 200) {
-				reset();
-				closeDialog();
 				fakeStore.id = response.data.id;
 				fakeStore.rating = 0;
 				fakeStore.reviewCounts = 0;
+				reset();
+				closeDialog();
 				updateFn(fakeStore);
 			}
 		} catch (error) {
@@ -128,7 +143,7 @@ export default function FormDialogWithImage({
 		try {
 			if (Object.values(dirtyFields).some((value) => value)) {
 				const formData = new FormData();
-				let fakePhoto: string = editingStore?.photo || '';
+				let fakePhoto: string = photo || '';
 				for (const [key, value] of Object.entries(data)) {
 					if (key === 'photo' && photoChanged) {
 						const file = data.photo[0];
@@ -141,7 +156,6 @@ export default function FormDialogWithImage({
 				const response = await updateStore(id, formData);
 				if (response.status === 200) {
 					closeDialog();
-					setEditingStore({});
 					updateFn({ ...data, photo: fakePhoto, id });
 				}
 			}
@@ -156,21 +170,11 @@ export default function FormDialogWithImage({
 	if (id === 0) {
 		btnDisabled = !isValid || isPending;
 	} else {
-		btnDisabled = !Object.values(dirtyFields).some((item) => item) || isPending;
+		btnDisabled = (!Object.values(dirtyFields).some((item) => item) && isValid) || isPending;
 	}
 
 	return (
-		<dialog ref={dialogRef} className={styles.dialog} key={id}>
-			<Button
-				onClick={() => {
-					setEditingStore({});
-					closeDialog();
-				}}
-				className={styles['btn--close']}
-			>
-				<IoMdCloseCircle />
-			</Button>
-
+		<Dialog ref={dialogRef} className={styles.dialog} key={id} closeDialog={closeDialog}>
 			<form
 				onSubmit={handleSubmit((data) => {
 					if (id === 0) {
@@ -326,6 +330,6 @@ export default function FormDialogWithImage({
 					{isPending ? '送出中...' : id ? '修改送出' : '送出'}
 				</Button>
 			</form>
-		</dialog>
+		</Dialog>
 	);
 }

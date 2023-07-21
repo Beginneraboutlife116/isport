@@ -15,7 +15,6 @@ export default function StoreFindPage() {
 	const [searchTerm, setSearchTerm] = useState('');
 	const { storesData, setStoresData, filteredData, setFilteredData } = useStoresData();
 	const [editingStore, setEditingStore] = useState<StoreType | {}>({});
-	const [id, setId] = useState(0);
 
 	useEffect(() => {
 		async function fetchOwnerStores() {
@@ -43,7 +42,6 @@ export default function StoreFindPage() {
 	}
 
 	function handleEdit(id: number) {
-		setId(id);
 		fetchOneStore(id);
 	}
 
@@ -124,19 +122,17 @@ export default function StoreFindPage() {
 						}}
 						handleSearchClick={handleSearch}
 					/>
-					<Button
-						onClick={() => setToggleDialog(!toggleDialog)}
-						className={styled['btn--openDialog']}
-					>
+					<Button onClick={() => setToggleDialog(!toggleDialog)} className={styled['btn--openDialog']}>
 						<BsPlusCircleFill />
 					</Button>
 
 					<FormDialogWithImage
-						key={id || 0}
-						status={toggleDialog}
-						closeDialog={() => setToggleDialog(!toggleDialog)}
+						isOpen={toggleDialog}
+						closeDialog={() => {
+							setEditingStore({});
+							setToggleDialog(!toggleDialog);
+						}}
 						editingStore={editingStore as StoreType}
-						setEditingStore={setEditingStore}
 						updateFn={updateStores}
 					/>
 				</div>

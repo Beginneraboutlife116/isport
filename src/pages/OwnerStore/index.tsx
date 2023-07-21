@@ -28,17 +28,9 @@ export default function OwnerStore() {
 	const [currentNav, setCurrentNav] = useState('course');
 	const [toggleImgDialog, setToggleImgDialog] = useState(false);
 	const [toggleDeleteModal, setToggleDeleteModal] = useState(false);
-	const [id, setId] = useState(0);
+	const [classId, setClassId] = useState(0);
 	const [error, setError] = useState('');
-	const [editingStore, setEditingStore] = useState<StoreType>({
-		id: 0,
-		storeName: '',
-		introduction: '',
-		photo: '',
-		address: '',
-		email: '',
-		phone: '',
-	});
+	const [editingStore, setEditingStore] = useState<StoreType | {}>({});
 	const [store, setStore] = useState<CardProps>({
 		id: 0,
 		storeName: '',
@@ -207,7 +199,7 @@ export default function OwnerStore() {
 									weekday={key}
 									openDeleteModal={(id) => {
 										setToggleDeleteModal(true);
-										setId(id);
+										setClassId(id);
 									}}
 								/>
 							))
@@ -218,16 +210,18 @@ export default function OwnerStore() {
 				{currentNav === 'review' && <section>評價</section>}
 			</div>
 			<FormDialogWithImage
-				status={toggleImgDialog}
-				closeDialog={() => setToggleImgDialog(!toggleImgDialog)}
+				isOpen={toggleImgDialog}
+				closeDialog={() => {
+					setEditingStore({});
+					setToggleImgDialog(!toggleImgDialog);
+				}}
 				editingStore={editingStore as StoreType}
-				setEditingStore={setEditingStore}
 				updateFn={updateStore}
 			/>
 			<DeleteModal
 				isOpen={toggleDeleteModal}
 				closeDialog={() => setToggleDeleteModal(false)}
-				handleDelete={() => deleteClassById(id)}
+				handleDelete={() => deleteClassById(classId)}
 			/>
 		</main>
 	);
