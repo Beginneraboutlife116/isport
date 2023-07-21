@@ -174,7 +174,7 @@ export default function FormDialogWithImage({
 	}
 
 	return (
-		<Dialog ref={dialogRef} className={styles.dialog} key={id} closeDialog={closeDialog}>
+		<Dialog ref={dialogRef} key={id} closeDialog={closeDialog}>
 			<form
 				onSubmit={handleSubmit((data) => {
 					if (id === 0) {

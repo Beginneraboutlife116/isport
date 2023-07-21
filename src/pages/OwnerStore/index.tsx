@@ -9,6 +9,7 @@ import { useStoresData } from '../../contexts/findContext';
 import styles from './styles.module.scss';
 import FormDialogWithImage from '../../components/Dialog/FormDialogWithImage';
 import DeleteModal from '../../components/Dialog/DeleteModal';
+import FormDialogForClass from '../../components/Dialog/FormDialogForClass';
 import { StoreType } from '../../components/Dialog/FormDialogWithImage';
 import { isAxiosError } from '../../util/helpers';
 
@@ -223,6 +224,7 @@ export default function OwnerStore() {
 				closeDialog={() => setToggleDeleteModal(false)}
 				handleDelete={() => deleteClassById(classId)}
 			/>
+			<FormDialogForClass isOpen={true} />
 		</main>
 	);
 }

@@ -1,22 +1,3 @@
-.dialog {
-	left: auto;
-	top: 10%;
-	right: 0;
-	width: 25cqi;
-	border: 0.0625rem solid #9eadba;
-	border-radius: 0.5rem;
-	box-shadow: 0 0 0 100vw rgb(#9eadba, 0.25);
-	padding: 2rem 1.25rem 1.5rem;
-	max-height: 75cqb;
-	overflow-y: scroll;
-	position: fixed;
-
-	scrollbar-width: none;
-	&::-webkit-scrollbar {
-		display: none;
-	}
-}
-
 .form {
 	display: grid;
 	gap: 1rem;
@@ -35,20 +16,6 @@
 
 		&:disabled {
 			opacity: 0.5;
-		}
-	}
-
-	&--close {
-		position: absolute;
-		top: 0.125rem;
-		right: -0.25rem;
-		color: #6558f5;
-		width: 2.5rem;
-		padding-inline: 0;
-
-		& > svg {
-			width: 100%;
-			height: 100%;
 		}
 	}
 
