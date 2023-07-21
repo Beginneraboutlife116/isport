@@ -114,12 +114,7 @@ function Card({
 								</div>
 								{/* google map */}
 								{isMapOpen && (
-									<MapModal
-										onClose={handleMapClick}
-										storeName={storeName}
-										lat={lat || 0}
-										lng={lng || 0}
-									/>
+									<MapModal onClose={handleMapClick} storeName={storeName} lat={lat || 0} lng={lng || 0} />
 								)}
 
 								<div className={styled['card__infoWrap__detailWrap__detail--review']}>

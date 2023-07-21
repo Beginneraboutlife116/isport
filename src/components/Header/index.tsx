@@ -1,5 +1,5 @@
 import styles from './styles.module.scss';
-import logo from '../../assets/Logo.png';
+import logo from '../../assets/logo.png';
 import { Link } from 'react-router-dom';
 import { IconContext } from 'react-icons';
 import { BiSolidUserCircle } from 'react-icons/bi';
