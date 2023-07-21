@@ -65,6 +65,9 @@ function Store() {
 		};
 		fetchData();
 		setOneStore(true);
+		return () => {
+			setOneStore(false)
+		}
 	}, []);
 
 	return (
