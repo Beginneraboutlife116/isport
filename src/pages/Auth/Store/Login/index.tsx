@@ -12,7 +12,7 @@ export default function StoreLoginPage() {
 	const {
 		register,
 		handleSubmit,
-		formState: { isValid, errors },
+		formState: { isValid, errors, isSubmitting },
 		setError,
 		clearErrors,
 	} = useForm();
@@ -68,8 +68,8 @@ export default function StoreLoginPage() {
 					errors={errors}
 					className={authStyles.auth__input}
 				/>
-				<Button type='submit' disabled={!isValid} className={authStyles.auth__btn}>
-					登入
+				<Button type='submit' disabled={!isValid || isSubmitting} className={authStyles.auth__btn}>
+					{isSubmitting ? '登入中...' : '登入'}
 				</Button>
 			</form>
 			<div className={`${styles.otherMethods} ${authStyles.auth__otherMethods}`}>

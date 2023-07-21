@@ -17,7 +17,7 @@ export default function StoreSignupPage() {
 	const {
 		register,
 		handleSubmit,
-		formState: { isValid, errors },
+		formState: { isValid, errors, isSubmitting },
 		watch,
 		setError,
 		clearErrors,
@@ -104,8 +104,8 @@ export default function StoreSignupPage() {
 					name='confirmPassword'
 					className={authStyles.auth__input}
 				/>
-				<Button type='submit' disabled={!isValid} className={authStyles.auth__btn}>
-					註冊
+				<Button type='submit' disabled={!isValid || isSubmitting} className={authStyles.auth__btn}>
+					{isSubmitting ? '註冊中...' : '註冊'}
 				</Button>
 			</form>
 			<div className={`${authStyles.auth__otherMethods} ${styles.otherMethods}`}>

@@ -20,8 +20,8 @@ type CardProps = {
 	email?: string;
 	phone?: string;
 	onClick?: (id: number) => void;
-	lat: number;
-	lng: number;
+	lat?: number;
+	lng?: number;
 };
 
 function Card({
@@ -114,7 +114,7 @@ function Card({
 								</div>
 								{/* google map */}
 								{isMapOpen && (
-									<MapModal onClose={handleMapClick} storeName={storeName} lat={lat} lng={lng} />
+									<MapModal onClose={handleMapClick} storeName={storeName} lat={lat || 0} lng={lng || 0} />
 								)}
 
 								<div className={styled['card__infoWrap__detailWrap__detail--review']}>
