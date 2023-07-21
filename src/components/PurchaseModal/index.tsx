@@ -4,11 +4,17 @@ import { GiCancel } from 'react-icons/gi';
 interface Props {
 	handlePurchaseClick: () => void;
 	planName: string;
-	price: string;
+	price: number;
 	id: number;
+	formData: {
+		MerchantID: string;
+		TradeInfo: string;
+		TradeSha: string;
+		Version: string;
+	};
 }
 
-function PurchaseModal({ handlePurchaseClick, planName, price, id }: Props) {
+function PurchaseModal({ handlePurchaseClick, planName, price, id, formData }: Props) {
 	return (
 		<div className={styled.container} key={id}>
 			<div className={styled.container__modal}>
@@ -31,7 +37,17 @@ function PurchaseModal({ handlePurchaseClick, planName, price, id }: Props) {
 					<button onClick={handlePurchaseClick} className={styled['container__buttonWrap--cancel']}>
 						取消
 					</button>
-					<button className={styled['container__buttonWrap--confirm']}>確認付款</button>
+
+					{/* 藍星金流 */}
+					<form id='orderForm' method='post' action='https://ccore.newebpay.com/MPG/mpg_gateway'>
+						<input type='hidden' name='MerchantID' value={formData.MerchantID} />
+						<input type='hidden' name='TradeInfo' value={formData.TradeInfo} />
+						<input type='hidden' name='TradeSha' value={formData.TradeSha} />
+						<input type='hidden' name='Version' value={formData.Version} />
+						<button type='submit' className={styled['container__buttonWrap--confirm']}>
+							確認付款
+						</button>
+					</form>
 				</div>
 			</div>
 		</div>

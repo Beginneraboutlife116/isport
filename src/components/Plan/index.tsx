@@ -2,19 +2,51 @@ import { useEffect, useState } from 'react';
 import styled from './styles.module.scss';
 import { fetchStorePlan } from '../../api/stores';
 import PurchaseModal from '../PurchaseModal';
+import { postPurchaseData } from '../../api/purchase';
 
 type Plans = {
 	id: number;
 	planName: string;
-	price: string;
+	price: number;
 };
 
 function Plan() {
 	const [plans, setPlans] = useState<Plans[]>([]);
 	const [selectedPlan, setSelectedPlan] = useState<Plans | null>(null);
+	const [formData, setFormData] = useState({
+		MerchantID: '',
+		TradeInfo: '',
+		TradeSha: '',
+		Version: '',
+	});
 
-	const handlePurchaseClick = (plan: Plans) => {
+	const handlePurchaseClick = async (plan: Plans) => {
 		setSelectedPlan(plan);
+		const storedData = localStorage.getItem('isport');
+		let dataObject: { token?: string } = {};
+		if (storedData) {
+			dataObject = JSON.parse(storedData);
+		}
+		const authToken = dataObject.token;
+		const oneStoreId = localStorage.getItem('oneStoreId');
+		const storeIdNumber = Number(oneStoreId);
+
+		const result = await postPurchaseData(
+			authToken || '',
+			plan.price,
+			plan.id,
+			plan.planName,
+			storeIdNumber,
+		);
+		console.log(plan);
+
+		setFormData({
+			...formData,
+			MerchantID: result.MerchantID,
+			TradeInfo: result.TradeInfo,
+			TradeSha: result.TradeSha,
+			Version: result.Version,
+		});
 	};
 
 	useEffect(() => {
@@ -60,6 +92,7 @@ function Plan() {
 								id={selectedPlan.id}
 								planName={selectedPlan.planName}
 								price={selectedPlan.price}
+								formData={formData}
 							/>
 						)}
 					</div>
