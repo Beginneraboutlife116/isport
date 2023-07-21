@@ -23,4 +23,16 @@ function updateStore(id: number, data: FormData) {
 	return apiHelper.put(`owner/stores/${id}}`, data);
 }
 
-export { getOwnerData, getOwnerStores, getOneStore, getStoreClasses, createStore, updateStore };
+function deleteClass(id: number) {
+	return apiHelper.delete(`owner/classes/${id}`);
+}
+
+export {
+	getOwnerData,
+	getOwnerStores,
+	getOneStore,
+	getStoreClasses,
+	createStore,
+	updateStore,
+	deleteClass,
+};

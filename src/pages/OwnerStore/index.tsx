@@ -1,16 +1,28 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { BsPlusCircleFill } from 'react-icons/bs';
-import { getOneStore, getStoreClasses } from '../../api/owner';
+import { getOneStore, getStoreClasses, deleteClass } from '../../api/owner';
 import Card, { type CardProps } from '../../components/Card';
 import Button from '../../components/Button';
-import OwnerCourse from '../../components/Course/OwnerCourse';
+import OwnerClass from '../../components/OwnerClass';
 import { useStoresData } from '../../contexts/findContext';
 import styles from './styles.module.scss';
 
+export type DayClassesType = {
+	id: number;
+	className: string;
+	startTime: string;
+	endTime: string;
+	headCount: number;
+};
+
+type ClassType = DayClassesType & {
+	weekDay: number;
+};
+
 export default function OwnerStore() {
 	const [currentNav, setCurrentNav] = useState('course');
-	const [classes, setClasses] = useState([]);
+	const [classes, setClasses] = useState<ClassType[] | []>([]);
 	const { storeId } = useParams();
 	const [store, setStore] = useState<CardProps>({
 		id: 0,
@@ -24,6 +36,45 @@ export default function OwnerStore() {
 		phone: '',
 	});
 	const { setOneStore } = useStoresData();
+	const eachDayClasses: { [key: string]: DayClassesType[] } = classes.reduce(
+		(accu: { [key: string]: DayClassesType[] }, curr: ClassType) => {
+			if (!accu[curr.weekDay]) {
+				accu[curr.weekDay] = [
+					{
+						id: curr.id,
+						className: curr.className,
+						startTime: curr.startTime,
+						endTime: curr.endTime,
+						headCount: curr.headCount,
+					},
+				];
+			} else {
+				accu[curr.weekDay] = [
+					...accu[curr.weekDay],
+					{
+						id: curr.id,
+						className: curr.className,
+						startTime: curr.startTime,
+						endTime: curr.endTime,
+						headCount: curr.headCount,
+					},
+				];
+			}
+			return accu;
+		},
+		{},
+	);
+
+	async function deleteClassById(id: number) {
+		try {
+			const response = await deleteClass(id);
+			if (response.status === 200) {
+				setClasses(classes.filter((item) => item.id !== id));
+			}
+		} catch (error) {
+			console.error(error);
+		}
+	}
 
 	useEffect(() => {
 		async function fetchStore() {
@@ -38,7 +89,7 @@ export default function OwnerStore() {
 			}
 		}
 
-		async function fetchClasses() {
+		async function fetchCourses() {
 			try {
 				const response = await getStoreClasses(Number.parseInt(storeId as string, 10));
 				if (response.status === 200) {
@@ -51,7 +102,7 @@ export default function OwnerStore() {
 
 		if (store.id === 0) {
 			fetchStore();
-			fetchClasses();
+			fetchCourses();
 		}
 
 		return () => {
@@ -99,7 +150,14 @@ export default function OwnerStore() {
 				</Button>
 				{currentNav === 'course' && (
 					<section>
-						<OwnerCourse />
+						{Object.entries(eachDayClasses).map(([key, value]) => (
+							<OwnerClass
+								key={key}
+								eachDayClasses={value}
+								weekday={key}
+								handleDelete={deleteClassById}
+							/>
+						))}
 					</section>
 				)}
 				{currentNav === 'plan' && <section>方案</section>}

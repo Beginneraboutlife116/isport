@@ -6,9 +6,12 @@
 	grid-template-columns: 25rem min(100%, 37.5rem);
 	gap: 3rem;
 	justify-content: center;
+	align-items: start;
 }
 
 .content {
+	height: 37.5rem;
+	overflow-y: scroll;
 }
 
 .nav {
@@ -41,7 +44,6 @@
 		aspect-ratio: 1;
 		padding-inline: 0;
 		margin-inline-start: auto;
-		margin-block-end: 0.5rem;
 		display: block;
 
 		& > svg {
