@@ -8,6 +8,7 @@ import OwnerClass from '../../components/OwnerClass';
 import { useStoresData } from '../../contexts/findContext';
 import styles from './styles.module.scss';
 import FormDialogWithImage from '../../components/Dialog/FormDialogWithImage';
+import DeleteModal from '../../components/Dialog/DeleteModal';
 import { StoreType } from '../../components/Dialog/FormDialogWithImage';
 import { isAxiosError } from '../../util/helpers';
 
@@ -26,6 +27,8 @@ type ClassType = DayClassesType & {
 export default function OwnerStore() {
 	const [currentNav, setCurrentNav] = useState('course');
 	const [toggleImgDialog, setToggleImgDialog] = useState(false);
+	const [toggleDeleteModal, setToggleDeleteModal] = useState(false);
+	const [id, setId] = useState(0);
 	const [error, setError] = useState('');
 	const [editingStore, setEditingStore] = useState<StoreType>({
 		id: 0,
@@ -91,11 +94,12 @@ export default function OwnerStore() {
 		});
 	}
 
-	async function deleteClassById(id: number) {
+	async function deleteClassById(classId: number) {
 		try {
-			const response = await deleteClass(id);
+			const response = await deleteClass(classId);
 			if (response.status === 200) {
-				setClasses(classes.filter((item) => item.id !== id));
+				setClasses(classes.filter((item) => item.id !== classId));
+				setToggleDeleteModal(false);
 			}
 		} catch (error) {
 			console.error(error);
@@ -201,7 +205,10 @@ export default function OwnerStore() {
 									key={key}
 									eachDayClasses={value}
 									weekday={key}
-									handleDelete={deleteClassById}
+									openDeleteModal={(id) => {
+										setToggleDeleteModal(true);
+										setId(id);
+									}}
 								/>
 							))
 						)}
@@ -216,6 +223,11 @@ export default function OwnerStore() {
 				editingStore={editingStore as StoreType}
 				setEditingStore={setEditingStore}
 				updateFn={updateStore}
+			/>
+			<DeleteModal
+				isOpen={toggleDeleteModal}
+				closeDialog={() => setToggleDeleteModal(false)}
+				handleDelete={() => deleteClassById(id)}
 			/>
 		</main>
 	);

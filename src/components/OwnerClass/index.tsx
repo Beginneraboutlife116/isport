@@ -7,11 +7,11 @@ import { DayClassesType } from '../../pages/OwnerStore';
 export default function OwnerClass({
 	weekday,
 	eachDayClasses,
-	handleDelete,
+	openDeleteModal,
 }: {
 	weekday: string;
 	eachDayClasses: DayClassesType[];
-	handleDelete: Function;
+	openDeleteModal: (id: number) => void;
 }) {
 	const week = ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日'];
 	return (
@@ -32,7 +32,7 @@ export default function OwnerClass({
 								<Button>
 									<MdEdit style={{ fontSize: '1.5rem' }} />
 								</Button>
-								<Button onClick={() => handleDelete(id)}>
+								<Button onClick={() => openDeleteModal(id)}>
 									<RxCross1 style={{ fontSize: '1.5rem' }} />
 								</Button>
 							</div>
