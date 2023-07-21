@@ -9,6 +9,7 @@ import { useStoresData } from '../../contexts/findContext';
 import styles from './styles.module.scss';
 import FormDialogWithImage from '../../components/Dialog/FormDialogWithImage';
 import { StoreType } from '../../components/Dialog/FormDialogWithImage';
+import { isAxiosError } from '../../util/helpers';
 
 export type DayClassesType = {
 	id: number;
@@ -25,6 +26,7 @@ type ClassType = DayClassesType & {
 export default function OwnerStore() {
 	const [currentNav, setCurrentNav] = useState('course');
 	const [toggleImgDialog, setToggleImgDialog] = useState(false);
+	const [error, setError] = useState('');
 	const [editingStore, setEditingStore] = useState<StoreType>({
 		id: 0,
 		storeName: '',
@@ -120,6 +122,9 @@ export default function OwnerStore() {
 					setClasses(response.data);
 				}
 			} catch (error) {
+				if (isAxiosError(error)) {
+					setError(error.response?.data.message);
+				}
 				console.error(error);
 			}
 		}
@@ -188,14 +193,18 @@ export default function OwnerStore() {
 				</Button>
 				{currentNav === 'course' && (
 					<section>
-						{Object.entries(eachDayClasses).map(([key, value]) => (
-							<OwnerClass
-								key={key}
-								eachDayClasses={value}
-								weekday={key}
-								handleDelete={deleteClassById}
-							/>
-						))}
+						{error ? (
+							<p className={styles.noData}>{error}</p>
+						) : (
+							Object.entries(eachDayClasses).map(([key, value]) => (
+								<OwnerClass
+									key={key}
+									eachDayClasses={value}
+									weekday={key}
+									handleDelete={deleteClassById}
+								/>
+							))
+						)}
 					</section>
 				)}
 				{currentNav === 'plan' && <section>方案</section>}
