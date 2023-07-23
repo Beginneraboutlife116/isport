@@ -55,8 +55,7 @@ function Booking({ setStatus }: BookingProps) {
 		setTimeout(() => {
 			setDone('');
 		}, 1000);
-		if (noPlans === 'error') {
-		}
+
 		navigate('/reservation');
 	};
 
