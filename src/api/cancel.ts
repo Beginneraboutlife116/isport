@@ -1,7 +1,7 @@
 import axios from "axios";
 
-// const baseUrl = 'http://i-sport-api-env-1.eba-yaqmmn4t.ap-northeast-2.elasticbeanstalk.com/api';
-const baseUrl = 'https://isports.tw/api';
+const baseUrl = 'http://i-sport-api-env-1.eba-yaqmmn4t.ap-northeast-2.elasticbeanstalk.com/api';
+// const baseUrl = 'https://isports.tw/api';
 
 // 取消單一預約課程
 export const fetchCancelStore = async (authToken: string, reservationId: number) => {

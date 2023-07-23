@@ -21,15 +21,17 @@ export type StoreType = {
 type FormDialogWithImageProps = {
 	isOpen: boolean;
 	editingStore?: StoreType;
-	closeDialog: () => void;
-	updateFn: Function;
+	closeDialog: Function;
+	handleDialogSubmit: Function;
+	buttonText: string;
 };
 
 export default function FormDialogWithImage({
 	isOpen,
 	editingStore,
 	closeDialog,
-	updateFn,
+	handleDialogSubmit,
+	buttonText,
 }: FormDialogWithImageProps) {
 	const {
 		email = '',
@@ -43,7 +45,7 @@ export default function FormDialogWithImage({
 	const {
 		register,
 		handleSubmit,
-		formState: { errors, isValid, dirtyFields },
+		formState: { errors, isValid, dirtyFields, isSubmitSuccessful },
 		setError,
 		clearErrors,
 		resetField,
@@ -97,48 +99,6 @@ export default function FormDialogWithImage({
 		};
 	}
 
-	async function onSubmitToCreate(data: FieldValues) {
-		try {
-			const formData = new FormData();
-			const fakeStore: { [key: string]: unknown } = {};
-			for (const [key, value] of Object.entries(data)) {
-				if (key === 'photo') {
-					const file = value[0];
-					fakeStore[key] = URL.createObjectURL(file);
-					formData.append(key, file);
-				} else {
-					formData.append(key, value);
-					if (key !== 'email' && key !== 'phone') {
-						fakeStore[key] = value;
-					}
-				}
-			}
-			setIsPending(true);
-			const response = await createStore(formData);
-			if (response.status === 200) {
-				fakeStore.id = response.data.id;
-				fakeStore.rating = 0;
-				fakeStore.reviewCounts = 0;
-				reset();
-				closeDialog();
-				updateFn(fakeStore);
-			}
-		} catch (error) {
-			if (isAxiosError(error) && error.response) {
-				const { data } = error.response;
-				const whichTypeInput = data.message.includes('地址') ? 'address' : 'storeName';
-				setError(whichTypeInput, {
-					type: data.status,
-					message: data.message,
-				});
-			} else {
-				console.error(error);
-			}
-		} finally {
-			setIsPending(false);
-		}
-	}
-
 	async function onSubmitToUpdate(id: number, data: FieldValues) {
 		try {
 			if (Object.values(dirtyFields).some((value) => value)) {
@@ -156,7 +116,7 @@ export default function FormDialogWithImage({
 				const response = await updateStore(id, formData);
 				if (response.status === 200) {
 					closeDialog();
-					updateFn({ ...data, photo: fakePhoto, id });
+					handleDialogSubmit({ ...data, photo: fakePhoto, id });
 				}
 			}
 		} catch (error) {
@@ -168,20 +128,25 @@ export default function FormDialogWithImage({
 
 	let btnDisabled = false;
 	if (id === 0) {
-		btnDisabled = !isValid || isPending;
+		btnDisabled = !isValid || isSubmitSuccessful;
 	} else {
-		btnDisabled = (!Object.values(dirtyFields).some((item) => item) && isValid) || isPending;
+		btnDisabled =
+			(!Object.values(dirtyFields).some((item) => item) && isValid) || isSubmitSuccessful;
 	}
 
 	return (
 		<Dialog ref={dialogRef} key={id} closeDialog={closeDialog}>
 			<form
 				onSubmit={handleSubmit((data) => {
-					if (id === 0) {
-						onSubmitToCreate(data);
-					} else {
-						onSubmitToUpdate(id, data);
+					const formData = new FormData();
+					for (const [key, value] of Object.entries(data)) {
+						if (key === 'photo' && photoChanged) {
+							const file = (value as FileList)[0];
+							formData.append(key, file);
+						}
+						formData.append(key, value);
 					}
+					handleDialogSubmit(formData, reset, setError);
 				})}
 				className={styles.form}
 			>
@@ -327,7 +292,7 @@ export default function FormDialogWithImage({
 					/>
 				</div>
 				<Button type='submit' className={styles['btn--submit']} disabled={btnDisabled}>
-					{isPending ? '送出中...' : id ? '修改送出' : '送出'}
+					{isSubmitSuccessful ? '送出中...' : buttonText}
 				</Button>
 			</form>
 		</Dialog>

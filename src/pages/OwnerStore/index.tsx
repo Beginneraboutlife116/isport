@@ -119,7 +119,8 @@ export default function OwnerStore() {
 					setToggleImgDialog(!toggleImgDialog);
 				}}
 				editingStore={editingStore as StoreType}
-				updateFn={updateStore}
+				handleDialogSubmit={updateStore}
+				buttonText='修改送出'
 			/>
 		</main>
 	);

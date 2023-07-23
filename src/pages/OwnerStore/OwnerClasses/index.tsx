@@ -23,11 +23,11 @@ export type ClassType = DayClassesType & {
 };
 
 type ConditionReturnFormDialogForClassProps = {
+	isOpen: boolean;
 	editingClass?: ClassType;
+	closeDialog: Function;
 	handleCreate: Function;
 	handleEdit: Function;
-	isOpen: boolean;
-	closeDialog: Function;
 };
 
 function ConditionReturnFormDialogForClass({
