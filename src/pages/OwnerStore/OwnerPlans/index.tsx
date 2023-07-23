@@ -98,7 +98,6 @@ export default function OwnerPlans() {
 	async function createPlanIntoStore(data: PlanType, reset: UseFormReset<FieldValues>) {
 		try {
 			const response = await createPlan(Number.parseInt(storeId as string, 10), data);
-			console.log(response);
 			if (response.status === 200) {
 				setPlans([...plans, { ...data, id: response.data.id }]);
 				setTogglePlanDialog(!togglePlanDialog);
@@ -116,7 +115,6 @@ export default function OwnerPlans() {
 	async function updatePlanIntoStore(data: PlanType) {
 		try {
 			const response = await updatePlan({ ...data, id: editingPlan?.id });
-			console.log(response);
 			if (response.status === 200) {
 				setPlans(
 					plans.map((plan) => {
