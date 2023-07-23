@@ -120,7 +120,7 @@ export default function OwnerClasses() {
 		}
 
 		fetchClasses();
-	}, []);
+	}, [storeId]);
 
 	async function deleteClassById() {
 		try {

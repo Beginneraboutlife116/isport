@@ -81,7 +81,7 @@ export default function OwnerPlans() {
 		}
 
 		fetchPlans();
-	}, []);
+	}, [storeId]);
 
 	async function deletePlanById() {
 		try {

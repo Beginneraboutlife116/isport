@@ -1,16 +1,16 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { getOneStore, updateStore } from '../../api/owner';
-import Card, { type CardProps } from '../../components/Card';
-import Button from '../../components/Button';
-import { useStoresData } from '../../contexts/findContext';
-import styles from './styles.module.scss';
-import FormDialogWithImage from '../../components/Dialog/FormDialogWithImage';
-import { StoreType } from '../../components/Dialog/FormDialogWithImage';
-import OwnerClasses from './OwnerClasses';
 import { UseFormReset, UseFormSetError, FieldValues } from 'react-hook-form';
 import { isAxiosError } from '../../util/helpers';
+import { getOneStore, updateStore } from '../../api/owner';
+import { useStoresData } from '../../contexts/findContext';
+import Card, { type CardProps } from '../../components/Card';
+import Button from '../../components/Button';
+import styles from './styles.module.scss';
+import FormDialogWithImage, { StoreType } from '../../components/Dialog/FormDialogWithImage';
+import OwnerClasses from './OwnerClasses';
 import OwnerPlans from './OwnerPlans';
+import OwnerReviews from './OwnerReviews';
 
 export default function OwnerStore() {
 	const { storeId } = useParams();
@@ -49,7 +49,7 @@ export default function OwnerStore() {
 		return () => {
 			setOneStore(false);
 		};
-	}, []);
+	}, [storeId]);
 
 	async function editStoreIntoStore(
 		data: FormData,
@@ -142,7 +142,7 @@ export default function OwnerStore() {
 				</nav>
 				{currentNav === 'classes' && <OwnerClasses />}
 				{currentNav === 'plans' && <OwnerPlans />}
-				{currentNav === 'reviews' && <section>評價</section>}
+				{currentNav === 'reviews' && <OwnerReviews />}
 			</div>
 			<FormDialogWithImage
 				isOpen={toggleImgDialog}

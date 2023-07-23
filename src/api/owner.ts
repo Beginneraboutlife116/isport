@@ -91,6 +91,11 @@ function deletePlan(id: number) {
 	return apiHelper.delete(`owner/plans/${id}`);
 }
 
+// reviews
+function getStoreReviews(id: number) {
+	return apiHelper.get(`/owner/stores/${id}/reviews`);
+}
+
 export {
 	// store
 	getOwnerData,
@@ -110,4 +115,7 @@ export {
 	createPlan,
 	updatePlan,
 	deletePlan,
+
+	// reviews
+	getStoreReviews,
 };

@@ -5,7 +5,7 @@ import Rating from '@mui/material/Rating';
 import Stack from '@mui/material/Stack';
 import { addComment } from '../../api/comment';
 
-type ItemProps = {
+export type ItemProps = {
 	id?: number;
 	avatar: string;
 	content: string;
@@ -19,7 +19,7 @@ type StarRatingProps = {
 	rating: number;
 };
 
-function ReviewItem({ avatar, content, createdAt, nickname, rating }: ItemProps) {
+export function ReviewItem({ avatar, content, createdAt, nickname, rating }: ItemProps) {
 	return (
 		<div className={styled.container__reviewWrap}>
 			{/* info */}
