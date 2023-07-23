@@ -12,7 +12,7 @@ type PlanItemProps = {
 export default function PlanItem({ id, storeName, plans }: PlanItemProps) {
 	return (
 		<li className={styles.item}>
-			<Link to={`/store/${id}`}>
+			<Link to={`/find/${id}`}>
 				<header className={`${styles.item__header} ${styles.item__row}`}>
 					<h3>{storeName}</h3>
 				</header>
