@@ -113,8 +113,9 @@ export default function OwnerClasses() {
 			} catch (error) {
 				if (isAxiosError(error)) {
 					console.error(error);
+				} else {
+					console.error(error);
 				}
-				console.error(error);
 			}
 		}
 
@@ -169,8 +170,9 @@ export default function OwnerClasses() {
 		} catch (error) {
 			if (isAxiosError(error)) {
 				console.error(error);
+			} else {
+				console.error(error);
 			}
-			console.error(error);
 		}
 	}
 
@@ -219,7 +221,11 @@ export default function OwnerClasses() {
 				setEditingClass(undefined);
 			}
 		} catch (error) {
-			console.error(error);
+			if (isAxiosError(error)) {
+				console.error(error);
+			} else {
+				console.error(error);
+			}
 		}
 	}
 

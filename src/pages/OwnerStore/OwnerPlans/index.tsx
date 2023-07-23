@@ -74,8 +74,9 @@ export default function OwnerPlans() {
 			} catch (error) {
 				if (isAxiosError(error)) {
 					setNoDataMessage(error.response?.data.message);
+				} else {
+					console.error(error);
 				}
-				console.error(error);
 			}
 		}
 
@@ -104,7 +105,11 @@ export default function OwnerPlans() {
 				reset();
 			}
 		} catch (error) {
-			console.error(error);
+			if (isAxiosError(error)) {
+				console.error(error);
+			} else {
+				console.error(error);
+			}
 		}
 	}
 
@@ -125,7 +130,13 @@ export default function OwnerPlans() {
 				setTogglePlanDialog(!togglePlanDialog);
 				setEditingPlan(undefined);
 			}
-		} catch (error) {}
+		} catch (error) {
+			if (isAxiosError(error)) {
+				console.error(error);
+			} else {
+				console.error(error);
+			}
+		}
 	}
 
 	return (
