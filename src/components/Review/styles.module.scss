@@ -1,8 +1,12 @@
 .container {
   width: 100%;
-  position: relative;
-  height: 380px;
-  overflow-x: auto;
+  display: flex;
+  flex-direction: column;
+
+  &__reviewCon {
+    height: 350px;
+    overflow-y: auto;
+  }
 
   &__reviewWrap {
     border: 2px solid lightgray;
@@ -54,8 +58,6 @@
     margin-top: 3rem;
     border-top: 2px solid lightgray;
     width: 100%;
-    position: fixed;
-    z-index: 999;
     background-color: white;
     width: 600px;
     bottom: 5rem;
