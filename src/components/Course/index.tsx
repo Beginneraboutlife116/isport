@@ -51,7 +51,7 @@ function CourseInfo({
 				id: id,
 			},
 		]);
-		navigate('plan');
+		navigate('reservation');
 	}
 
 	return (
