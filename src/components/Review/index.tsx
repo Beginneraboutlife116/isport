@@ -112,16 +112,18 @@ function Review() {
 	return (
 		<div className={styled.container}>
 			{/* Reviews */}
-			{reviews.map((item) => (
-				<ReviewItem
-					key={item.id}
-					avatar={item.avatar}
-					content={item.content}
-					createdAt={item.createdAt}
-					nickname={item.nickname}
-					rating={item.rating}
-				/>
-			))}
+			<div className={styled.container__reviewCon}>
+				{reviews.map((item) => (
+					<ReviewItem
+						key={item.id}
+						avatar={item.avatar}
+						content={item.content}
+						createdAt={item.createdAt}
+						nickname={item.nickname}
+						rating={item.rating}
+					/>
+				))}
+			</div>
 
 			{/* send review */}
 			<div className={styled.container__replyWrap}>
