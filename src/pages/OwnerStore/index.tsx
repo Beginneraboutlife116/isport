@@ -10,6 +10,7 @@ import { StoreType } from '../../components/Dialog/FormDialogWithImage';
 import OwnerClasses from './OwnerClasses';
 import { UseFormReset, UseFormSetError, FieldValues } from 'react-hook-form';
 import { isAxiosError } from '../../util/helpers';
+import OwnerPlans from './OwnerPlans';
 
 export default function OwnerStore() {
 	const { storeId } = useParams();
@@ -140,7 +141,7 @@ export default function OwnerStore() {
 					</ul>
 				</nav>
 				{currentNav === 'classes' && <OwnerClasses />}
-				{currentNav === 'plan' && <section>方案</section>}
+				{currentNav === 'plan' && <OwnerPlans />}
 				{currentNav === 'review' && <section>評價</section>}
 			</div>
 			<FormDialogWithImage

@@ -15,6 +15,10 @@ function getStoreClasses(id: number) {
 	return apiHelper.get(`/owner/stores/${id}/classes`);
 }
 
+function getStorePlans(id: number) {
+	return apiHelper.get(`/owner/stores/${id}/plans`);
+}
+
 function createStore(data: FormData) {
 	return apiHelper.post('/owner/stores', data);
 }
@@ -25,6 +29,10 @@ function updateStore(id: number, data: FormData) {
 
 function deleteClass(id: number) {
 	return apiHelper.delete(`owner/classes/${id}`);
+}
+
+function deletePlan(id: number) {
+	return apiHelper.delete(`owner/plans/${id}`);
 }
 
 function createClass(
@@ -71,13 +79,20 @@ function updateClass({
 }
 
 export {
+	// store
 	getOwnerData,
 	getOwnerStores,
 	getOneStore,
-	getStoreClasses,
 	createStore,
 	updateStore,
-	deleteClass,
+
+	// class
 	createClass,
+	getStoreClasses,
 	updateClass,
+	deleteClass,
+
+	// plan
+	getStorePlans,
+	deletePlan,
 };

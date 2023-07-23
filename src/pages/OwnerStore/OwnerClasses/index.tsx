@@ -4,10 +4,9 @@ import { BsPlusCircleFill } from 'react-icons/bs';
 import { isAxiosError } from '../../../util/helpers';
 import { getStoreClasses, deleteClass, createClass, updateClass } from '../../../api/owner';
 import Button from '../../../components/Button';
-import OwnerClass from '../../../components/OwnerClass';
+import OwnerClass from '../../../components/Course/OwnerClass';
 import { DeleteModal, FormDialogForClass } from '../../../components/Dialog';
-import storeStyles from '../styles.module.scss';
-import styles from './styles.module.scss';
+import styles from '../styles.module.scss';
 import { UseFormReset, FieldValues } from 'react-hook-form';
 
 export type DayClassesType = {
@@ -255,7 +254,7 @@ export default function OwnerClasses() {
 			</Button>
 			<section className={styles.section}>
 				{noDataMessage ? (
-					<p className={storeStyles.noData}>{noDataMessage}</p>
+					<p className={styles.noData}>{noDataMessage}</p>
 				) : (
 					Object.entries(eachDayClasses).map(([key, value]) => (
 						<OwnerClass

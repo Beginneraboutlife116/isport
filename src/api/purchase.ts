@@ -1,7 +1,7 @@
 import axios from "axios";
 
-// const baseUrl = 'http://i-sport-api-env-1.eba-yaqmmn4t.ap-northeast-2.elasticbeanstalk.com/api';
-const baseUrl = 'https://isports.tw/api';
+const baseUrl = 'http://i-sport-api-env-1.eba-yaqmmn4t.ap-northeast-2.elasticbeanstalk.com/api';
+// const baseUrl = 'https://isports.tw/api';
 
 export const postPurchaseData = async (authToken: string, Amt: number, planId: number, planName: string, storeId: number) => {
 	try {

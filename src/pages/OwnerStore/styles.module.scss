@@ -38,6 +38,10 @@
 	}
 }
 
+.section {
+	overflow-y: scroll;
+}
+
 .modal {
 	&__btn {
 		color: #61afdf;
@@ -59,4 +63,27 @@
 	text-align: center;
 	color: #da1010;
 	font-size: 1.5rem;
+}
+
+.btn {
+	&__open {
+		color: #61afdf;
+		width: 2.25rem;
+		aspect-ratio: 1;
+		padding-inline: 0;
+		margin-inline-start: auto;
+		display: block;
+
+		& > svg {
+			width: 100%;
+			height: 100%;
+			color: #3488d9;
+		}
+	}
+}
+
+.plans {
+	margin-block-end: 0;
+	display: grid;
+	gap: 1.5rem;
 }
