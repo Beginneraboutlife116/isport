@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const baseUrl = 'http://i-sport-api-env-1.eba-yaqmmn4t.ap-northeast-2.elasticbeanstalk.com/api';
+// const baseUrl = 'http://i-sport-api-env-1.eba-yaqmmn4t.ap-northeast-2.elasticbeanstalk.com/api';
+const baseUrl = 'https://isports.tw/api';
 
 // 取得使用者目前擁有方案
 export const fetchUserPlans = async (authToken: string, storeId: number) => {
