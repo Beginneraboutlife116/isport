@@ -32,15 +32,6 @@ export default function FormDialogWithImage({
 	buttonText,
 }: FormDialogWithImageProps) {
 	const {
-		email = '',
-		phone = '',
-		introduction = '',
-		address = '',
-		storeName = '',
-		photo = null,
-		id = 0,
-	} = editingStore || {};
-	const {
 		register,
 		handleSubmit,
 		formState: { errors, isValid, dirtyFields, isSubmitSuccessful },
@@ -51,23 +42,23 @@ export default function FormDialogWithImage({
 		watch,
 	} = useForm<FieldValues>({
 		values: {
-			email,
-			phone,
-			introduction,
-			address,
-			storeName,
-			photo,
+			email: editingStore?.email || '',
+			phone: editingStore?.phone || '',
+			introduction: editingStore?.introduction || '',
+			address: editingStore?.address || '',
+			storeName: editingStore?.storeName || '',
+			photo: editingStore?.photo || null,
 		},
 	});
 	const [{ imgSrc, imgName }, setImgInfo] = useState({
-		imgSrc: photo,
-		imgName: storeName,
+		imgSrc: editingStore?.photo || '',
+		imgName: editingStore?.storeName || '',
 	});
 	const dialogRef = useRef<HTMLDialogElement>(null);
 	const [photoChanged, setPhotoChanged] = useState(false);
 
 	useEffect(() => {
-		setImgInfo({ imgSrc: photo, imgName: storeName });
+		setImgInfo({ imgSrc: editingStore?.photo || '', imgName: editingStore?.storeName || '' });
 		const dialog = dialogRef.current;
 		if (dialog) {
 			if (isOpen && !dialog.open) {
@@ -97,14 +88,15 @@ export default function FormDialogWithImage({
 	}
 
 	let btnDisabled = false;
-	if (id === 0) {
+	if (editingStore) {
 		btnDisabled = !isValid || isSubmitSuccessful;
 	} else {
-		btnDisabled = !Object.values(dirtyFields).some((item) => item) || !isValid || isSubmitSuccessful;
+		btnDisabled =
+			!Object.values(dirtyFields).some((item) => item) || !isValid || isSubmitSuccessful;
 	}
 
 	return (
-		<Dialog ref={dialogRef} key={id} closeDialog={closeDialog}>
+		<Dialog ref={dialogRef} key={editingStore?.id || 0} closeDialog={closeDialog}>
 			<form
 				onSubmit={handleSubmit((data) => {
 					const formData = new FormData();
@@ -232,10 +224,10 @@ export default function FormDialogWithImage({
 						id='photo'
 						accept='image/jpg, image/png, image/jpeg'
 						{...register('photo', {
-							required: id === 0,
+							required: !editingStore,
 							validate: {
 								fileType: (value) => {
-									if (id === 0) {
+									if (!editingStore) {
 										const file = value[0];
 										const validateFormat = ['image/jpg', 'image/png', 'image/jpeg'];
 										return validateFormat.includes(file.type);

@@ -123,7 +123,6 @@ export default function FormDialogForClass({
 						{...register('headcount', {
 							required: true,
 							validate: { min: (v) => Number.parseInt(v, 10) > 0 },
-							min: 1,
 							onBlur: (event: FocusEvent<HTMLInputElement, Element>) => {
 								const { target } = event;
 								if (!target.value) {
