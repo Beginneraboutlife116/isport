@@ -1,4 +1,4 @@
-import { useEffect, useRef, ReactNode, ChangeEvent, FocusEvent } from 'react';
+import { useEffect, useRef, ChangeEvent, FocusEvent } from 'react';
 import { useForm, Controller, FieldValues } from 'react-hook-form';
 import * as Slider from '@radix-ui/react-slider';
 import FormInput, { NameInput } from '../../FormInput';

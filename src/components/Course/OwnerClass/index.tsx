@@ -32,10 +32,10 @@ export default function OwnerClass({
 						<div className={styles.content__right}>
 							<p>名額 {headcount} 人</p>
 							<div>
-								<Button onClick={() => openEditDialog(id)}>
+								<Button onClick={() => openEditDialog(id as number)}>
 									<MdEdit style={{ fontSize: '1.5rem' }} />
 								</Button>
-								<Button onClick={() => openDeleteModal(id)}>
+								<Button onClick={() => openDeleteModal(id as number)}>
 									<RxCross1 style={{ fontSize: '1.5rem' }} />
 								</Button>
 							</div>
