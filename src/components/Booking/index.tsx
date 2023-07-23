@@ -15,6 +15,7 @@ function Booking({ setStatus }: BookingProps) {
 	const [remark, setRemark] = useState('');
 	const [done, setDone] = useState('');
 	const [userPlanId, setUserPlanId] = useState<number>(0);
+	const [selectedOption, setSelectedOption] = useState('');
 	const storedData = localStorage.getItem('isport');
 	let dataObject: { token?: string } = {};
 	if (storedData) {
@@ -29,6 +30,11 @@ function Booking({ setStatus }: BookingProps) {
 	const handleRemark = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
 		const inputValue = e.target.value;
 		setRemark(inputValue);
+	};
+
+	const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+		const selectedValue = e.target.value;
+		setSelectedOption(selectedValue); // 更新選中的選項
 	};
 
 	const handleBooking = async () => {
@@ -49,7 +55,8 @@ function Booking({ setStatus }: BookingProps) {
 		setTimeout(() => {
 			setDone('');
 		}, 1000);
-
+		if (noPlans === 'error') {
+		}
 		navigate('/reservation');
 	};
 
@@ -86,7 +93,10 @@ function Booking({ setStatus }: BookingProps) {
 				<select
 					name='plan'
 					id='plan'
-					onChange={(e) => setUserPlanId(Number(e.target.value))}
+					onChange={(e) => {
+						setUserPlanId(Number(e.target.value));
+						handleSelectChange(e);
+					}}
 					className={styled['container__infoWrap--select']}
 				>
 					<option value='' style={{ color: 'gray' }}>
@@ -129,7 +139,11 @@ function Booking({ setStatus }: BookingProps) {
 							<span className={styled['container__buttonWrap--done']}>{done}!</span>
 					  )}
 
-				<button onClick={handleBooking} className={styled.container__button}>
+				<button
+					onClick={handleBooking}
+					disabled={!selectedOption}
+					className={styled.container__button}
+				>
 					送出預約
 				</button>
 			</div>
