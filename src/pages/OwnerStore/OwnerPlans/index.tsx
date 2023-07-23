@@ -2,14 +2,15 @@ import { useState, useEffect } from 'react';
 import { BsPlusCircleFill } from 'react-icons/bs';
 import { useParams } from 'react-router-dom';
 import { isAxiosError } from '../../../util/helpers';
-import { getStorePlans, deletePlan } from '../../../api/owner';
+import { getStorePlans, deletePlan, createPlan } from '../../../api/owner';
 import Button from '../../../components/Button';
 import { DeleteModal, FormDialogForPlan } from '../../../components/Dialog';
 import styles from '../styles.module.scss';
 import OwnerPlan from '../../../components/Plan/OwnerPlan';
+import { FieldValues, UseFormReset } from 'react-hook-form';
 
 export type PlanType = {
-	id: number;
+	id?: number;
 	planName: string;
 	planAmount: number;
 	price: number;
@@ -93,8 +94,18 @@ export default function OwnerPlans() {
 		}
 	}
 
-	async function createPlanIntoStore(data) {
-		console.log(data);
+	async function createPlanIntoStore(data: PlanType, reset: UseFormReset<FieldValues>) {
+		try {
+			const response = await createPlan(Number.parseInt(storeId as string, 10), data);
+			console.log(response);
+			if (response.status === 200) {
+				setPlans([...plans, { ...data, id: response.data.id }]);
+				setTogglePlanDialog(!togglePlanDialog);
+				reset();
+			}
+		} catch (error) {
+			console.error(error);
+		}
 	}
 
 	async function updatePlanIntoStore(data) {
@@ -120,7 +131,7 @@ export default function OwnerPlans() {
 								key={plan.id}
 								plan={plan}
 								openDeleteModal={() => {
-									setPlanId(plan.id);
+									setPlanId(plan?.id as number);
 									setToggleDeleteModal(!toggleDeleteModal);
 								}}
 								openEditDialog={() => {

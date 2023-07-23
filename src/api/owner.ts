@@ -1,5 +1,6 @@
 import apiHelper from '../util/helpers';
 
+// store
 function getOwnerData() {
 	return apiHelper.get('/owner/users/account');
 }
@@ -7,16 +8,9 @@ function getOwnerData() {
 function getOwnerStores() {
 	return apiHelper.get('/owner/stores');
 }
+
 function getOneStore(id: number) {
 	return apiHelper.get(`/owner/stores/${id}`);
-}
-
-function getStoreClasses(id: number) {
-	return apiHelper.get(`/owner/stores/${id}/classes`);
-}
-
-function getStorePlans(id: number) {
-	return apiHelper.get(`/owner/stores/${id}/plans`);
 }
 
 function createStore(data: FormData) {
@@ -24,15 +18,12 @@ function createStore(data: FormData) {
 }
 
 function updateStore(id: number, data: FormData) {
-	return apiHelper.put(`owner/stores/${id}`, data);
+	return apiHelper.put(`/owner/stores/${id}`, data);
 }
 
-function deleteClass(id: number) {
-	return apiHelper.delete(`owner/classes/${id}`);
-}
-
-function deletePlan(id: number) {
-	return apiHelper.delete(`owner/plans/${id}`);
+// classes
+function getStoreClasses(id: number) {
+	return apiHelper.get(`/owner/stores/${id}/classes`);
 }
 
 function createClass(
@@ -45,7 +36,7 @@ function createClass(
 		className,
 	}: { weekDay: string; startTime: string; endTime: string; headcount: number; className: string },
 ) {
-	return apiHelper.post(`owner/stores/${storeId}/classes`, {
+	return apiHelper.post(`/owner/stores/${storeId}/classes`, {
 		weekDay,
 		startTime,
 		endTime,
@@ -69,13 +60,43 @@ function updateClass({
 	headcount: number;
 	className: string;
 }) {
-	return apiHelper.put(`owner/classes/${id}`, {
+	return apiHelper.put(`/owner/classes/${id}`, {
 		weekDay,
 		startTime,
 		endTime,
 		headcount,
 		className,
 	});
+}
+
+function deleteClass(id: number) {
+	return apiHelper.delete(`/owner/classes/${id}`);
+}
+
+// plans
+function getStorePlans(id: number) {
+	return apiHelper.get(`/owner/stores/${id}/plans`);
+}
+
+function createPlan(
+	id: number,
+	{
+		planAmount,
+		planName,
+		planType,
+		price,
+	}: {
+		planName: string;
+		planType: string;
+		planAmount: number;
+		price: number;
+	},
+) {
+	return apiHelper.post(`/owner/stores/${id}/plans`, { planName, planType, planAmount, price });
+}
+
+function deletePlan(id: number) {
+	return apiHelper.delete(`owner/plans/${id}`);
 }
 
 export {
@@ -94,5 +115,6 @@ export {
 
 	// plan
 	getStorePlans,
+	createPlan,
 	deletePlan,
 };

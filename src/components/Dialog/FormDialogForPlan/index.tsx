@@ -53,7 +53,16 @@ export default function FormDialogForPlan({
 		<Dialog closeDialog={closeDialog} ref={dialogRef} key={editingPlan?.id || 0}>
 			<form
 				onSubmit={handleSubmit((data) => {
-					console.log(data);
+					const { planName, planType, planAmount, price } = data;
+					handleDialogSubmit(
+						{
+							planName,
+							planType,
+							planAmount: Number.parseInt(planAmount, 10),
+							price: Number.parseInt(price, 10),
+						},
+						reset,
+					);
 				})}
 				className={styles.form}
 			>
@@ -83,7 +92,10 @@ export default function FormDialogForPlan({
 						onBlur: (event: FocusEvent<HTMLInputElement, Element>) => {
 							const { target } = event;
 							if (!target.value) {
-								setError('planAmount', { type: 'required', message: '次數/天數 不可為空' });
+								setError('planAmount', {
+									type: 'required',
+									message: `${watch('planType')} 不可為空`,
+								});
 							}
 						},
 						onChange: (event: ChangeEvent<HTMLInputElement>) => {
