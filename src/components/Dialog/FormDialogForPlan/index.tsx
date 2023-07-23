@@ -1,5 +1,5 @@
 import { useEffect, useRef, FocusEvent, ChangeEvent } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, FieldValues } from 'react-hook-form';
 import Dialog from '..';
 import FormInput, { NameInput } from '../../FormInput';
 import Button from '../../Button';
@@ -30,7 +30,14 @@ export default function FormDialogForPlan({
 		clearErrors,
 		reset,
 		watch,
-	} = useForm();
+	} = useForm<FieldValues>({
+		values: {
+			planName: editingPlan?.planName || '',
+			planType: editingPlan?.planType || '次數',
+			planAmount: editingPlan?.planAmount || 1,
+			price: editingPlan?.price || 0,
+		},
+	});
 
 	useEffect(() => {
 		const dialog = dialogRef.current;
@@ -48,6 +55,14 @@ export default function FormDialogForPlan({
 			}
 		};
 	}, [isOpen]);
+
+	let btnDisabled = false;
+	if (editingPlan) {
+		btnDisabled =
+			!Object.values(dirtyFields).some((item) => item) || !isValid || isSubmitSuccessful;
+	} else {
+		btnDisabled = !isValid || isSubmitSuccessful;
+	}
 
 	return (
 		<Dialog closeDialog={closeDialog} ref={dialogRef} key={editingPlan?.id || 0}>
@@ -134,8 +149,8 @@ export default function FormDialogForPlan({
 						},
 					}}
 				/>
-				<Button type='submit' className={styles['btn--submit']} disabled={!isValid}>
-					{buttonText}
+				<Button type='submit' className={styles['btn--submit']} disabled={btnDisabled}>
+					{isSubmitSuccessful ? '送出中...' : buttonText}
 				</Button>
 			</form>
 		</Dialog>

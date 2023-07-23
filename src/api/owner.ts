@@ -1,3 +1,4 @@
+import { PlanType } from '../pages/OwnerStore/OwnerPlans';
 import apiHelper from '../util/helpers';
 
 // store
@@ -78,21 +79,12 @@ function getStorePlans(id: number) {
 	return apiHelper.get(`/owner/stores/${id}/plans`);
 }
 
-function createPlan(
-	id: number,
-	{
-		planAmount,
-		planName,
-		planType,
-		price,
-	}: {
-		planName: string;
-		planType: string;
-		planAmount: number;
-		price: number;
-	},
-) {
+function createPlan(id: number, { planAmount, planName, planType, price }: PlanType) {
 	return apiHelper.post(`/owner/stores/${id}/plans`, { planName, planType, planAmount, price });
+}
+
+function updatePlan({ id, planName, planType, planAmount, price }: PlanType) {
+	return apiHelper.put(`/owner/plans/${id}`, { planName, planType, planAmount, price });
 }
 
 function deletePlan(id: number) {
@@ -116,5 +108,6 @@ export {
 	// plan
 	getStorePlans,
 	createPlan,
+	updatePlan,
 	deletePlan,
 };

@@ -10,7 +10,7 @@ import styles from '../styles.module.scss';
 import { UseFormReset, FieldValues } from 'react-hook-form';
 
 export type DayClassesType = {
-	id: number;
+	id?: number;
 	className: string;
 	startTime: string;
 	endTime: string;
@@ -138,16 +138,7 @@ export default function OwnerClasses() {
 		}
 	}
 
-	async function createClassIntoStore(
-		data: {
-			weekDay: number;
-			className: string;
-			startTime: string;
-			endTime: string;
-			headcount: number;
-		},
-		reset: UseFormReset<FieldValues>,
-	) {
+	async function createClassIntoStore(data: ClassType, reset: UseFormReset<FieldValues>) {
 		try {
 			const response = await createClass(Number.parseInt(storeId as string, 10), {
 				...data,
@@ -183,16 +174,7 @@ export default function OwnerClasses() {
 		}
 	}
 
-	async function updateClassIntoStore(
-		data: {
-			weekDay: number;
-			className: string;
-			startTime: string;
-			endTime: string;
-			headcount: number;
-		},
-		reset: UseFormReset<FieldValues>,
-	) {
+	async function updateClassIntoStore(data: ClassType) {
 		try {
 			const { weekDay } = data;
 			const response = await updateClass({
@@ -235,7 +217,6 @@ export default function OwnerClasses() {
 				}
 				setToggleClassDialog(!toggleClassDialog);
 				setEditingClass(undefined);
-				reset();
 			}
 		} catch (error) {
 			console.error(error);

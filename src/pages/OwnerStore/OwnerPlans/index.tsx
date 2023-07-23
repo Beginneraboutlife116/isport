@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { BsPlusCircleFill } from 'react-icons/bs';
 import { useParams } from 'react-router-dom';
 import { isAxiosError } from '../../../util/helpers';
-import { getStorePlans, deletePlan, createPlan } from '../../../api/owner';
+import { getStorePlans, deletePlan, createPlan, updatePlan } from '../../../api/owner';
 import Button from '../../../components/Button';
 import { DeleteModal, FormDialogForPlan } from '../../../components/Dialog';
 import styles from '../styles.module.scss';
@@ -108,8 +108,24 @@ export default function OwnerPlans() {
 		}
 	}
 
-	async function updatePlanIntoStore(data) {
-		console.log(data);
+	async function updatePlanIntoStore(data: PlanType) {
+		try {
+			const response = await updatePlan({ ...data, id: editingPlan?.id });
+			console.log(response);
+			if (response.status === 200) {
+				setPlans(
+					plans.map((plan) => {
+						if (plan.id === editingPlan?.id) {
+							return { ...plan, ...data };
+						} else {
+							return plan;
+						}
+					}),
+				);
+				setTogglePlanDialog(!togglePlanDialog);
+				setEditingPlan(undefined);
+			}
+		} catch (error) {}
 	}
 
 	return (

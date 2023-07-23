@@ -1,10 +1,14 @@
 .plan {
 	display: flex;
 	border-bottom: 0.125rem solid #c3cfd9;
-  padding-block-end: 1rem;
-  justify-content: space-between;
+	padding-block-end: 1rem;
 
-  & p, h3 {
-    margin: 0;
-  }
+	& p,
+	h3 {
+		margin: 0;
+	}
+
+	& *:not(:last-child) {
+		flex: 1;
+	}
 }
