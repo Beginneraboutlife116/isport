@@ -61,7 +61,15 @@ function ConditionReturnFormDialogForClass({
 
 export default function OwnerClasses() {
 	const { storeId } = useParams();
-	const [eachDayClasses, setEachDayClasses] = useState<{ [key: string]: DayClassesType[] }>({});
+	const [eachDayClasses, setEachDayClasses] = useState<{ [key: string]: DayClassesType[] }>({
+		'0': [],
+		'1': [],
+		'2': [],
+		'3': [],
+		'4': [],
+		'5': [],
+		'6': [],
+	});
 	const [noDataMessage, setNoDataMessage] = useState<string>('');
 	const [classIdAndDay, setClassIdAndDay] = useState<[number, string]>([0, '']);
 	const [toggleDeleteModal, setToggleDeleteModal] = useState<boolean>(false);
@@ -102,7 +110,7 @@ export default function OwnerClasses() {
 						},
 						{} as { [key: string]: DayClassesType[] },
 					);
-					setEachDayClasses(newData);
+					setEachDayClasses({ ...eachDayClasses, ...newData });
 				}
 			} catch (error) {
 				if (isAxiosError(error)) {
@@ -149,15 +157,22 @@ export default function OwnerClasses() {
 			});
 			if (response.status === 200) {
 				const { weekDay, className, startTime, endTime, headcount } = data;
-				setEachDayClasses({
-					...eachDayClasses,
-					[weekDay]: eachDayClasses[weekDay].concat({
-						id: response.data.id,
-						className,
-						startTime,
-						endTime,
-						headcount,
-					}),
+				setEachDayClasses((e) => {
+					const weekDayClasses = e[weekDay];
+					if (weekDayClasses) {
+						return {
+							...e,
+							[weekDay]: [
+								...weekDayClasses,
+								{ id: response.data.id, className, startTime, endTime, headcount },
+							],
+						};
+					} else {
+						return {
+							...e,
+							[weekDay]: [{ id: response.data.id, className, startTime, endTime, headcount }],
+						};
+					}
 				});
 				setToggleClassDialog(!toggleClassDialog);
 				reset();
@@ -188,16 +203,38 @@ export default function OwnerClasses() {
 				weekDay: week[weekDay],
 			});
 			if (response.status === 200) {
-				setEachDayClasses({
-					...eachDayClasses,
-					[editingClass?.weekDay as number]: eachDayClasses[editingClass?.weekDay as number].filter(
-						(item) => item.id !== (editingClass?.id as number),
-					),
-				});
-				setEachDayClasses((e) => ({
-					...e,
-					[weekDay]: [...e[weekDay], { ...data, id: editingClass?.id as number }],
-				}));
+				if (editingClass?.weekDay === weekDay) {
+					setEachDayClasses({
+						...eachDayClasses,
+						[editingClass.weekDay as number]: eachDayClasses[editingClass.weekDay as number].map(
+							(item) => {
+								if (item.id === editingClass.id) {
+									return { ...item, ...data };
+								} else {
+									return item;
+								}
+							},
+						),
+					});
+				} else {
+					setEachDayClasses((e) => {
+						const weekDayClasses = e[weekDay];
+						if (weekDayClasses) {
+							return {
+								...e,
+								[editingClass?.weekDay as number]: e[editingClass?.weekDay as number].filter(
+									(item) => item.id !== (editingClass?.id as number),
+								),
+								[weekDay]: [...weekDayClasses, { ...editingClass, ...data }],
+							};
+						} else {
+							return {
+								...e,
+								[weekDay]: [{ ...data, id: editingClass?.id as number }],
+							};
+						}
+					});
+				}
 				setToggleClassDialog(!toggleClassDialog);
 				setEditingClass(undefined);
 				reset();

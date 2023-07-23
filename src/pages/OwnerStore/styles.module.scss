@@ -12,6 +12,7 @@
 .content {
 	height: 37.5rem;
 	display: grid;
+	grid-template-rows: repeat(2, auto) 1fr;
 }
 
 .nav {

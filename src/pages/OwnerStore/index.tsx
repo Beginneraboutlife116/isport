@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { getOneStore } from '../../api/owner';
+import { getOneStore, updateStore } from '../../api/owner';
 import Card, { type CardProps } from '../../components/Card';
 import Button from '../../components/Button';
 import { useStoresData } from '../../contexts/findContext';
@@ -8,6 +8,8 @@ import styles from './styles.module.scss';
 import FormDialogWithImage from '../../components/Dialog/FormDialogWithImage';
 import { StoreType } from '../../components/Dialog/FormDialogWithImage';
 import OwnerClasses from './OwnerClasses';
+import { UseFormReset, UseFormSetError, FieldValues } from 'react-hook-form';
+import { isAxiosError } from '../../util/helpers';
 
 export default function OwnerStore() {
 	const { storeId } = useParams();
@@ -15,24 +17,25 @@ export default function OwnerStore() {
 	const [currentNav, setCurrentNav] = useState('classes');
 	const [toggleImgDialog, setToggleImgDialog] = useState(false);
 	const [editingStore, setEditingStore] = useState<StoreType>();
-	const [store, setStore] = useState<CardProps>({
-		id: 0,
-		storeName: '',
-		rating: 0,
-		reviewCounts: 0,
-		introduction: '',
-		photo: '',
-		address: '',
-		email: '',
-		phone: '',
-	});
+	const [store, setStore] = useState<CardProps>();
 
 	useEffect(() => {
 		async function fetchStore() {
 			try {
 				const response = await getOneStore(Number.parseInt(storeId as string, 10));
 				if (response.status === 200) {
-					setStore(response.data);
+					const { data } = response;
+					setStore({
+						id: data.id,
+						storeName: data.storeName,
+						rating: data.rating || 0,
+						reviewCounts: data.reviewCounts || 0,
+						introduction: data.introduction,
+						photo: data.photo,
+						address: data.address,
+						email: data.email,
+						phone: data.phone,
+					} as CardProps);
 					setOneStore(true);
 				}
 			} catch (error) {
@@ -47,31 +50,59 @@ export default function OwnerStore() {
 		};
 	}, []);
 
-	function updateStore({ storeName, introduction, photo, address, email, phone }: StoreType) {
-		setStore({
-			...store,
-			storeName,
-			introduction,
-			photo,
-			address,
-			email,
-			phone,
-		});
+	async function editStoreIntoStore(
+		data: FormData,
+		reset: UseFormReset<FieldValues>,
+		setError: UseFormSetError<FieldValues>,
+	) {
+		try {
+			let fakePhoto = editingStore?.photo as string;
+			if (data.has('photo')) {
+				fakePhoto = URL.createObjectURL(data.get('photo') as File);
+			}
+			const storeId = editingStore?.id;
+			const response = await updateStore(storeId as number, data);
+			const fakeStore = {
+				storeName: data.get('storeName'),
+				address: data.get('address'),
+				introduction: data.get('introduction'),
+				photo: fakePhoto,
+			};
+			if (response.status === 200) {
+				setStore({
+					...store,
+					...fakeStore,
+				} as CardProps);
+				reset();
+				setToggleImgDialog(!toggleImgDialog);
+			}
+		} catch (error) {
+			if (isAxiosError(error) && error.response) {
+				const { data } = error.response;
+				const whichTypeInput = data.message.includes('地址') ? 'address' : 'storeName';
+				setError(whichTypeInput, {
+					type: data.status,
+					message: data.message,
+				});
+			} else {
+				console.error(error);
+			}
+		}
 	}
 
 	return (
 		<main className={styles.container}>
 			<Card
-				{...store}
+				{...(store as CardProps)}
 				onClick={() => {
 					setEditingStore({
-						id: store.id,
-						storeName: store.storeName,
-						introduction: store.introduction,
-						photo: store.photo,
-						address: store.address || '',
-						email: store.email || '',
-						phone: store.phone || '',
+						id: store?.id || 0,
+						storeName: store?.storeName || '',
+						introduction: store?.introduction || '',
+						photo: store?.photo || '',
+						address: store?.address || '',
+						email: store?.email || '',
+						phone: store?.phone || '',
 					});
 					setToggleImgDialog(!toggleImgDialog);
 				}}
@@ -118,8 +149,8 @@ export default function OwnerStore() {
 					setEditingStore(undefined);
 					setToggleImgDialog(!toggleImgDialog);
 				}}
-				editingStore={editingStore as StoreType}
-				handleDialogSubmit={updateStore}
+				editingStore={editingStore}
+				handleDialogSubmit={editStoreIntoStore}
 				buttonText='修改送出'
 			/>
 		</main>
