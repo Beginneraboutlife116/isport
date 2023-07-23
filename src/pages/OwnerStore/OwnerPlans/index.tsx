@@ -24,13 +24,34 @@ type ConditionReturnFormDialogForPlanType = {
 	handleEdit: Function;
 };
 
-// function ConditionReturnFormDialogForPlan({
-// 	isOpen,
-// 	closeDialog,
-// 	editingPlan,
-// 	handleCreate,
-// 	handleEdit,
-// }: ConditionReturnFormDialogForPlanType) {}
+function ConditionReturnFormDialogForPlan({
+	isOpen,
+	closeDialog,
+	editingPlan,
+	handleCreate,
+	handleEdit,
+}: ConditionReturnFormDialogForPlanType) {
+	if (editingPlan) {
+		return (
+			<FormDialogForPlan
+				isOpen={isOpen}
+				closeDialog={closeDialog}
+				editingPlan={editingPlan}
+				handleDialogSubmit={handleEdit}
+				buttonText='修改方案'
+			/>
+		);
+	} else {
+		return (
+			<FormDialogForPlan
+				isOpen={isOpen}
+				closeDialog={closeDialog}
+				handleDialogSubmit={handleCreate}
+				buttonText='建立方案'
+			/>
+		);
+	}
+}
 
 export default function OwnerPlans() {
 	const { storeId } = useParams();
@@ -72,6 +93,14 @@ export default function OwnerPlans() {
 		}
 	}
 
+	async function createPlanIntoStore(data) {
+		console.log(data);
+	}
+
+	async function updatePlanIntoStore(data) {
+		console.log(data);
+	}
+
 	return (
 		<>
 			<Button
@@ -108,16 +137,16 @@ export default function OwnerPlans() {
 				closeDialog={() => setToggleDeleteModal(false)}
 				handleDelete={() => deletePlanById()}
 			/>
-			{/* <ConditionReturnFormDialogForPlan
+			<ConditionReturnFormDialogForPlan
 				isOpen={togglePlanDialog}
 				closeDialog={() => {
 					setTogglePlanDialog(!togglePlanDialog);
 					setEditingPlan(undefined);
 				}}
 				editingPlan={editingPlan}
-				handleCreate={createClassIntoStore}
-				handleEdit={updateClassIntoStore}
-			/> */}
+				handleCreate={createPlanIntoStore}
+				handleEdit={updatePlanIntoStore}
+			/>
 		</>
 	);
 }

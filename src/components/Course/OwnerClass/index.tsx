@@ -19,7 +19,7 @@ export default function OwnerClass({
 	return (
 		<details className={styles.class} open key={weekday}>
 			<summary className={styles.title}>{week[Number.parseInt(weekday, 10)]}</summary>
-			{eachDayClasses.length === 0 && <p style={{ color: '#da1010' }}>沒有課程</p>}
+			{eachDayClasses.length === 0 && <p style={{ color: '#da1010' }}>場館無課表</p>}
 			{eachDayClasses.map(({ id, className, startTime, endTime, headcount }) => {
 				return (
 					<div className={styles.content} key={id}>

@@ -24,9 +24,9 @@
 	padding: 2rem 1.25rem 1.5rem;
 	max-height: 75cqb;
 
-  & .close {
-    right: 0;
-  }
+	& .close {
+		right: 0;
+	}
 }
 
 .close {
@@ -40,5 +40,188 @@
 	& > svg {
 		width: 100%;
 		height: 100%;
+	}
+}
+
+.form {
+	display: grid;
+	gap: 1rem;
+	font-size: 0.75rem;
+}
+
+.btn {
+	&--submit {
+		background-color: #6558f5;
+		color: white;
+		padding-block: 1em;
+
+		&:disabled {
+			opacity: 0.5;
+		}
+	}
+
+	&--image {
+		width: fit-content;
+		padding: 0.25em 0.5em;
+		border-radius: 0.125em;
+		border: 0.0625rem solid #9eadba;
+		font-size: 1rem;
+		color: #4b5c6c;
+		cursor: pointer;
+	}
+
+	&--reset {
+		@extend .btn--image;
+
+		&:disabled {
+			opacity: 0.5;
+		}
+	}
+}
+
+.textarea {
+	display: grid;
+	position: relative;
+
+	& textarea {
+		resize: vertical;
+		padding: 0.75em;
+		border-radius: 0.25rem;
+		border: 0.125rem solid #c5ced6;
+	}
+
+	&:has(.textarea__error) > textarea {
+		border-color: #da1010;
+	}
+
+	& p {
+		margin-block: 0.25rem 0;
+		& :last-child {
+			display: block;
+			width: fit-content;
+			margin-inline-start: auto;
+		}
+	}
+
+	&__error {
+		width: 100%;
+		height: auto;
+		color: #da1010;
+		position: absolute;
+		top: calc(100% - 1.25em);
+	}
+}
+
+.uploadImage {
+	position: relative;
+	display: grid;
+	grid-template-columns: 2fr auto auto;
+	align-items: end;
+	gap: 0.5rem;
+
+	&__image {
+		object-fit: cover;
+		aspect-ratio: 16 / 9;
+	}
+
+	&__error {
+		position: absolute;
+		top: 100%;
+		color: #da1010;
+	}
+}
+
+.select {
+	width: 25%;
+	padding: 0.75em;
+	border: 0.125rem solid #c5ced6;
+	border-radius: 0.25rem;
+
+	&:focus {
+		outline-color: #6558f5;
+	}
+}
+
+.label {
+	display: grid;
+	position: relative;
+	font-weight: normal;
+}
+
+.error {
+	position: absolute;
+	top: calc(100% - 0.9em);
+	color: #da1010;
+
+	& + input {
+		border-color: #da1010;
+	}
+}
+
+.slider {
+	&__root {
+		position: relative;
+		display: flex;
+		align-items: center;
+		user-select: none;
+		touch-action: none;
+		width: 75%;
+		height: 2rem;
+	}
+
+	&__track {
+		background-color: #808080;
+		position: relative;
+		flex-grow: 1;
+		border-radius: 99em;
+		height: 0.25rem;
+	}
+
+	&__range {
+		position: absolute;
+		background-color: #6558f5;
+		border-radius: 99em;
+		height: 100%;
+	}
+
+	&__thumb {
+		display: block;
+		width: 1.125rem;
+		height: 1.125rem;
+		background-color: #6558f5;
+		border-radius: 10px;
+
+		&:hover {
+			background-color: #61afdf;
+		}
+
+		&:focus {
+			outline: none;
+			box-shadow: 0 0 0 0.0625rem #61afdf;
+		}
+	}
+
+	&__mark {
+		position: absolute;
+		display: flex;
+		width: 100%;
+		font-size: 0.5rem;
+		justify-content: space-between;
+		align-items: center;
+		top: calc(100% - 1rem);
+		color: #6558f5;
+	}
+}
+
+.time {
+	width: 80%;
+	display: flex;
+	justify-content: space-evenly;
+	font-size: 1rem;
+	margin: 0;
+
+	& span {
+		flex-basis: 20%;
+		text-align: center;
 	}
 }

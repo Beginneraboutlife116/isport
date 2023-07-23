@@ -69,7 +69,6 @@ export default function OwnerClasses() {
 		'5': [],
 		'6': [],
 	});
-	const [noDataMessage, setNoDataMessage] = useState<string>('');
 	const [classIdAndDay, setClassIdAndDay] = useState<[number, string]>([0, '']);
 	const [toggleDeleteModal, setToggleDeleteModal] = useState<boolean>(false);
 	const [toggleClassDialog, setToggleClassDialog] = useState<boolean>(false);
@@ -113,7 +112,7 @@ export default function OwnerClasses() {
 				}
 			} catch (error) {
 				if (isAxiosError(error)) {
-					setNoDataMessage(error.response?.data.message);
+					console.error(error);
 				}
 				console.error(error);
 			}
@@ -253,28 +252,24 @@ export default function OwnerClasses() {
 				<BsPlusCircleFill />
 			</Button>
 			<section className={styles.section}>
-				{noDataMessage ? (
-					<p className={styles.noData}>{noDataMessage}</p>
-				) : (
-					Object.entries(eachDayClasses).map(([key, value]) => (
-						<OwnerClass
-							key={key}
-							eachDayClasses={value}
-							weekday={key}
-							openDeleteModal={(id: number) => {
-								setToggleDeleteModal(true);
-								setClassIdAndDay([id, key]);
-							}}
-							openEditDialog={(id: number) => {
-								setToggleClassDialog(true);
-								setEditingClass({
-									...eachDayClasses[key].find((data) => data.id === id),
-									weekDay: Number.parseInt(key, 10),
-								} as ClassType);
-							}}
-						/>
-					))
-				)}
+				{Object.entries(eachDayClasses).map(([key, value]) => (
+					<OwnerClass
+						key={key}
+						eachDayClasses={value}
+						weekday={key}
+						openDeleteModal={(id: number) => {
+							setToggleDeleteModal(true);
+							setClassIdAndDay([id, key]);
+						}}
+						openEditDialog={(id: number) => {
+							setToggleClassDialog(true);
+							setEditingClass({
+								...eachDayClasses[key].find((data) => data.id === id),
+								weekDay: Number.parseInt(key, 10),
+							} as ClassType);
+						}}
+					/>
+				))}
 			</section>
 			<DeleteModal
 				isOpen={toggleDeleteModal}

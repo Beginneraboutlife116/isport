@@ -4,6 +4,7 @@ import Dialog from '..';
 import FormInput, { NameInput } from '../../FormInput';
 import Button from '../../Button';
 import { PlanType } from '../../../pages/OwnerStore/OwnerPlans';
+import styles from '../styles.module.scss';
 
 type FormDialogForPlanProps = {
 	isOpen: boolean;
@@ -48,14 +49,13 @@ export default function FormDialogForPlan({
 		};
 	}, [isOpen]);
 
-	console.log(watch('planType'));
-
 	return (
 		<Dialog closeDialog={closeDialog} ref={dialogRef} key={editingPlan?.id || 0}>
 			<form
 				onSubmit={handleSubmit((data) => {
 					console.log(data);
 				})}
+				className={styles.form}
 			>
 				<NameInput
 					register={register}
@@ -64,16 +64,18 @@ export default function FormDialogForPlan({
 					setError={setError}
 					clearErrors={clearErrors}
 					label='方案名稱'
+					labelClassName={styles.label}
 				/>
-				<select {...register('planType', { required: true })}>
+				<select {...register('planType', { required: true })} className={styles.select}>
 					<option value='次數'>次數方案</option>
 					<option value='天數'>天數方案</option>
 				</select>
 				<FormInput
+					labelClassName={styles.label}
 					type='number'
 					register={register}
 					errors={errors}
-					label='次數/天數'
+					label={watch('planType')}
 					name='planAmount'
 					rules={{
 						required: true,
@@ -95,6 +97,7 @@ export default function FormDialogForPlan({
 					}}
 				/>
 				<FormInput
+					labelClassName={styles.label}
 					type='number'
 					register={register}
 					errors={errors}
@@ -119,7 +122,9 @@ export default function FormDialogForPlan({
 						},
 					}}
 				/>
-				<Button type='submit'>{buttonText}</Button>
+				<Button type='submit' className={styles['btn--submit']} disabled={!isValid}>
+					{buttonText}
+				</Button>
 			</form>
 		</Dialog>
 	);

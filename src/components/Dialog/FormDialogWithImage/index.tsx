@@ -4,7 +4,7 @@ import type { FieldValues } from 'react-hook-form';
 import { EmailInput, NameInput } from '../../FormInput';
 import Dialog from '../../Dialog';
 import Button from '../../Button';
-import styles from './styles.module.scss';
+import styles from '../styles.module.scss';
 
 export type StoreType = {
 	id: number;
