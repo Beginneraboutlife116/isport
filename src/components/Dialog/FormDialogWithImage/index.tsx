@@ -2,8 +2,6 @@ import { useState, useRef, useEffect, ReactNode } from 'react';
 import { useForm } from 'react-hook-form';
 import type { FieldValues } from 'react-hook-form';
 import { EmailInput, NameInput } from '../../FormInput';
-import { createStore, updateStore } from '../../../api/owner';
-import { isAxiosError } from '../../../util/helpers';
 import Dialog from '../../Dialog';
 import Button from '../../Button';
 import styles from './styles.module.scss';
@@ -67,7 +65,6 @@ export default function FormDialogWithImage({
 	});
 	const dialogRef = useRef<HTMLDialogElement>(null);
 	const [photoChanged, setPhotoChanged] = useState(false);
-	const [isPending, setIsPending] = useState(false);
 
 	useEffect(() => {
 		setImgInfo({ imgSrc: photo, imgName: storeName });
@@ -99,39 +96,11 @@ export default function FormDialogWithImage({
 		};
 	}
 
-	async function onSubmitToUpdate(id: number, data: FieldValues) {
-		try {
-			if (Object.values(dirtyFields).some((value) => value)) {
-				const formData = new FormData();
-				let fakePhoto: string = photo || '';
-				for (const [key, value] of Object.entries(data)) {
-					if (key === 'photo' && photoChanged) {
-						const file = data.photo[0];
-						formData.append(key, file);
-						fakePhoto = URL.createObjectURL(file);
-					}
-					formData.append(key, value);
-				}
-				setIsPending(true);
-				const response = await updateStore(id, formData);
-				if (response.status === 200) {
-					closeDialog();
-					handleDialogSubmit({ ...data, photo: fakePhoto, id });
-				}
-			}
-		} catch (error) {
-			console.error(error);
-		} finally {
-			setIsPending(false);
-		}
-	}
-
 	let btnDisabled = false;
 	if (id === 0) {
 		btnDisabled = !isValid || isSubmitSuccessful;
 	} else {
-		btnDisabled =
-			(!Object.values(dirtyFields).some((item) => item) && isValid) || isSubmitSuccessful;
+		btnDisabled = !Object.values(dirtyFields).some((item) => item) || !isValid || isSubmitSuccessful;
 	}
 
 	return (
@@ -140,11 +109,14 @@ export default function FormDialogWithImage({
 				onSubmit={handleSubmit((data) => {
 					const formData = new FormData();
 					for (const [key, value] of Object.entries(data)) {
-						if (key === 'photo' && photoChanged) {
-							const file = (value as FileList)[0];
-							formData.append(key, file);
+						if (key === 'photo') {
+							if (photoChanged) {
+								const file = (value as FileList)[0];
+								formData.append(key, file);
+							}
+						} else {
+							formData.append(key, value);
 						}
-						formData.append(key, value);
 					}
 					handleDialogSubmit(formData, reset, setError);
 				})}
