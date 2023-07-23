@@ -1,0 +1,29 @@
+.container {
+	width: 20vw;
+	height: 15vh;
+	display: grid;
+	text-align: center;
+	color: #da1010;
+}
+
+.btn {
+	padding: 0.25rem 2rem;
+
+	&__wrapper {
+		display: flex;
+		justify-content: space-between;
+	}
+
+	&__confirm {
+		background-color: #6358ec;
+		color: white;
+	}
+
+	&__cancel {
+		background-color: #9eadba;
+	}
+
+	&:hover {
+		opacity: 0.5;
+	}
+}

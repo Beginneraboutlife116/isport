@@ -20,6 +20,7 @@ import StoreAccount from './pages/StoreAccount/index.tsx';
 import StoreFindPage from './pages/StoreFind/index.tsx';
 import { AuthProvider } from './contexts/authContext.tsx';
 import ErrorPage from './pages/Error/index.tsx';
+import OwnerStore from './pages/OwnerStore/index.tsx';
 
 const router = createBrowserRouter([
 	{
@@ -53,8 +54,14 @@ const router = createBrowserRouter([
 					{ path: 'plan', element: <MyPlanPage /> },
 				],
 			},
-			{ path: 'store/account', element: <StoreAccount /> },
-			{ path: 'store/find', element: <StoreFindPage /> },
+			{
+				path: 'store',
+				children: [
+					{ path: 'account', element: <StoreAccount /> },
+					{ path: 'find', element: <StoreFindPage /> },
+					{ path: 'find/:storeId', element: <OwnerStore /> },
+				],
+			},
 			{ path: 'role', element: <ErrorPage /> },
 		],
 	},

@@ -8,7 +8,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useStoresData } from '../../contexts/findContext';
 import MapModal from '../MapModal';
 
-type CardProps = {
+export type CardProps = {
 	id: number;
 	storeName: string;
 	rating: number;
@@ -71,7 +71,7 @@ function Card({
 	// 點擊單一場館跳轉頁面
 	const handleCardClick = (e: MouseEvent<HTMLDivElement>) => {
 		e.preventDefault();
-		navigate(`/find/${id}`);
+		navigate(pathname.includes('/store/find') ? `/store/find/${id}` : `/find/${id}`);
 		localStorage.setItem('oneStoreId', String(id));
 	};
 
@@ -157,15 +157,24 @@ function Card({
 						<div className={styled['card__storeInfoWrap--title']}>
 							<span>{storeName}</span>
 							{/* 愛心收藏圖案功能 */}
-							<div onClick={() => handleToggleLike(id)}>
-								{!isStoreLiked ? (
-									<BsHeart style={{ fontSize: '24px' }} />
-								) : (
-									<BsHeartFill style={{ fontSize: '24px', color: 'red' }} />
-								)}
-							</div>
-
-							{/* 這裡可以加入商家的鉛筆圖案編輯功能 */}
+							{!pathname.includes('/store/find') ? (
+								<div onClick={() => handleToggleLike(id)}>
+									{!isStoreLiked ? (
+										<BsHeart style={{ fontSize: '24px' }} />
+									) : (
+										<BsHeartFill style={{ fontSize: '24px', color: 'red' }} />
+									)}
+								</div>
+							) : (
+								<MdEdit
+									onClick={() => {
+										if (onClick) {
+											onClick(id);
+										}
+									}}
+									style={{ fontSize: '24px' }}
+								/>
+							)}
 						</div>
 
 						{/* address */}
