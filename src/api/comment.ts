@@ -14,7 +14,6 @@ export const addComment = async (authToken: string, storeId: number, rating :num
 				Authorization: 'Bearer ' + authToken,
 			},
 		});    
-		console.log(response);
 		
 		return response.data;
 	} catch (error) {
