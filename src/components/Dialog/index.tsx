@@ -2,6 +2,10 @@ import { ReactNode, forwardRef } from 'react';
 import { IoMdCloseCircle } from 'react-icons/io';
 import Button from '../Button';
 import styles from './styles.module.scss';
+import DeleteModal from './DeleteModal';
+import FormDialogForClass from './FormDialogForClass';
+import FormDialogForPlan from './FormDialogForPlan';
+import FormDialogWithImage from './FormDialogWithImage';
 
 type DialogProps = {
 	closeDialog: Function;
@@ -25,3 +29,4 @@ const Dialog = forwardRef<HTMLDialogElement, DialogProps>(function Dialog(
 });
 
 export default Dialog;
+export { DeleteModal, FormDialogForClass, FormDialogWithImage, FormDialogForPlan };

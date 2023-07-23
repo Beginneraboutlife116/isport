@@ -1,0 +1,116 @@
+@use '../FormDialogWithImage/styles.module.scss' as *;
+
+.form {
+	@extend .form;
+}
+
+.select {
+	width: 25%;
+	padding: 0.75em;
+	border: 0.125rem solid #c5ced6;
+	border-radius: 0.25rem;
+
+	&:focus {
+		outline-color: #6558f5;
+	}
+}
+
+.label {
+	display: grid;
+	position: relative;
+	font-weight: 700;
+
+	& input {
+		padding: 0.75em;
+		border: 0.125rem solid #c5ced6;
+		border-radius: 0.25rem;
+
+		&:focus {
+			outline-color: #6558f5;
+		}
+	}
+}
+
+.error {
+	position: absolute;
+	top: calc(100% - 0.9em);
+	color: #da1010;
+
+	& + input {
+		border-color: #da1010;
+	}
+}
+
+.btn {
+	&--submit {
+		@extend .btn--submit;
+	}
+}
+
+.slider {
+	&__root {
+		position: relative;
+		display: flex;
+		align-items: center;
+		user-select: none;
+		touch-action: none;
+		width: 75%;
+		height: 2rem;
+	}
+
+	&__track {
+		background-color: #808080;
+		position: relative;
+		flex-grow: 1;
+		border-radius: 99em;
+		height: 0.25rem;
+	}
+
+	&__range {
+		position: absolute;
+		background-color: #6558f5;
+		border-radius: 99em;
+		height: 100%;
+	}
+
+	&__thumb {
+		display: block;
+		width: 1.125rem;
+		height: 1.125rem;
+		background-color: #6558f5;
+		border-radius: 10px;
+
+		&:hover {
+			background-color: #61afdf;
+		}
+
+		&:focus {
+			outline: none;
+			box-shadow: 0 0 0 0.0625rem #61afdf;
+		}
+	}
+
+	&__mark {
+		position: absolute;
+		display: flex;
+		width: 100%;
+		font-size: 0.5rem;
+		justify-content: space-between;
+		align-items: center;
+		top: calc(100% - 1rem);
+		color: #6558f5;
+	}
+}
+
+.time {
+	width: 80%;
+	display: flex;
+	justify-content: space-evenly;
+	font-size: 1rem;
+	margin: 0;
+
+	& span {
+		flex-basis: 20%;
+		text-align: center;
+	}
+}

@@ -2,22 +2,24 @@ import { MdEdit } from 'react-icons/md';
 import { RxCross1 } from 'react-icons/rx';
 import Button from '../Button';
 import styles from './styles.module.scss';
-import { DayClassesType } from '../../pages/OwnerStore';
+import { DayClassesType } from '../../pages/OwnerStore/OwnerClasses';
 
 export default function OwnerClass({
 	weekday,
 	eachDayClasses,
 	openDeleteModal,
+	openEditDialog,
 }: {
 	weekday: string;
 	eachDayClasses: DayClassesType[];
 	openDeleteModal: (id: number) => void;
+	openEditDialog: (id: number) => void;
 }) {
-	const week = ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日'];
+	const week = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
 	return (
-		<details className={styles.class} open>
-			<summary className={`${styles.title}`.trim()}>{week[Number.parseInt(weekday, 10)]}</summary>
-			{eachDayClasses.map(({ id, className, startTime, endTime, headCount }) => {
+		<details className={styles.class} open key={weekday}>
+			<summary className={styles.title}>{week[Number.parseInt(weekday, 10)]}</summary>
+			{eachDayClasses.map(({ id, className, startTime, endTime, headcount }) => {
 				return (
 					<div className={styles.content} key={id}>
 						<div>
@@ -27,9 +29,9 @@ export default function OwnerClass({
 							</p>
 						</div>
 						<div className={styles.content__right}>
-							<p>名額 {headCount} 人</p>
+							<p>名額 {headcount} 人</p>
 							<div>
-								<Button>
+								<Button onClick={() => openEditDialog(id)}>
 									<MdEdit style={{ fontSize: '1.5rem' }} />
 								</Button>
 								<Button onClick={() => openDeleteModal(id)}>

@@ -3,7 +3,7 @@
 	width: min(100%, 71.25rem);
 	margin-inline: auto;
 	display: grid;
-	grid-template-columns: 25rem min(100%, 37.5rem);
+	grid-template-columns: auto min(100%, 37.5rem);
 	gap: 3rem;
 	justify-content: center;
 	align-items: start;
@@ -11,7 +11,7 @@
 
 .content {
 	height: 37.5rem;
-	overflow-y: scroll;
+	display: grid;
 }
 
 .nav {

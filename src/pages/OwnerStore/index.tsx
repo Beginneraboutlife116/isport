@@ -1,37 +1,20 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { BsPlusCircleFill } from 'react-icons/bs';
-import { getOneStore, getStoreClasses, deleteClass } from '../../api/owner';
+import { getOneStore } from '../../api/owner';
 import Card, { type CardProps } from '../../components/Card';
 import Button from '../../components/Button';
-import OwnerClass from '../../components/OwnerClass';
 import { useStoresData } from '../../contexts/findContext';
 import styles from './styles.module.scss';
 import FormDialogWithImage from '../../components/Dialog/FormDialogWithImage';
-import DeleteModal from '../../components/Dialog/DeleteModal';
-import FormDialogForClass from '../../components/Dialog/FormDialogForClass';
 import { StoreType } from '../../components/Dialog/FormDialogWithImage';
-import { isAxiosError } from '../../util/helpers';
-
-export type DayClassesType = {
-	id: number;
-	className: string;
-	startTime: string;
-	endTime: string;
-	headCount: number;
-};
-
-type ClassType = DayClassesType & {
-	weekDay: number;
-};
+import OwnerClasses from './OwnerClasses';
 
 export default function OwnerStore() {
-	const [currentNav, setCurrentNav] = useState('course');
+	const { storeId } = useParams();
+	const { setOneStore } = useStoresData();
+	const [currentNav, setCurrentNav] = useState('classes');
 	const [toggleImgDialog, setToggleImgDialog] = useState(false);
-	const [toggleDeleteModal, setToggleDeleteModal] = useState(false);
-	const [classId, setClassId] = useState(0);
-	const [error, setError] = useState('');
-	const [editingStore, setEditingStore] = useState<StoreType | {}>({});
+	const [editingStore, setEditingStore] = useState<StoreType>();
 	const [store, setStore] = useState<CardProps>({
 		id: 0,
 		storeName: '',
@@ -43,61 +26,6 @@ export default function OwnerStore() {
 		email: '',
 		phone: '',
 	});
-	const [classes, setClasses] = useState<ClassType[]>([]);
-	const { storeId } = useParams();
-	const { setOneStore } = useStoresData();
-	const eachDayClasses: { [key: string]: DayClassesType[] } = classes.reduce(
-		(accu: { [key: string]: DayClassesType[] }, curr: ClassType) => {
-			if (!accu[curr.weekDay]) {
-				accu[curr.weekDay] = [
-					{
-						id: curr.id,
-						className: curr.className,
-						startTime: curr.startTime,
-						endTime: curr.endTime,
-						headCount: curr.headCount,
-					},
-				];
-			} else {
-				accu[curr.weekDay] = [
-					...accu[curr.weekDay],
-					{
-						id: curr.id,
-						className: curr.className,
-						startTime: curr.startTime,
-						endTime: curr.endTime,
-						headCount: curr.headCount,
-					},
-				];
-			}
-			return accu;
-		},
-		{} as { [key: string]: DayClassesType[] },
-	);
-
-	function updateStore({ storeName, introduction, photo, address, email, phone }: StoreType) {
-		setStore({
-			...store,
-			storeName,
-			introduction,
-			photo,
-			address,
-			email,
-			phone,
-		});
-	}
-
-	async function deleteClassById(classId: number) {
-		try {
-			const response = await deleteClass(classId);
-			if (response.status === 200) {
-				setClasses(classes.filter((item) => item.id !== classId));
-				setToggleDeleteModal(false);
-			}
-		} catch (error) {
-			console.error(error);
-		}
-	}
 
 	useEffect(() => {
 		async function fetchStore() {
@@ -112,29 +40,24 @@ export default function OwnerStore() {
 			}
 		}
 
-		async function fetchCourses() {
-			try {
-				const response = await getStoreClasses(Number.parseInt(storeId as string, 10));
-				if (response.status === 200) {
-					setClasses(response.data);
-				}
-			} catch (error) {
-				if (isAxiosError(error)) {
-					setError(error.response?.data.message);
-				}
-				console.error(error);
-			}
-		}
-
-		if (store.id === 0) {
-			fetchStore();
-			fetchCourses();
-		}
+		fetchStore();
 
 		return () => {
 			setOneStore(false);
 		};
 	}, []);
+
+	function updateStore({ storeName, introduction, photo, address, email, phone }: StoreType) {
+		setStore({
+			...store,
+			storeName,
+			introduction,
+			photo,
+			address,
+			email,
+			phone,
+		});
+	}
 
 	return (
 		<main className={styles.container}>
@@ -158,7 +81,7 @@ export default function OwnerStore() {
 					<ul className={styles.nav__list}>
 						<li>
 							<Button
-								onClick={() => setCurrentNav('course')}
+								onClick={() => setCurrentNav('classes')}
 								className={styles.nav__btn}
 								data-selected={currentNav === 'course'}
 							>
@@ -185,46 +108,21 @@ export default function OwnerStore() {
 						</li>
 					</ul>
 				</nav>
-				<Button type='button' className={styles.modal__btn}>
-					<BsPlusCircleFill />
-				</Button>
-				{currentNav === 'course' && (
-					<section>
-						{error ? (
-							<p className={styles.noData}>{error}</p>
-						) : (
-							Object.entries(eachDayClasses).map(([key, value]) => (
-								<OwnerClass
-									key={key}
-									eachDayClasses={value}
-									weekday={key}
-									openDeleteModal={(id) => {
-										setToggleDeleteModal(true);
-										setClassId(id);
-									}}
-								/>
-							))
-						)}
-					</section>
-				)}
+				{currentNav === 'classes' && <OwnerClasses />}
 				{currentNav === 'plan' && <section>方案</section>}
 				{currentNav === 'review' && <section>評價</section>}
 			</div>
 			<FormDialogWithImage
 				isOpen={toggleImgDialog}
 				closeDialog={() => {
-					setEditingStore({});
+					setEditingStore(undefined);
 					setToggleImgDialog(!toggleImgDialog);
 				}}
 				editingStore={editingStore as StoreType}
 				updateFn={updateStore}
 			/>
-			<DeleteModal
-				isOpen={toggleDeleteModal}
-				closeDialog={() => setToggleDeleteModal(false)}
-				handleDelete={() => deleteClassById(classId)}
-			/>
-			<FormDialogForClass isOpen={true} />
 		</main>
 	);
 }
+
+export { OwnerClasses };

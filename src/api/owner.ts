@@ -27,6 +27,49 @@ function deleteClass(id: number) {
 	return apiHelper.delete(`owner/classes/${id}`);
 }
 
+function createClass(
+	storeId: number,
+	{
+		weekDay,
+		startTime,
+		endTime,
+		headcount,
+		className,
+	}: { weekDay: string; startTime: string; endTime: string; headcount: number; className: string },
+) {
+	return apiHelper.post(`owner/stores/${storeId}/classes`, {
+		weekDay,
+		startTime,
+		endTime,
+		headcount,
+		className,
+	});
+}
+
+function updateClass({
+	id,
+	weekDay,
+	startTime,
+	endTime,
+	headcount,
+	className,
+}: {
+	id: number;
+	weekDay: string;
+	startTime: string;
+	endTime: string;
+	headcount: number;
+	className: string;
+}) {
+	return apiHelper.put(`owner/classes/${id}`, {
+		weekDay,
+		startTime,
+		endTime,
+		headcount,
+		className,
+	});
+}
+
 export {
 	getOwnerData,
 	getOwnerStores,
@@ -35,4 +78,6 @@ export {
 	createStore,
 	updateStore,
 	deleteClass,
+	createClass,
+	updateClass,
 };
