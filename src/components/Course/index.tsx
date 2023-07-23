@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import styled from './styles.module.scss';
 import { useStoresData } from '../../contexts/findContext';
-import { useNavigate } from 'react-router-dom';
 
 type InfoProps = {
 	setStatus: React.Dispatch<React.SetStateAction<string>>;
@@ -38,7 +37,6 @@ function CourseInfo({
 	weekDay,
 }: InfoProps) {
 	const { setClassData } = useStoresData();
-	const navigate = useNavigate();
 	function handleBooking() {
 		setStatus('booking');
 		setClassData([
@@ -51,7 +49,6 @@ function CourseInfo({
 				id: id,
 			},
 		]);
-		navigate('reservation');
 	}
 
 	return (

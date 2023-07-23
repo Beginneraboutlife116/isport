@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useStoresData } from '../../contexts/findContext';
 import styled from './styles.module.scss';
 import { bookingClass, fetchUserPlans } from '../../api/plan';
+import { useNavigate } from 'react-router-dom';
 
 type BookingProps = {
 	setStatus: React.Dispatch<React.SetStateAction<string>>;
@@ -23,6 +24,7 @@ function Booking({ setStatus }: BookingProps) {
 	const storeId = localStorage.getItem('oneStoreId');
 	const numberStoreId = Number(storeId);
 	const classId = classData[0].id;
+	const navigate = useNavigate();
 
 	const handleRemark = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
 		const inputValue = e.target.value;
@@ -47,6 +49,8 @@ function Booking({ setStatus }: BookingProps) {
 		setTimeout(() => {
 			setDone('');
 		}, 1000);
+
+		navigate('/reservation');
 	};
 
 	const handleBackClick = () => {
