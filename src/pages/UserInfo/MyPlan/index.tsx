@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import PlanItem from './PlanItem';
-import styles from './styles.module.scss';
 import { getUserPlans } from '../../../api/user';
-import { AiOutlineLoading3Quarters } from 'react-icons/ai';
+import PlanItem from './PlanItem';
+import Loading from '../../../components/Loading';
+import styles from './styles.module.scss';
 
 export type UserPlanType = {
 	id: number;
@@ -45,7 +45,7 @@ export default function MyPlanPage() {
 	return (
 		<ul className={styles.myPlan}>
 			{isFetching ? (
-				<AiOutlineLoading3Quarters className={styles.loading} />
+				<Loading />
 			) : plans.length ? (
 				plans.map((plan) => (
 					<PlanItem
