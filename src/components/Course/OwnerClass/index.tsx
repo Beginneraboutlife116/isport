@@ -19,7 +19,7 @@ export default function OwnerClass({
 	return (
 		<details className={styles.class} open key={weekday}>
 			<summary className={styles.title}>{week[Number.parseInt(weekday, 10)]}</summary>
-			{eachDayClasses.length === 0 && <p style={{ color: '#da1010' }}>沒有課程</p>}
+			{eachDayClasses.length === 0 && <p style={{ color: '#da1010' }}>場館無課表</p>}
 			{eachDayClasses.map(({ id, className, startTime, endTime, headcount }) => {
 				return (
 					<div className={styles.content} key={id}>
@@ -32,10 +32,10 @@ export default function OwnerClass({
 						<div className={styles.content__right}>
 							<p>名額 {headcount} 人</p>
 							<div>
-								<Button onClick={() => openEditDialog(id)}>
+								<Button onClick={() => openEditDialog(id as number)}>
 									<MdEdit style={{ fontSize: '1.5rem' }} />
 								</Button>
-								<Button onClick={() => openDeleteModal(id)}>
+								<Button onClick={() => openDeleteModal(id as number)}>
 									<RxCross1 style={{ fontSize: '1.5rem' }} />
 								</Button>
 							</div>

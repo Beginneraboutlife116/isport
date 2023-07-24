@@ -1,11 +1,11 @@
-import { useEffect, useRef, ReactNode, ChangeEvent, FocusEvent } from 'react';
+import { useEffect, useRef, ChangeEvent, FocusEvent } from 'react';
 import { useForm, Controller, FieldValues } from 'react-hook-form';
 import * as Slider from '@radix-ui/react-slider';
-import { NameInput } from '../../FormInput';
+import FormInput, { NameInput } from '../../FormInput';
 import { ClassType } from '../../../pages/OwnerStore/OwnerClasses';
 import Button from '../../Button';
 import Dialog from '..';
-import styles from './styles.module.scss';
+import styles from '../styles.module.scss';
 
 type FormDialogForClassProps = {
 	isOpen: boolean;
@@ -112,35 +112,34 @@ export default function FormDialogForClass({
 					label='課程名稱'
 					setError={setError}
 					clearErrors={clearErrors}
+					labelClassName={styles.label}
 				/>
-				<label className={styles.label}>
-					<span>名額</span>
-					{errors['headcount'] && (
-						<p className={styles.error}>{errors['headcount'].message as ReactNode}</p>
-					)}
-					<input
-						type='number'
-						{...register('headcount', {
-							required: true,
-							validate: { min: (v) => Number.parseInt(v, 10) > 0 },
-							min: 1,
-							onBlur: (event: FocusEvent<HTMLInputElement, Element>) => {
-								const { target } = event;
-								if (!target.value) {
-									setError('headcount', { type: 'required', message: '名額 不可為空' });
-								}
-							},
-							onChange: (event: ChangeEvent<HTMLInputElement>) => {
-								const { target } = event;
-								if (Number.parseInt(target.value, 10) <= 0) {
-									setError('headcount', { type: 'min', message: '名額 必須大於 0' });
-								} else {
-									clearErrors('headcount');
-								}
-							},
-						})}
-					/>
-				</label>
+				<FormInput
+					register={register}
+					labelClassName={styles.label}
+					label='名額'
+					errors={errors}
+					name='headcount'
+					type='number'
+					rules={{
+						required: true,
+						validate: { min: (v) => Number.parseInt(v, 10) > 0 },
+						onBlur: (event: FocusEvent<HTMLInputElement, Element>) => {
+							const { target } = event;
+							if (!target.value) {
+								setError('headcount', { type: 'required', message: '名額 不可為空' });
+							}
+						},
+						onChange: (event: ChangeEvent<HTMLInputElement>) => {
+							const { target } = event;
+							if (Number.parseInt(target.value, 10) <= 0) {
+								setError('headcount', { type: 'min', message: '名額 必須大於 0' });
+							} else {
+								clearErrors('headcount');
+							}
+						},
+					}}
+				/>
 				<Controller
 					control={control}
 					name='time'

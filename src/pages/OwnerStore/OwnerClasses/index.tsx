@@ -4,14 +4,13 @@ import { BsPlusCircleFill } from 'react-icons/bs';
 import { isAxiosError } from '../../../util/helpers';
 import { getStoreClasses, deleteClass, createClass, updateClass } from '../../../api/owner';
 import Button from '../../../components/Button';
-import OwnerClass from '../../../components/OwnerClass';
+import OwnerClass from '../../../components/Course/OwnerClass';
 import { DeleteModal, FormDialogForClass } from '../../../components/Dialog';
-import storeStyles from '../styles.module.scss';
-import styles from './styles.module.scss';
+import styles from '../styles.module.scss';
 import { UseFormReset, FieldValues } from 'react-hook-form';
 
 export type DayClassesType = {
-	id: number;
+	id?: number;
 	className: string;
 	startTime: string;
 	endTime: string;
@@ -70,7 +69,6 @@ export default function OwnerClasses() {
 		'5': [],
 		'6': [],
 	});
-	const [noDataMessage, setNoDataMessage] = useState<string>('');
 	const [classIdAndDay, setClassIdAndDay] = useState<[number, string]>([0, '']);
 	const [toggleDeleteModal, setToggleDeleteModal] = useState<boolean>(false);
 	const [toggleClassDialog, setToggleClassDialog] = useState<boolean>(false);
@@ -114,9 +112,10 @@ export default function OwnerClasses() {
 				}
 			} catch (error) {
 				if (isAxiosError(error)) {
-					setNoDataMessage(error.response?.data.message);
+					console.error(error);
+				} else {
+					console.error(error);
 				}
-				console.error(error);
 			}
 		}
 
@@ -140,16 +139,7 @@ export default function OwnerClasses() {
 		}
 	}
 
-	async function createClassIntoStore(
-		data: {
-			weekDay: number;
-			className: string;
-			startTime: string;
-			endTime: string;
-			headcount: number;
-		},
-		reset: UseFormReset<FieldValues>,
-	) {
+	async function createClassIntoStore(data: ClassType, reset: UseFormReset<FieldValues>) {
 		try {
 			const response = await createClass(Number.parseInt(storeId as string, 10), {
 				...data,
@@ -180,21 +170,13 @@ export default function OwnerClasses() {
 		} catch (error) {
 			if (isAxiosError(error)) {
 				console.error(error);
+			} else {
+				console.error(error);
 			}
-			console.error(error);
 		}
 	}
 
-	async function updateClassIntoStore(
-		data: {
-			weekDay: number;
-			className: string;
-			startTime: string;
-			endTime: string;
-			headcount: number;
-		},
-		reset: UseFormReset<FieldValues>,
-	) {
+	async function updateClassIntoStore(data: ClassType) {
 		try {
 			const { weekDay } = data;
 			const response = await updateClass({
@@ -237,10 +219,13 @@ export default function OwnerClasses() {
 				}
 				setToggleClassDialog(!toggleClassDialog);
 				setEditingClass(undefined);
-				reset();
 			}
 		} catch (error) {
-			console.error(error);
+			if (isAxiosError(error)) {
+				console.error(error);
+			} else {
+				console.error(error);
+			}
 		}
 	}
 
@@ -254,28 +239,24 @@ export default function OwnerClasses() {
 				<BsPlusCircleFill />
 			</Button>
 			<section className={styles.section}>
-				{noDataMessage ? (
-					<p className={storeStyles.noData}>{noDataMessage}</p>
-				) : (
-					Object.entries(eachDayClasses).map(([key, value]) => (
-						<OwnerClass
-							key={key}
-							eachDayClasses={value}
-							weekday={key}
-							openDeleteModal={(id: number) => {
-								setToggleDeleteModal(true);
-								setClassIdAndDay([id, key]);
-							}}
-							openEditDialog={(id: number) => {
-								setToggleClassDialog(true);
-								setEditingClass({
-									...eachDayClasses[key].find((data) => data.id === id),
-									weekDay: Number.parseInt(key, 10),
-								} as ClassType);
-							}}
-						/>
-					))
-				)}
+				{Object.entries(eachDayClasses).map(([key, value]) => (
+					<OwnerClass
+						key={key}
+						eachDayClasses={value}
+						weekday={key}
+						openDeleteModal={(id: number) => {
+							setToggleDeleteModal(true);
+							setClassIdAndDay([id, key]);
+						}}
+						openEditDialog={(id: number) => {
+							setToggleClassDialog(true);
+							setEditingClass({
+								...eachDayClasses[key].find((data) => data.id === id),
+								weekDay: Number.parseInt(key, 10),
+							} as ClassType);
+						}}
+					/>
+				))}
 			</section>
 			<DeleteModal
 				isOpen={toggleDeleteModal}

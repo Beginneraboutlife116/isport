@@ -10,6 +10,7 @@ import { StoreType } from '../../components/Dialog/FormDialogWithImage';
 import OwnerClasses from './OwnerClasses';
 import { UseFormReset, UseFormSetError, FieldValues } from 'react-hook-form';
 import { isAxiosError } from '../../util/helpers';
+import OwnerPlans from './OwnerPlans';
 
 export default function OwnerStore() {
 	const { storeId } = useParams();
@@ -114,25 +115,25 @@ export default function OwnerStore() {
 							<Button
 								onClick={() => setCurrentNav('classes')}
 								className={styles.nav__btn}
-								data-selected={currentNav === 'course'}
+								data-selected={currentNav === 'classes'}
 							>
 								每週課表
 							</Button>
 						</li>
 						<li>
 							<Button
-								onClick={() => setCurrentNav('plan')}
+								onClick={() => setCurrentNav('plans')}
 								className={styles.nav__btn}
-								data-selected={currentNav === 'plan'}
+								data-selected={currentNav === 'plans'}
 							>
 								方案
 							</Button>
 						</li>
 						<li>
 							<Button
-								onClick={() => setCurrentNav('review')}
+								onClick={() => setCurrentNav('reviews')}
 								className={styles.nav__btn}
-								data-selected={currentNav === 'review'}
+								data-selected={currentNav === 'reviews'}
 							>
 								評價
 							</Button>
@@ -140,8 +141,8 @@ export default function OwnerStore() {
 					</ul>
 				</nav>
 				{currentNav === 'classes' && <OwnerClasses />}
-				{currentNav === 'plan' && <section>方案</section>}
-				{currentNav === 'review' && <section>評價</section>}
+				{currentNav === 'plans' && <OwnerPlans />}
+				{currentNav === 'reviews' && <section>評價</section>}
 			</div>
 			<FormDialogWithImage
 				isOpen={toggleImgDialog}
