@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react';
 import { BsPlusCircleFill } from 'react-icons/bs';
 import { useParams } from 'react-router-dom';
+import { FieldValues, UseFormReset } from 'react-hook-form';
 import { isAxiosError } from '../../../util/helpers';
 import { getStorePlans, deletePlan, createPlan, updatePlan } from '../../../api/owner';
 import Button from '../../../components/Button';
 import { DeleteModal, FormDialogForPlan } from '../../../components/Dialog';
-import styles from '../styles.module.scss';
 import OwnerPlan from '../../../components/Plan/OwnerPlan';
-import { FieldValues, UseFormReset } from 'react-hook-form';
+import Loading from '../../../components/Loading';
+import styles from '../styles.module.scss';
 
 export type PlanType = {
 	id?: number;
@@ -62,10 +63,12 @@ export default function OwnerPlans() {
 	const [editingPlan, setEditingPlan] = useState<PlanType>();
 	const [planId, setPlanId] = useState<number>(0);
 	const [plans, setPlans] = useState<PlanType[] | []>([]);
+	const [isPending, setIsPending] = useState(false);
 
 	useEffect(() => {
 		async function fetchPlans() {
 			try {
+				setIsPending(true);
 				const response = await getStorePlans(Number.parseInt(storeId as string, 10));
 				if (response.status === 200) {
 					const { data } = response;
@@ -77,6 +80,8 @@ export default function OwnerPlans() {
 				} else {
 					console.error(error);
 				}
+			} finally {
+				setIsPending(false);
 			}
 		}
 
@@ -87,7 +92,11 @@ export default function OwnerPlans() {
 		try {
 			const response = await deletePlan(planId);
 			if (response.status === 200) {
-				setPlans(plans.filter((plan) => plan.id !== planId));
+				const newPlans = plans.filter((plan) => plan.id !== planId);
+				setPlans(newPlans);
+				if (!newPlans.length) {
+					setNoDataMessage('場館無方案');
+				}
 				setToggleDeleteModal(false);
 			}
 		} catch (error) {
@@ -99,7 +108,15 @@ export default function OwnerPlans() {
 		try {
 			const response = await createPlan(Number.parseInt(storeId as string, 10), data);
 			if (response.status === 200) {
-				setPlans([...plans, { ...data, id: response.data.id }]);
+				if (plans.length) {
+					const newPlans = [...plans, { ...data, id: response.data.id }].sort(
+						(a, b) => a.price - b.price,
+					);
+					setPlans(newPlans);
+				} else {
+					setPlans([{ ...data, id: response.data.id }]);
+					setNoDataMessage('');
+				}
 				setTogglePlanDialog(!togglePlanDialog);
 				reset();
 			}
@@ -147,7 +164,9 @@ export default function OwnerPlans() {
 				<BsPlusCircleFill />
 			</Button>
 			<section className={styles.section}>
-				{noDataMessage ? (
+				{isPending ? (
+					<Loading />
+				) : noDataMessage ? (
 					<p className={styles.noData}>{noDataMessage}</p>
 				) : (
 					<ul className={styles.plans}>

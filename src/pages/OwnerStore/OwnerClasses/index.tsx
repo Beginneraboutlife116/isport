@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { UseFormReset, FieldValues } from 'react-hook-form';
 import { BsPlusCircleFill } from 'react-icons/bs';
 import { isAxiosError } from '../../../util/helpers';
 import { getStoreClasses, deleteClass, createClass, updateClass } from '../../../api/owner';
@@ -7,8 +8,8 @@ import Button from '../../../components/Button';
 import OwnerClass from '../../../components/Course/OwnerClass';
 import { DeleteModal, FormDialogForClass } from '../../../components/Dialog';
 import { timeToNum } from '../../../components/Dialog/FormDialogForClass';
+import Loading from '../../../components/Loading';
 import styles from '../styles.module.scss';
-import { UseFormReset, FieldValues } from 'react-hook-form';
 
 export type DayClassType = {
 	id?: number;
@@ -74,11 +75,13 @@ export default function OwnerClasses() {
 	const [toggleDeleteModal, setToggleDeleteModal] = useState<boolean>(false);
 	const [toggleClassDialog, setToggleClassDialog] = useState<boolean>(false);
 	const [editingClass, setEditingClass] = useState<ClassType>();
+	const [isPending, setIsPending] = useState(false);
 	const week = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
 
 	useEffect(() => {
 		async function fetchClasses() {
 			try {
+				setIsPending(true);
 				const response = await getStoreClasses(Number.parseInt(storeId as string, 10));
 				if (response.status === 200) {
 					const newData: { [key: string]: DayClassType[] } = response.data.reduce(
@@ -117,6 +120,8 @@ export default function OwnerClasses() {
 				} else {
 					console.error(error);
 				}
+			} finally {
+				setIsPending(false);
 			}
 		}
 
@@ -260,24 +265,28 @@ export default function OwnerClasses() {
 				<BsPlusCircleFill />
 			</Button>
 			<section className={styles.section}>
-				{Object.entries(eachDayClasses).map(([key, value]) => (
-					<OwnerClass
-						key={key}
-						eachDayClasses={value}
-						weekday={key}
-						openDeleteModal={(id: number) => {
-							setToggleDeleteModal(true);
-							setClassIdAndDay([id, key]);
-						}}
-						openEditDialog={(id: number) => {
-							setToggleClassDialog(true);
-							setEditingClass({
-								...eachDayClasses[key].find((data) => data.id === id),
-								weekDay: Number.parseInt(key, 10),
-							} as ClassType);
-						}}
-					/>
-				))}
+				{isPending ? (
+					<Loading />
+				) : (
+					Object.entries(eachDayClasses).map(([key, value]) => (
+						<OwnerClass
+							key={key}
+							eachDayClasses={value}
+							weekday={key}
+							openDeleteModal={(id: number) => {
+								setToggleDeleteModal(true);
+								setClassIdAndDay([id, key]);
+							}}
+							openEditDialog={(id: number) => {
+								setToggleClassDialog(true);
+								setEditingClass({
+									...eachDayClasses[key].find((data) => data.id === id),
+									weekDay: Number.parseInt(key, 10),
+								} as ClassType);
+							}}
+						/>
+					))
+				)}
 			</section>
 			<DeleteModal
 				isOpen={toggleDeleteModal}
