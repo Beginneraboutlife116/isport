@@ -1,0 +1,11 @@
+.container {
+	width: 100cqb;
+	height: 100cqi;
+	display: grid;
+	justify-content: center;
+	grid-template-rows: repeat(4, 1fr);
+}
+
+.wrapper {
+	grid-row: 2 / 3;
+}
