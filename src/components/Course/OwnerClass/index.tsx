@@ -2,7 +2,7 @@ import { MdEdit } from 'react-icons/md';
 import { RxCross1 } from 'react-icons/rx';
 import Button from '../../Button';
 import styles from './styles.module.scss';
-import { DayClassesType } from '../../../pages/OwnerStore/OwnerClasses';
+import { DayClassType } from '../../../pages/OwnerStore/OwnerClasses';
 
 export default function OwnerClass({
 	weekday,
@@ -11,7 +11,7 @@ export default function OwnerClass({
 	openEditDialog,
 }: {
 	weekday: string;
-	eachDayClasses: DayClassesType[];
+	eachDayClasses: DayClassType[];
 	openDeleteModal: (id: number) => void;
 	openEditDialog: (id: number) => void;
 }) {
