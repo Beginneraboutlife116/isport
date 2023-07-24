@@ -6,10 +6,11 @@ import { getStoreClasses, deleteClass, createClass, updateClass } from '../../..
 import Button from '../../../components/Button';
 import OwnerClass from '../../../components/Course/OwnerClass';
 import { DeleteModal, FormDialogForClass } from '../../../components/Dialog';
+import { timeToNum } from '../../../components/Dialog/FormDialogForClass';
 import styles from '../styles.module.scss';
 import { UseFormReset, FieldValues } from 'react-hook-form';
 
-export type DayClassesType = {
+export type DayClassType = {
 	id?: number;
 	className: string;
 	startTime: string;
@@ -17,7 +18,7 @@ export type DayClassesType = {
 	headcount: number;
 };
 
-export type ClassType = DayClassesType & {
+export type ClassType = DayClassType & {
 	weekDay: number;
 };
 
@@ -60,7 +61,7 @@ function ConditionReturnFormDialogForClass({
 
 export default function OwnerClasses() {
 	const { storeId } = useParams();
-	const [eachDayClasses, setEachDayClasses] = useState<{ [key: string]: DayClassesType[] }>({
+	const [eachDayClasses, setEachDayClasses] = useState<{ [key: string]: DayClassType[] }>({
 		'0': [],
 		'1': [],
 		'2': [],
@@ -80,8 +81,8 @@ export default function OwnerClasses() {
 			try {
 				const response = await getStoreClasses(Number.parseInt(storeId as string, 10));
 				if (response.status === 200) {
-					const newData: { [key: string]: DayClassesType[] } = response.data.reduce(
-						(accu: { [key: string]: DayClassesType[] }, curr: ClassType) => {
+					const newData: { [key: string]: DayClassType[] } = response.data.reduce(
+						(accu: { [key: string]: DayClassType[] }, curr: ClassType) => {
 							if (!accu[curr.weekDay]) {
 								accu[curr.weekDay] = [
 									{
@@ -106,7 +107,7 @@ export default function OwnerClasses() {
 							}
 							return accu;
 						},
-						{} as { [key: string]: DayClassesType[] },
+						{} as { [key: string]: DayClassType[] },
 					);
 					setEachDayClasses({ ...eachDayClasses, ...newData });
 				}
@@ -150,12 +151,21 @@ export default function OwnerClasses() {
 				setEachDayClasses((e) => {
 					const weekDayClasses = e[weekDay];
 					if (weekDayClasses) {
+						const newWeekDayClasses = [
+							...weekDayClasses,
+							{ id: response.data.id, className, startTime, endTime, headcount },
+						].sort((a, b) => {
+							const timeA = timeToNum(a.startTime);
+							const timeB = timeToNum(b.startTime);
+							if (timeA && timeB) {
+								return timeA - timeB;
+							} else {
+								return 0;
+							}
+						});
 						return {
 							...e,
-							[weekDay]: [
-								...weekDayClasses,
-								{ id: response.data.id, className, startTime, endTime, headcount },
-							],
+							[weekDay]: newWeekDayClasses,
 						};
 					} else {
 						return {
@@ -202,12 +212,23 @@ export default function OwnerClasses() {
 					setEachDayClasses((e) => {
 						const weekDayClasses = e[weekDay];
 						if (weekDayClasses) {
+							const newWeekDayClasses = [...weekDayClasses, { ...editingClass, ...data }].sort(
+								(a, b) => {
+									const timeA = timeToNum(a.startTime);
+									const timeB = timeToNum(b.startTime);
+									if (timeA && timeB) {
+										return timeA - timeB;
+									} else {
+										return 0;
+									}
+								},
+							);
 							return {
 								...e,
 								[editingClass?.weekDay as number]: e[editingClass?.weekDay as number].filter(
 									(item) => item.id !== (editingClass?.id as number),
 								),
-								[weekDay]: [...weekDayClasses, { ...editingClass, ...data }],
+								[weekDay]: newWeekDayClasses,
 							};
 						} else {
 							return {

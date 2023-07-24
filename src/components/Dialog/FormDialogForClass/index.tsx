@@ -15,6 +15,18 @@ type FormDialogForClassProps = {
 	buttonText: string;
 };
 
+export function timeToNum(str: string | undefined): number | undefined {
+	if (!str) return undefined;
+	const strArr = str.split(':');
+	return Number.parseInt(strArr[0], 10) * 2 + (strArr[1] === '30' ? 1 : 0);
+}
+
+export function numToTime(num: number): string {
+	const hour = Math.floor(num / 2).toString();
+	const minute = num % 2 ? '30' : '00';
+	return `${hour.padStart(2, '0')}:${minute}`;
+}
+
 export default function FormDialogForClass({
 	isOpen,
 	closeDialog,
@@ -41,18 +53,6 @@ export default function FormDialogForClass({
 		},
 	});
 	const week = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
-
-	function timeToNum(str: string | undefined): number | undefined {
-		if (!str) return undefined;
-		const strArr = str.split(':');
-		return Number.parseInt(strArr[0], 10) * 2 + (strArr[1] === '30' ? 1 : 0);
-	}
-
-	function numToTime(num: number): string {
-		const hour = Math.floor(num / 2).toString();
-		const minute = num % 2 ? '30' : '00';
-		return `${hour.padStart(2, '0')}:${minute}`;
-	}
 
 	useEffect(() => {
 		const dialog = dialogRef.current;
