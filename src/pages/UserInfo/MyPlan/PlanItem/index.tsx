@@ -14,7 +14,7 @@ export default function PlanItem({ id, storeName, plans }: PlanItemProps) {
 	return (
 		isPlanMissing && (
 			<li className={styles.item}>
-				<Link to={`/find/${id}`}>
+				<Link to={`/find/${id}`} onClick={() => localStorage.setItem('oneStoreId', id.toString())}>
 					<header className={`${styles.item__header} ${styles.item__row}`}>
 						<h3>{storeName}</h3>
 					</header>
