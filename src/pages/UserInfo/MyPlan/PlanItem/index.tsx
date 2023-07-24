@@ -21,22 +21,26 @@ export default function PlanItem({ id, storeName, plans }: PlanItemProps) {
 				</Link>
 				<ul aria-label={`${storeName} 目前剩餘方案狀況`}>
 					<li>
-						{plans.map((plan) => (
-							<Fragment key={plan.id}>
-								<div className={`${styles.item__planType} ${styles.item__row}`}>
-									<p>{plan.planName}</p>
-									<p>{plan.planType}</p>
-								</div>
-								<div className={`${styles.item__planRest} ${styles.item__row}`}>
-									<p>{plan.planType.includes('次') ? '剩餘次數' : '剩餘天數'}</p>
-									<p>
-										{plan.planType.includes('次')
-											? `${plan.amountLeft} 次`
-											: `${plan.amountLeft} 天`}
-									</p>
-								</div>
-							</Fragment>
-						))}
+						{plans.map((plan) => {
+							if (plan.planType !== null && plan.planName !== null) {
+								return (
+									<Fragment key={plan.id}>
+										<div className={`${styles.item__planType} ${styles.item__row}`}>
+											<p>{plan.planName}</p>
+											<p>{plan.planType}</p>
+										</div>
+										<div className={`${styles.item__planRest} ${styles.item__row}`}>
+											<p>{plan.planType.includes('次') ? '剩餘次數' : '剩餘天數'}</p>
+											<p>
+												{plan.planType.includes('次')
+													? `${plan.amountLeft} 次`
+													: `${plan.amountLeft} 天`}
+											</p>
+										</div>
+									</Fragment>
+								);
+							}
+						})}
 					</li>
 				</ul>
 			</li>
