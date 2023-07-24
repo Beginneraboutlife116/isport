@@ -87,7 +87,11 @@ export default function OwnerPlans() {
 		try {
 			const response = await deletePlan(planId);
 			if (response.status === 200) {
-				setPlans(plans.filter((plan) => plan.id !== planId));
+				const newPlans = plans.filter((plan) => plan.id !== planId);
+				setPlans(newPlans);
+				if (!newPlans.length) {
+					setNoDataMessage('場館無方案');
+				}
 				setToggleDeleteModal(false);
 			}
 		} catch (error) {
@@ -99,7 +103,15 @@ export default function OwnerPlans() {
 		try {
 			const response = await createPlan(Number.parseInt(storeId as string, 10), data);
 			if (response.status === 200) {
-				setPlans([...plans, { ...data, id: response.data.id }]);
+				if (plans.length) {
+					const newPlans = [...plans, { ...data, id: response.data.id }].sort(
+						(a, b) => a.price - b.price,
+					);
+					setPlans(newPlans);
+				} else {
+					setPlans([{ ...data, id: response.data.id }]);
+					setNoDataMessage('');
+				}
 				setTogglePlanDialog(!togglePlanDialog);
 				reset();
 			}
