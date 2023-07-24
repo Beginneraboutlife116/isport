@@ -8,6 +8,7 @@ import { FormDialogWithImage } from '../../components/Dialog';
 import { getOwnerStores, getOneStore, createStore, updateStore } from '../../api/owner';
 import { useStoresData } from '../../contexts/findContext';
 import { isAxiosError } from '../../util/helpers';
+import Loading from '../../components/Loading';
 import styled from './styles.module.scss';
 
 type StoreType = {
@@ -62,10 +63,12 @@ export default function StoreFindPage() {
 	const [searchTerm, setSearchTerm] = useState('');
 	const { storesData, setStoresData, filteredData, setFilteredData } = useStoresData();
 	const [editingStore, setEditingStore] = useState<StoreType>();
+	const [isPending, setIsPending] = useState(false);
 
 	useEffect(() => {
 		async function fetchOwnerStores() {
 			try {
+				setIsPending(true);
 				const response = await getOwnerStores();
 				setStoresData(response.data);
 				setFilteredData(response.data);
@@ -75,6 +78,8 @@ export default function StoreFindPage() {
 				} else {
 					console.error(error);
 				}
+			} finally {
+				setIsPending(false);
 			}
 		}
 		fetchOwnerStores();
@@ -253,7 +258,9 @@ export default function StoreFindPage() {
 						handleEdit={editStoreIntoStores}
 					/>
 				</div>
-				{filteredData.length ? (
+				{isPending ? (
+					<Loading />
+				) : filteredData.length ? (
 					<CardList data={filteredData} handleClick={handleEdit} />
 				) : (
 					<h2 data-title='no store'>沒有建立之場館</h2>

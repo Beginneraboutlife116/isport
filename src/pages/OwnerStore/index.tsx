@@ -6,11 +6,12 @@ import { getOneStore, updateStore } from '../../api/owner';
 import { useStoresData } from '../../contexts/findContext';
 import Card, { type CardProps } from '../../components/Card';
 import Button from '../../components/Button';
-import styles from './styles.module.scss';
 import FormDialogWithImage, { StoreType } from '../../components/Dialog/FormDialogWithImage';
 import OwnerClasses from './OwnerClasses';
 import OwnerPlans from './OwnerPlans';
 import OwnerReviews from './OwnerReviews';
+import Loading from '../../components/Loading';
+import styles from './styles.module.scss';
 
 export default function OwnerStore() {
 	const { storeId } = useParams();
@@ -19,10 +20,12 @@ export default function OwnerStore() {
 	const [toggleImgDialog, setToggleImgDialog] = useState(false);
 	const [editingStore, setEditingStore] = useState<StoreType>();
 	const [store, setStore] = useState<CardProps>();
+	const [isPending, setIsPending] = useState(false);
 
 	useEffect(() => {
 		async function fetchStore() {
 			try {
+				setIsPending(true);
 				const response = await getOneStore(Number.parseInt(storeId as string, 10));
 				if (response.status === 200) {
 					const { data } = response;
@@ -41,6 +44,8 @@ export default function OwnerStore() {
 				}
 			} catch (error) {
 				console.error(error);
+			} finally {
+				setIsPending(false);
 			}
 		}
 
@@ -93,21 +98,25 @@ export default function OwnerStore() {
 
 	return (
 		<main className={styles.container}>
-			<Card
-				{...(store as CardProps)}
-				onClick={() => {
-					setEditingStore({
-						id: store?.id || 0,
-						storeName: store?.storeName || '',
-						introduction: store?.introduction || '',
-						photo: store?.photo || '',
-						address: store?.address || '',
-						email: store?.email || '',
-						phone: store?.phone || '',
-					});
-					setToggleImgDialog(!toggleImgDialog);
-				}}
-			/>
+			{isPending ? (
+				<Loading />
+			) : (
+				<Card
+					{...(store as CardProps)}
+					onClick={() => {
+						setEditingStore({
+							id: store?.id || 0,
+							storeName: store?.storeName || '',
+							introduction: store?.introduction || '',
+							photo: store?.photo || '',
+							address: store?.address || '',
+							email: store?.email || '',
+							phone: store?.phone || '',
+						});
+						setToggleImgDialog(!toggleImgDialog);
+					}}
+				/>
+			)}
 			<div className={styles.content}>
 				<nav className={styles.nav}>
 					<ul className={styles.nav__list}>
