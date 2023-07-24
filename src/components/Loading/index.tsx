@@ -4,12 +4,16 @@ export default function Loading() {
 	return (
 		<div className={styles.container}>
 			<div className={styles.wrapper}>
-				<div>
-					<div></div>
-					<div></div>
-					<div></div>
+				<div className={styles.dumbbell}>
+					<div className={styles.dumbbell__left}></div>
+					<div className={styles.dumbbell__middle}></div>
+					<div className={styles.dumbbell__right}></div>
 				</div>
-				<img src='/src/assets/logo-word.png' alt='logo' />
+				<div className={styles.dumbbell} data-green>
+					<div className={styles.dumbbell__left}></div>
+					<div className={styles.dumbbell__middle}></div>
+					<div className={styles.dumbbell__right}></div>
+				</div>
 			</div>
 		</div>
 	);
