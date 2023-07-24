@@ -2,17 +2,20 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { isAxiosError } from '../../../util/helpers';
 import { getStoreReviews } from '../../../api/owner';
-import styles from '../styles.module.scss';
 import { ReviewItem, ItemProps } from '../../../components/Review';
+import Loading from '../../../components/Loading';
+import styles from '../styles.module.scss';
 
 export default function OwnerReviews() {
 	const { storeId } = useParams();
 	const [reviews, setReviews] = useState<ItemProps[]>([]);
 	const [noDataMessage, setNoDataMessage] = useState<string>();
+	const [isPending, setIsPending] = useState(false);
 
 	useEffect(() => {
 		async function fetchReviews() {
 			try {
+				setIsPending(true);
 				const response = await getStoreReviews(Number.parseInt(storeId as string, 10));
 				if (response.status === 200) {
 					setReviews(response.data);
@@ -23,6 +26,8 @@ export default function OwnerReviews() {
 				} else {
 					console.error(error);
 				}
+			} finally {
+				setIsPending(false);
 			}
 		}
 
@@ -31,7 +36,9 @@ export default function OwnerReviews() {
 
 	return (
 		<section className={styles.section}>
-			{noDataMessage ? (
+			{isPending ? (
+				<Loading />
+			) : noDataMessage ? (
 				<p className={styles.noData} style={{ marginBlockStart: '65.5px' }}>
 					{noDataMessage}
 				</p>
