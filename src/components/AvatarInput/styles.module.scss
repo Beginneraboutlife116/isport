@@ -19,7 +19,7 @@
 		width: 100%;
 		aspect-ratio: 1;
 		object-position: center;
-		object-fit: contain;
+		object-fit: cover;
 	}
 
 	&--error {
@@ -54,11 +54,11 @@
 }
 
 :global(.hidden) {
-	clip: rect(0 0 0 0); 
-  clip-path: inset(50%);
-  height: 1px;
-  overflow: hidden;
-  position: absolute;
-  white-space: nowrap; 
-  width: 1px;
+	clip: rect(0 0 0 0);
+	clip-path: inset(50%);
+	height: 1px;
+	overflow: hidden;
+	position: absolute;
+	white-space: nowrap;
+	width: 1px;
 }
