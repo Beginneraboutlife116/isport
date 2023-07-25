@@ -42,6 +42,7 @@ function Find() {
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
+				setFilteredData([]);
 				const storedData = localStorage.getItem('isport');
 				let dataObject: { token?: string } = {};
 				if (storedData) {
@@ -61,7 +62,6 @@ function Find() {
 		fetchData();
 		setOneStore(false);
 	}, []);
-
 	return (
 		<div className={styled.container}>
 			<div className={styled.container__wrap}>
