@@ -8,13 +8,11 @@ import Button from '../Button';
 export default function Header({
 	className,
 	role,
-	currentUserId,
 	avatar,
 	onLogout,
 }: {
 	className?: string;
 	role: string;
-	currentUserId: number;
 	avatar: string;
 	onLogout: () => void;
 }) {
