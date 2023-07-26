@@ -1,67 +1,22 @@
-import { useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { BsPlusCircleFill } from 'react-icons/bs';
 import { UseFormReset, FieldValues, UseFormSetError } from 'react-hook-form';
 import CardList from '../../components/CardList';
 import SearchBar from '../../components/SearchBar';
 import Button from '../../components/Button';
+import { StoreType } from '../../components/Dialog/FormDialogWithImage';
+import { CardData } from '../../components/CardList';
 import { FormDialogWithImage } from '../../components/Dialog';
 import { getOwnerStores, getOneStore, createStore, updateStore } from '../../api/owner';
-import { useStoresData } from '../../contexts/findContext';
 import { isAxiosError } from '../../util/helpers';
 import Loading from '../../components/Loading';
 import styled from './styles.module.scss';
 
-type StoreType = {
-	id: number;
-	storeName: string;
-	photo: string;
-	address: string;
-	email: string;
-	phone: string;
-	introduction: string;
-};
-
-type ConditionReturnFormDialogWithImageProps = {
-	isOpen: boolean;
-	editingStore?: StoreType;
-	closeDialog: Function;
-	handleCreate: Function;
-	handleEdit: Function;
-};
-
-function ConditionReturnFormDialogWithImage({
-	isOpen,
-	closeDialog,
-	editingStore,
-	handleCreate,
-	handleEdit,
-}: ConditionReturnFormDialogWithImageProps) {
-	if (editingStore) {
-		return (
-			<FormDialogWithImage
-				isOpen={isOpen}
-				closeDialog={closeDialog}
-				editingStore={editingStore}
-				handleDialogSubmit={handleEdit}
-				buttonText='修改送出'
-			/>
-		);
-	} else {
-		return (
-			<FormDialogWithImage
-				isOpen={isOpen}
-				closeDialog={closeDialog}
-				handleDialogSubmit={handleCreate}
-				buttonText='送出'
-			/>
-		);
-	}
-}
-
 export default function StoreFindPage() {
 	const [toggleDialog, setToggleDialog] = useState(false);
 	const [searchTerm, setSearchTerm] = useState('');
-	const { storesData, setStoresData, filteredData, setFilteredData } = useStoresData();
+	const [storesData, setStoresData] = useState<CardData[] | []>([]);
+	const [filteredData, setFilteredData] = useState<CardData[] | []>([]);
 	const [editingStore, setEditingStore] = useState<StoreType>();
 	const [isPending, setIsPending] = useState(false);
 
@@ -122,19 +77,23 @@ export default function StoreFindPage() {
 		data: FormData,
 		reset: UseFormReset<FieldValues>,
 		setError: UseFormSetError<FieldValues>,
+		setIsPending: Dispatch<SetStateAction<boolean>>,
 	) {
 		try {
 			let fakePhoto = URL.createObjectURL(data.get('photo') as File);
+			setIsPending(true);
 			const response = await createStore(data);
 			if (response.status === 200) {
 				const fakeStore = {
 					id: response.data.id,
 					rating: 0,
 					reviewCounts: 0,
-					storeName: data.get('storeName'),
-					address: data.get('address'),
-					introduction: data.get('introduction'),
+					storeName: data.get('storeName') as string,
+					address: data.get('address') as string,
+					introduction: data.get('introduction') as string,
 					photo: fakePhoto,
+					lat: 0,
+					lng: 0,
 				};
 				setStoresData([...storesData, fakeStore]);
 				if (searchTerm) {
@@ -158,6 +117,8 @@ export default function StoreFindPage() {
 			} else {
 				console.error(error);
 			}
+		} finally {
+			setIsPending(false);
 		}
 	}
 
@@ -165,6 +126,7 @@ export default function StoreFindPage() {
 		data: FormData,
 		reset: UseFormReset<FieldValues>,
 		setError: UseFormSetError<FieldValues>,
+		setIsPending: Dispatch<SetStateAction<boolean>>,
 	) {
 		try {
 			let fakePhoto = editingStore?.photo as string;
@@ -172,11 +134,12 @@ export default function StoreFindPage() {
 				fakePhoto = URL.createObjectURL(data.get('photo') as File);
 			}
 			const storeId = editingStore?.id;
+			setIsPending(true);
 			const response = await updateStore(storeId as number, data);
 			const fakeStore = {
-				storeName: data.get('storeName'),
-				address: data.get('address'),
-				introduction: data.get('introduction'),
+				storeName: data.get('storeName') as string,
+				address: data.get('address') as string,
+				introduction: data.get('introduction') as string,
 				photo: fakePhoto,
 			};
 			if (response.status === 200) {
@@ -211,6 +174,7 @@ export default function StoreFindPage() {
 				}
 				reset();
 				setToggleDialog(!toggleDialog);
+				setEditingStore(undefined);
 			}
 		} catch (error) {
 			if (isAxiosError(error) && error.response) {
@@ -223,6 +187,8 @@ export default function StoreFindPage() {
 			} else {
 				console.error(error);
 			}
+		} finally {
+			setIsPending(false);
 		}
 	}
 
@@ -246,16 +212,15 @@ export default function StoreFindPage() {
 					>
 						<BsPlusCircleFill />
 					</Button>
-
-					<ConditionReturnFormDialogWithImage
+					<FormDialogWithImage
 						isOpen={toggleDialog}
 						closeDialog={() => {
 							setEditingStore(undefined);
 							setToggleDialog(!toggleDialog);
 						}}
 						editingStore={editingStore}
-						handleCreate={createStoreIntoStores}
-						handleEdit={editStoreIntoStores}
+						handleDialogSubmit={editingStore ? editStoreIntoStores : createStoreIntoStores}
+						buttonText={editingStore ? '修改送出' : '送出'}
 					/>
 				</div>
 				{isPending ? (

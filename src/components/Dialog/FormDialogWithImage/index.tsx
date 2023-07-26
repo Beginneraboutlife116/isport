@@ -34,7 +34,7 @@ export default function FormDialogWithImage({
 	const {
 		register,
 		handleSubmit,
-		formState: { errors, isValid, dirtyFields, isSubmitSuccessful },
+		formState: { errors, isValid, dirtyFields },
 		setError,
 		clearErrors,
 		resetField,
@@ -51,14 +51,14 @@ export default function FormDialogWithImage({
 		},
 	});
 	const [{ imgSrc, imgName }, setImgInfo] = useState({
-		imgSrc: editingStore?.photo || '',
-		imgName: editingStore?.storeName || '',
+		imgSrc: '',
+		imgName: '',
 	});
 	const dialogRef = useRef<HTMLDialogElement>(null);
 	const [photoChanged, setPhotoChanged] = useState(false);
+	const [isPending, setIsPending] = useState<boolean>(false);
 
 	useEffect(() => {
-		setImgInfo({ imgSrc: editingStore?.photo || '', imgName: editingStore?.storeName || '' });
 		const dialog = dialogRef.current;
 		if (dialog) {
 			if (isOpen && !dialog.open) {
@@ -69,6 +69,8 @@ export default function FormDialogWithImage({
 				setPhotoChanged(false);
 			}
 		}
+		setImgInfo({ imgSrc: editingStore?.photo || '', imgName: editingStore?.storeName || '' });
+
 		return () => {
 			if (dialog && dialog.open) {
 				dialog.close();
@@ -88,11 +90,10 @@ export default function FormDialogWithImage({
 	}
 
 	let btnDisabled = false;
-	if (editingStore) {
-		btnDisabled = !isValid || isSubmitSuccessful;
+	if (!editingStore) {
+		btnDisabled = !isValid || isPending;
 	} else {
-		btnDisabled =
-			!Object.values(dirtyFields).some((item) => item) || !isValid || isSubmitSuccessful;
+		btnDisabled = !Object.values(dirtyFields).some((item) => item) || !isValid || isPending;
 	}
 
 	return (
@@ -110,7 +111,7 @@ export default function FormDialogWithImage({
 							formData.append(key, value);
 						}
 					}
-					handleDialogSubmit(formData, reset, setError);
+					handleDialogSubmit(formData, reset, setError, setIsPending);
 				})}
 				className={styles.form}
 			>
@@ -256,7 +257,7 @@ export default function FormDialogWithImage({
 					/>
 				</div>
 				<Button type='submit' className={styles['btn--submit']} disabled={btnDisabled}>
-					{isSubmitSuccessful ? '送出中...' : buttonText}
+					{isPending ? '送出中...' : buttonText}
 				</Button>
 			</form>
 		</Dialog>
