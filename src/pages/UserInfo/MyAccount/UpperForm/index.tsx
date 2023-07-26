@@ -13,13 +13,14 @@ export default function UpperForm() {
 	const {
 		register,
 		handleSubmit,
-		formState: { isValid, errors, isSubmitting },
-		watch,
-		resetField,
+		formState: { isValid, errors, isSubmitting, dirtyFields },
 		setError,
 		clearErrors,
 	} = useForm<FieldValues>({ values: { email: auth.email, nickname: auth.name, avatar: null } });
-	const [isAvatarChanged, setIsAvatarChanged] = useState<boolean>(false);
+	const [imgInfo, setImgInfo] = useState<{ imgSrc: string; imgName: string }>({
+		imgSrc: '',
+		imgName: '',
+	});
 
 	useEffect(() => {
 		async function fetchUserData() {
@@ -27,6 +28,10 @@ export default function UpperForm() {
 				const response = await getUserData();
 				if (response.status === 200) {
 					setAuth((a) => ({ ...a, email: response.data.email, name: response.data.nickname }));
+					setImgInfo({
+						imgSrc: response.data.avatar || '',
+						imgName: response.data.nickname || '',
+					});
 				}
 			} catch (error) {
 				if (isAxiosError(error)) {
@@ -42,22 +47,18 @@ export default function UpperForm() {
 	async function onSubmit(data: FieldValues) {
 		try {
 			const { email, nickname, avatar } = data;
-			let fakeAvatar = '';
-			if (email !== auth.email || nickname !== auth.name || isAvatarChanged) {
+			if (Object.values(dirtyFields).some((value) => value)) {
+				let fakeAvatar = '';
+				const file = avatar ? avatar[0] : null;
+				fakeAvatar = file ? URL.createObjectURL(file) : auth.avatar;
+
 				const formData = new FormData();
 				formData.append('email', email);
 				formData.append('nickname', nickname);
-				if (isAvatarChanged) {
-					const file = avatar ? avatar[0] : null;
-					fakeAvatar = file ? URL.createObjectURL(file) : '';
-					formData.append('avatar', file);
-				}
+				formData.append('avatar', file);
 				const response = await updateUserAccount(formData);
 				if (response.status === 200) {
-					setAuth({ ...auth, email, name: nickname });
-					if (isAvatarChanged) {
-						setAuth({ ...auth, avatar: fakeAvatar });
-					}
+					setAuth({ ...auth, email, name: nickname, avatar: fakeAvatar });
 				}
 			}
 		} catch (error) {
@@ -76,12 +77,34 @@ export default function UpperForm() {
 	return (
 		<form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
 			<AvatarInput
-				register={register}
-				watch={watch}
-				resetField={resetField}
 				className={styles.form__input}
-				changeIsAvatarChanged={setIsAvatarChanged}
-				authAvatar={auth.avatar}
+				imgInfo={imgInfo}
+				errorMessage={errors['avatar']?.message as string}
+				{...register('avatar', {
+					validate: {
+						fileType: (v) => {
+							if (v && v[0]) {
+								const validateFormat = ['image/jpg', 'image/png', 'image/jpeg'];
+								return validateFormat.includes(v[0].type);
+							}
+						},
+					},
+					onChange: (e) => {
+						const file = e.target.files?.[0];
+						if (file) {
+							clearErrors('avatar');
+							const validateFormat = ['image/jpg', 'image/png', 'image/jpeg'];
+							if (validateFormat.includes(file.type)) {
+								setImgInfo({ imgSrc: URL.createObjectURL(file), imgName: file.name });
+							} else {
+								setError('avatar', {
+									type: 'fileType',
+									message: '不支援的圖片格式',
+								});
+							}
+						}
+					},
+				})}
 			/>
 			<EmailInput
 				register={register}

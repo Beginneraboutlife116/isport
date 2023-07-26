@@ -15,29 +15,29 @@ export default function SignupStepTwoPage() {
 	const {
 		register,
 		handleSubmit,
-		watch,
-		formState: { isValid, errors, isSubmitting },
-		resetField,
+		formState: { isValid, errors, isSubmitting, dirtyFields },
 		setError,
 		clearErrors,
 	} = useForm<FieldValues>({ values: { nickname: auth.name } });
+	const [imgInfo, setImgInfo] = useState<{ imgSrc: string; imgName: string }>({
+		imgSrc: '',
+		imgName: '',
+	});
 
-	const [isAvatarChanged, setIsAvatarChanged] = useState<boolean>(false);
 	const navigate = useNavigate();
 
 	async function onSubmit(data: FieldValues) {
 		try {
 			const { nickname, avatar } = data;
-			let fakeAvatar = '';
-			if (nickname !== auth.name || isAvatarChanged) {
+			if (Object.values(dirtyFields).some((value) => value)) {
+				let fakeAvatar = '';
+				const file = avatar ? avatar[0] : null;
+				fakeAvatar = file ? URL.createObjectURL(file) : '';
+
 				const formData = new FormData();
 				formData.append('nickname', nickname);
 				formData.append('email', auth.email);
-				if (isAvatarChanged) {
-					const file = avatar ? avatar[0] : null;
-					fakeAvatar = file ? URL.createObjectURL(file) : '';
-					formData.append('avatar', file);
-				}
+				formData.append('avatar', file);
 				const response = await updateUserAccount(formData);
 				if (response.status === 200) {
 					setAuth({ ...auth, name: nickname, avatar: fakeAvatar });
@@ -61,11 +61,34 @@ export default function SignupStepTwoPage() {
 			<h1 className={authStyles.auth__title}>用戶註冊 Step 2</h1>
 			<form onSubmit={handleSubmit(onSubmit)}>
 				<AvatarInput
-					register={register}
-					watch={watch}
 					className={authStyles.auth__input}
-					resetField={resetField}
-					changeIsAvatarChanged={setIsAvatarChanged}
+					imgInfo={imgInfo}
+					errorMessage={errors['avatar']?.message as string}
+					{...register('avatar', {
+						validate: {
+							fileType: (v) => {
+								if (v && v[0]) {
+									const validateFormat = ['image/jpg', 'image/png', 'image/jpeg'];
+									return validateFormat.includes(v[0].type);
+								}
+							},
+						},
+						onChange: (e) => {
+							const file = e.target.files?.[0];
+							if (file) {
+								clearErrors('avatar');
+								const validateFormat = ['image/jpg', 'image/png', 'image/jpeg'];
+								if (validateFormat.includes(file.type)) {
+									setImgInfo({ imgSrc: URL.createObjectURL(file), imgName: file.name });
+								} else {
+									setError('avatar', {
+										type: 'fileType',
+										message: '不支援的圖片格式',
+									});
+								}
+							}
+						},
+					})}
 				/>
 				<NameInput
 					register={register}

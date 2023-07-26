@@ -117,7 +117,6 @@ function App() {
 				role={!auth.isAuthenticated ? '' : auth.role}
 				avatar={auth.avatar}
 				onLogout={handleLogout}
-				currentUserId={auth.userId}
 			/>
 			<FindProvider>
 				<Outlet />
