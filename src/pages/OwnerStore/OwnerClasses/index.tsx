@@ -23,43 +23,6 @@ export type ClassType = DayClassType & {
 	weekDay: number;
 };
 
-type ConditionReturnFormDialogForClassProps = {
-	isOpen: boolean;
-	editingClass?: ClassType;
-	closeDialog: Function;
-	handleCreate: Function;
-	handleEdit: Function;
-};
-
-function ConditionReturnFormDialogForClass({
-	editingClass,
-	handleCreate,
-	handleEdit,
-	isOpen,
-	closeDialog,
-}: ConditionReturnFormDialogForClassProps) {
-	if (editingClass) {
-		return (
-			<FormDialogForClass
-				handleDialogSubmit={handleEdit}
-				isOpen={isOpen}
-				editingClass={editingClass}
-				closeDialog={closeDialog}
-				buttonText='修改課程'
-			/>
-		);
-	} else {
-		return (
-			<FormDialogForClass
-				handleDialogSubmit={handleCreate}
-				isOpen={isOpen}
-				closeDialog={closeDialog}
-				buttonText='建立課程'
-			/>
-		);
-	}
-}
-
 export default function OwnerClasses() {
 	const { storeId } = useParams();
 	const [eachDayClasses, setEachDayClasses] = useState<{ [key: string]: DayClassType[] }>({
@@ -293,15 +256,15 @@ export default function OwnerClasses() {
 				closeDialog={() => setToggleDeleteModal(false)}
 				handleDelete={() => deleteClassById()}
 			/>
-			<ConditionReturnFormDialogForClass
+			<FormDialogForClass
+				handleDialogSubmit={editingClass ? updateClassIntoStore : createClassIntoStore}
 				isOpen={toggleClassDialog}
+				editingClass={editingClass}
 				closeDialog={() => {
 					setToggleClassDialog(!toggleClassDialog);
 					setEditingClass(undefined);
 				}}
-				editingClass={editingClass}
-				handleCreate={createClassIntoStore}
-				handleEdit={updateClassIntoStore}
+				buttonText={editingClass ? '修改課程' : '建立課程'}
 			/>
 		</>
 	);

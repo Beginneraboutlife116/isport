@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Dispatch, SetStateAction } from 'react';
 import { useParams } from 'react-router-dom';
 import { UseFormReset, UseFormSetError, FieldValues } from 'react-hook-form';
 import { isAxiosError } from '../../util/helpers';
@@ -60,6 +60,7 @@ export default function OwnerStore() {
 		data: FormData,
 		reset: UseFormReset<FieldValues>,
 		setError: UseFormSetError<FieldValues>,
+		setIsPending: Dispatch<SetStateAction<boolean>>,
 	) {
 		try {
 			let fakePhoto = editingStore?.photo as string;
@@ -67,6 +68,7 @@ export default function OwnerStore() {
 				fakePhoto = URL.createObjectURL(data.get('photo') as File);
 			}
 			const storeId = editingStore?.id;
+			setIsPending(true);
 			const response = await updateStore(storeId as number, data);
 			const fakeStore = {
 				storeName: data.get('storeName'),
@@ -81,6 +83,7 @@ export default function OwnerStore() {
 				} as CardProps);
 				reset();
 				setToggleImgDialog(!toggleImgDialog);
+				setEditingStore(undefined);
 			}
 		} catch (error) {
 			if (isAxiosError(error) && error.response) {
@@ -93,6 +96,8 @@ export default function OwnerStore() {
 			} else {
 				console.error(error);
 			}
+		} finally {
+			setIsPending(false);
 		}
 	}
 

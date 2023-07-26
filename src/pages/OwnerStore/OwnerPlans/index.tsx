@@ -18,43 +18,6 @@ export type PlanType = {
 	planType: string;
 };
 
-type ConditionReturnFormDialogForPlanType = {
-	isOpen: boolean;
-	editingPlan?: PlanType;
-	closeDialog: Function;
-	handleCreate: Function;
-	handleEdit: Function;
-};
-
-function ConditionReturnFormDialogForPlan({
-	isOpen,
-	closeDialog,
-	editingPlan,
-	handleCreate,
-	handleEdit,
-}: ConditionReturnFormDialogForPlanType) {
-	if (editingPlan) {
-		return (
-			<FormDialogForPlan
-				isOpen={isOpen}
-				closeDialog={closeDialog}
-				editingPlan={editingPlan}
-				handleDialogSubmit={handleEdit}
-				buttonText='修改方案'
-			/>
-		);
-	} else {
-		return (
-			<FormDialogForPlan
-				isOpen={isOpen}
-				closeDialog={closeDialog}
-				handleDialogSubmit={handleCreate}
-				buttonText='建立方案'
-			/>
-		);
-	}
-}
-
 export default function OwnerPlans() {
 	const { storeId } = useParams();
 	const [noDataMessage, setNoDataMessage] = useState<string>('');
@@ -133,15 +96,14 @@ export default function OwnerPlans() {
 		try {
 			const response = await updatePlan({ ...data, id: editingPlan?.id });
 			if (response.status === 200) {
-				setPlans(
-					plans.map((plan) => {
+				const newPlans = plans
+					.map((plan) => {
 						if (plan.id === editingPlan?.id) {
 							return { ...plan, ...data };
-						} else {
-							return plan;
-						}
-					}),
-				);
+						} else return plan;
+					})
+					.sort((a, b) => a.price - b.price);
+				setPlans(newPlans);
 				setTogglePlanDialog(!togglePlanDialog);
 				setEditingPlan(undefined);
 			}
@@ -192,15 +154,15 @@ export default function OwnerPlans() {
 				closeDialog={() => setToggleDeleteModal(false)}
 				handleDelete={() => deletePlanById()}
 			/>
-			<ConditionReturnFormDialogForPlan
+			<FormDialogForPlan
 				isOpen={togglePlanDialog}
 				closeDialog={() => {
 					setTogglePlanDialog(!togglePlanDialog);
 					setEditingPlan(undefined);
 				}}
 				editingPlan={editingPlan}
-				handleCreate={createPlanIntoStore}
-				handleEdit={updatePlanIntoStore}
+				handleDialogSubmit={editingPlan ? updatePlanIntoStore : createPlanIntoStore}
+				buttonText={editingPlan ? '修改方案' : '建立方案'}
 			/>
 		</>
 	);
