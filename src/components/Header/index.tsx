@@ -8,13 +8,11 @@ import Button from '../Button';
 export default function Header({
 	className,
 	role,
-	currentUserId,
 	avatar,
 	onLogout,
 }: {
 	className?: string;
 	role: string;
-	currentUserId: number;
 	avatar: string;
 	onLogout: () => void;
 }) {
@@ -48,7 +46,7 @@ export default function Header({
 				{role && (
 					<>
 						{role === 'user' && (
-							<Link to={`/user/${currentUserId}`}>
+							<Link to={`/user/account`}>
 								<Button aria-label='修改大頭照' className={styles.header__btn}>
 									{avatar ? (
 										<img src={avatar} alt='大頭照' className={styles.header__avatar} />
