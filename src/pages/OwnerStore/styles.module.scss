@@ -6,7 +6,7 @@
 	grid-template-columns: auto min(100%, 37.5rem);
 	gap: 3rem;
 	justify-content: center;
-	align-items: start;
+	grid-auto-rows: 37.5rem;
 }
 
 .content {

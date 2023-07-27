@@ -10,17 +10,17 @@
     - [商家功能](#商家功能)
   - [螢幕截圖](#螢幕截圖)
   - [作品連結](#作品連結)
+    - [測試帳號](#測試帳號)
 - [過程](#過程)
   - [所用工具](#所用工具)
   - [學習到的是...](#學習到的是...)
   - [可以優化的地方](#可以優化的地方)
-  - [參考資源](#參考資源)
 - [作者](#作者)
 - [感謝](#感謝)
 
 ## 概述
 
-i-sport 是一個整合運動場館課程預約平台，產品訴求是協助運動場館販賣課程並協助使用者更便利的預約及購買運動課程，使用者身份分為商家與用戶，商家登入後可以在平台上公告旗下場館課程資訊供用戶預約以及販賣課程方案，用戶登入後可查看商家資訊、預約場館課程、購買場館方案、查看場館評論或留下評論。
+I-sport 是一個整合運動場館課程預約平台，產品訴求是協助運動場館販賣課程並協助使用者更便利的預約及購買運動課程，使用者身份分為商家與用戶，商家登入後可以在平台上公告旗下場館課程資訊供用戶預約以及販賣課程方案，用戶登入後可查看商家資訊、預約場館課程、購買場館方案、查看場館評論或留下評論。
 
 ### 使用者故事
 
@@ -53,58 +53,57 @@ i-sport 是一個整合運動場館課程預約平台，產品訴求是協助運
 - 「方案」頁籤將顯示該場館可購買的方案，商家可以新增、編輯、刪除方案
 - 「評價」頁籤將顯示場館所有用戶留下的評價
 
-### 螢幕截圖
+### 螢幕截圖 ScreenShot
 
 <div>
   <section>
     <h4>使用者畫面</h4>
-    <div class="screenshots">
-      <img src='./src/assets/screenshot/login-screen.png' alt='login screen'>
-      <img src='./src/assets/screenshot/signup-screen.png' alt='signup screen'>
-      <img src='./src/assets/screenshot/signup-step2-screen.png' alt='sign up step 2 screen'>
-      <img src='./src/assets/screenshot/find-screen.png' alt='find screen'>
-      <img src='./src/assets/screenshot/my-collections-screen.png' alt='my collections screen'>
-      <img src='./src/assets/screenshot/my-reservation-screen.png' alt='my reservation screen'>
-      <img src='./src/assets/screenshot/my-account-screen.png' alt='my account screen'>
-      <img src='./src/assets/screenshot/my-plans-screen.png' alt='my plans screen'>
-      <img src='./src/assets/screenshot/certain-store-classes-screen.png' alt='certain store classes screen'>
-      <img src='./src/assets/screenshot/certain-store-plans-screen.png' alt='certain store plans screen'>
-      <img src='./src/assets/screenshot/certain-store-plans-buying-screen.png' alt='certain store plans buying screen'>
-      <img src='./src/assets/screenshot/certain-store-reviews-screen.png' alt='certain store reviews screen'>
+    <div>
+      <img src='./src/assets/screenshot/login-screen.png' alt='login screen' style="width: 45%">
+      <img src='./src/assets/screenshot/signup-screen.png' alt='signup screen' style="width: 45%">
+      <img src='./src/assets/screenshot/signup-step2-screen.png' alt='sign up step 2 screen' style="width: 45%">
+      <img src='./src/assets/screenshot/find-screen.png' alt='find screen' style="width: 45%">
+      <img src='./src/assets/screenshot/my-collections-screen.png' alt='my collections screen' style="width: 45%">
+      <img src='./src/assets/screenshot/my-reservation-screen.png' alt='my reservation screen' style="width: 45%">
+      <img src='./src/assets/screenshot/my-account-screen.png' alt='my account screen' style="width: 45%">
+      <img src='./src/assets/screenshot/my-plans-screen.png' alt='my plans screen' style="width: 45%">
+      <img src='./src/assets/screenshot/certain-store-classes-screen.png' alt='certain store classes screen' style="width: 45%">
+      <img src='./src/assets/screenshot/certain-store-plans-screen.png' alt='certain store plans screen' style="width: 45%">
+      <img src='./src/assets/screenshot/certain-store-plans-buying-screen.png' alt='certain store plans buying screen' style="width: 45%">
+      <img src='./src/assets/screenshot/certain-store-reviews-screen.png' alt='certain store reviews screen' style="width: 45%">
     </div>
     <h5 class="tx-underline">user1@example.com</h5>
-    <div class="screenshots">
-      <img src='./src/assets/screenshot/user1-my-reservation-screen.png' alt='user1 my reservation screen'>
-      <img src='./src/assets/screenshot/user1-my-account-screen.png' alt='user1 my account screen'>
-      <img src='./src/assets/screenshot/user1-my-plans-screen.png' alt='user1 my plans screen'>
+    <div>
+      <img src='./src/assets/screenshot/user1-my-reservation-screen.png' alt='user1 my reservation screen' style="width: 45%">
+      <img src='./src/assets/screenshot/user1-my-account-screen.png' alt='user1 my account screen' style="width: 45%">
+      <img src='./src/assets/screenshot/user1-my-plans-screen.png' alt='user1 my plans screen' style="width: 45%">
     </div>
   </section>
 
   <section>
     <h4>商家畫面</h4>
-    <div class="screenshots">
-      <img src='./src/assets/screenshot/store-login-screen.png' alt='store login screen'>
-      <img src='./src/assets/screenshot/store-signup-screen.png' alt='store signup screen'>
-      <img src='./src/assets/screenshot/store-find-screen.png' alt='store find screen'>
+    <div>
+      <img src='./src/assets/screenshot/store-login-screen.png' alt='store login screen' style="width: 45%">
+      <img src='./src/assets/screenshot/store-signup-screen.png' alt='store signup screen' style="width: 45%">
+      <img src='./src/assets/screenshot/store-find-screen.png' alt='store find screen' style="width: 45%">
+      <img src='./src/assets/screenshot/store-find-create-screen.png' alt='store find screen create store screen' style="width: 45%">
+      <img src='./src/assets/screenshot/store-find-create-with-data-screen.png' alt='store find screen create store with data screen' style="width: 45%">
+      <img src='./src/assets/screenshot/store-find-created-screen.png' alt='store find screen created screen' style="width: 45%">
+      <img src='./src/assets/screenshot/store-find-editing-screen.png' alt='store find screen editing store screen' style="width: 45%">
+      <img src='./src/assets/screenshot/store-find-edited-screen.png' alt='store find screen edited screen' style="width: 45%">
+      <img src='./src/assets/screenshot/store-in-certain-store-screen.png' alt='store in certain store screen' style="width: 45%">
+      <img src='./src/assets/screenshot/store-in-certain-store-add-class-screen.png' alt='store in certain store add class screen' style="width: 45%">
+      <img src='./src/assets/screenshot/store-in-certain-store-class-added-screen.png' alt='store in certain store class added screen' style="width: 45%">
+      <img src='./src/assets/screenshot/store-in-certain-store-edit-class-screen.png' alt='store in certain store edit class screen' style="width: 45%">
+      <img src='./src/assets/screenshot/store-in-certain-store-plans-screen.png' alt='store in certain store plans screen' style="width: 45%">
+      <img src='./src/assets/screenshot/store-in-certain-store-plans-create-screen.png' alt='store in certain store plans create screen' style="width: 45%">
+      <img src='./src/assets/screenshot/store-in-certain-store-plans-created-screen.png' alt='store in certain store plans created screen' style="width: 45%">
+      <img src='./src/assets/screenshot/store-in-certain-store-plans-editing-screen.png' alt='store in certain store plans editing screen' style="width: 45%">
+      <img src='./src/assets/screenshot/store-in-certain-store-plans-edited-screen.png' alt='store in certain store plans edited screen' style="width: 45%">
+      <img src='./src/assets/screenshot/store-in-certain-store-reviews-screen.png' alt='store in certain store reviews screen' style="width: 45%">
+      <img src='./src/assets/screenshot/store-account-screen.png' alt='store account screen' style="width: 45%">
     </div>
   </section>
-
-  <style>
-    img {
-      max-width: 100%;
-      height: auto;
-    }
-
-    .screenshots {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-    }
-
-    .tx-underline {
-      text-decoration: underline;
-    }
-  </style>
 </div>
 
 ### 作品連結
@@ -112,6 +111,26 @@ i-sport 是一個整合運動場館課程預約平台，產品訴求是協助運
 - [前端 Repo](https://github.com/Beginneraboutlife116/isport)
 - [網站網址](https://isport-omega.vercel.app/login)
 - [後端 Repo](https://github.com/popojk/i-sport)
+
+#### 測試帳號
+
+使用者帳號：
+
+1. user1@example.com
+2. user2@example.com
+3. user3@example.com
+4. user4@example.com
+5. user5@example.com
+
+使用者密碼：12345678
+
+商家帳號：
+
+1. tmma@tmma.com
+2. hrc@hrc.com
+3. goodtime@goodtime.com
+
+商家密碼：12345678
 
 ## 過程
 
@@ -184,104 +203,146 @@ i-sport 是一個整合運動場館課程預約平台，產品訴求是協助運
 ## Table of contents
 
 - [Overview](#overview)
-  - [The challenge](#the-challenge)
-  - [Screenshot](#screenshot)
+  - [User Story](#user-story)
+    - [User](#user)
+    - [Store](#store)
+  - [Screenshot](#螢幕截圖-screenshot)
   - [Links](#links)
 - [My process](#my-process)
   - [Built with](#built-with)
   - [What I learned](#what-i-learned)
   - [Continued development](#continued-development)
-  - [Useful resources](#useful-resources)
 - [Author](#author)
 - [Acknowledgments](#acknowledgments)
 
 ## Overview
 
-### The challenge
+I-sport is an integrated sports facility and course reservation platform.
+The products's main goal is to assist sports facilities owner in selling courses and to facilitate users in conveniently reserving and purchasing courses.
 
-Users should be able to:
+Users are categorized as either merchants or customers.
+After logging in, merchants can announce information about their sports facilities and courses for customers to reserve and purchase course plans.
+On the other hand, customers can log in to view merchant information, reserve sports facility courses, purchase facility plans, read venue reviews, or leave their own reviews.
 
-- (Like writing user story)
+### User Story
 
-### Screenshot
+#### User
 
-![](./screenshot.jpg)
+- Users can register an account using their email.
+- After registration, users can add their own profile picture and change their "anonymous" nickname.
+- Users can select "skip" to go directly to the homepage.
+- Users can log in using their existing account and password.
+- In the "My Account" section or by clicking on the profile picture icon, users can modify their email, nickname, password, and profile picture or upload a new one.
+- Once logged in, users can view all sports facilities under the "Find Venues" section, where they can also bookmark venues. Clicking on the Map will display the location of the selected venue using Google Maps.
+- Under the "My Venues" page, users can see their currently bookmarked venues.
+- In the "My Bookings" page, users can view all their scheduled course reservations.
+- Users can cancel a reserved course on the "My Bookings" page.
+- By clicking on a venue, users can access the venue's page, where the "Courses" tab will display courses available within the next seven days.
+- On the course page, clicking "Book" will take the user to the reservation page.
+- After choosing a purchased course plan for the selected venue, users can complete the reservation and deduct the course count from the plan.
+- Under the venue page's "Plans" tab, users can see available plans for purchase.
+- Clicking "Buy" will open a confirmation window, and upon confirming, users will proceed to the BluePay payment page.
+- After entering the card information and completing the payment, clicking "Return to Store" will bring users back to the i-sport page (recommended to use test card numbers for testing).
+- Under the venue page's "Reviews" tab, users can see all reviews for that venue and can also leave their own reviews.
 
-Add a screenshot of your solution. The easiest way to do this is to use Firefox to view your project, right-click the page and select "Take a Screenshot". You can choose either a full-height screenshot or a cropped one based on how long the page is. If it's very long, it might be best to crop it.
+#### Store
 
-Alternatively, you can use a tool like [FireShot](https://getfireshot.com/) to take the screenshot. FireShot has a free option, so you don't need to purchase it.
+- Users can register an account using their email and log in afterward.
+- Merchants can access the "My Account" page to modify their email, name, and password.
+- After logging in, merchants can view all their affiliated venues under the "All Venues" page and have the option to create and edit venues.
+- By clicking on a venue, merchants can access the venue's page, where they can view the "Weekly Schedule," "Plans," and "Reviews" tabs.
+- Under the "Weekly Schedule" tab, the system will list the schedule from Sunday to Saturday, automatically generating courses for the next seven days for users to reserve. Merchants can also add, edit, or delete courses.
+- The "Plans" tab will display packages available for purchase at the venue, and merchants can add, edit, or delete packages.
+- Under the "Reviews" tab, all user reviews for the venue will be displayed.
 
-Then crop/optimize/edit your image however you like, add it to your project, and update the file path in the image above.
-
-**Note: Delete this note and the paragraphs above when you add your screenshot. If you prefer not to add a screenshot, feel free to remove this entire section.**
+### [Screenshot](#螢幕截圖-screenshot)
 
 ### Links
 
-- Solution URL: [Add solution URL here](https://your-solution-url.com)
-- Live Site URL: [Add live site URL here](https://your-live-site-url.com)
+- [Frontend Repo](https://github.com/Beginneraboutlife116/isport)
+- [Live Site URL](https://isport-omega.vercel.app/login)
+- [Backend Repo](https://github.com/popojk/i-sport)
+
+#### Test Account
+
+User Accounts:
+
+1. user1@example.com
+2. user2@example.com
+3. user3@example.com
+4. user4@example.com
+5. user5@example.com
+
+User Password：12345678
+
+Store Accounts：
+
+1. tmma@tmma.com
+2. hrc@hrc.com
+3. goodtime@goodtime.com
+
+Store Password：12345678
 
 ## My process
 
 ### Built with
 
-- Semantic HTML5 markup
-- CSS custom properties
-- Flexbox
-- CSS Grid
-- Mobile-first workflow
+- SCSS module
 - [React](https://reactjs.org/) - JS library
-- [Next.js](https://nextjs.org/) - React framework
-- [Styled Components](https://styled-components.com/) - For styles
-
-**Note: These are just examples. Delete this note and replace the list above with your own choices**
+- [React Router](https://nextjs.org/) - Routing library
+- [React Hook Form]() - Form library
+- [Material UI]() - UI library
+- [Radix UI]() - UI library
+- [Google Map React]() - Map library
+- [Axios]() - API library
+- [React icon]() - Icon library
+- TypeScript
+- Prettier
+- ESLint
 
 ### What I learned
 
-Use this section to recap over some of your major learnings while working through this project. Writing these out and providing code samples of areas you want to highlight is a great way to reinforce your own knowledge.
-
-To see how you can add code snippets, see below:
-
-```html
-<h1>Some HTML code I'm proud of</h1>
-```
-
-```css
-.proud-of-this-css {
-	color: papayawhip;
-}
-```
-
-```js
-const proudOfThisFunc = () => {
-	console.log('🎉');
-};
-```
-
-If you want more help with writing markdown, we'd recommend checking out [The Markdown Guide](https://www.markdownguide.org/) to learn more.
-
-**Note: Delete this note and the content within this section and replace with your own learnings.**
+- Utilized SCSS modules, including converting a specific class selector to a global class.
+- Implemented form validation using React Hook Form.
+- Utilized React Router for handling routing and page navigation.
+- Implemented a star rating feature for reviews using MUI (Material-UI) components.
+- Incorporated Radix UI to achieve a double-thumb slider for adding courses in the merchant's interface.
+- Utilized Google Map React to render maps and display locations on the platform.
+- Simplified API calls by using Axios.
+- Implemented TypeScript for type checking, debugging, and enhanced code reliability.
+- Used Prettier and ESLint for code formatting and ensuring consistent formatting standards across collaboration.
 
 ### Continued development
 
-Use this section to outline areas that you want to continue focusing on in future projects. These could be concepts you're still not completely comfortable with or techniques you found useful that you want to refine and perfect.
-
-**Note: Delete this note and the content within this section and replace with your own plans for continued development.**
-
-### Useful resources
-
-- [Example resource 1](https://www.example.com) - This helped me for XYZ reason. I really liked this pattern and will use it going forward.
-- [Example resource 2](https://www.example.com) - This is an amazing article which helped me finally understand XYZ. I'd recommend it to anyone still learning this concept.
-
-**Note: Delete this note and replace the list above with resources that helped you during the challenge. These could come in handy for anyone viewing your solution or for yourself when you look back on this project in the future.**
+- Implemented Google account login functionality.
+- After completing a product purchase, users are redirected to a custom-designed transaction result page.
+- Ensured a responsive web design (RWD) to provide an optimal user experience across various devices and screen sizes.
 
 ## Author
 
-- Website - [Add your name here](https://www.your-site.com)
-- Frontend Mentor - [@yourusername](https://www.frontendmentor.io/profile/yourusername)
-- Twitter - [@yourusername](https://www.twitter.com/yourusername)
+### Frontend
 
-**Note: Delete this note and add/remove/edit lines above based on what links you'd like to share.**
+#### Oliver Liao
+
+- [Website](https://portfolio-website-ollieeryo.vercel.app/)
+- [Github](https://github.com/Ollieeryo)
+- [Linkedin](https://www.linkedin.com/in/oliver-nien-ching-liao/)
+- [Medium](https://medium.com/@ollieeryo)
+
+#### Wei Kai Lin
+
+- [Github](https://github.com/Beginneraboutlife116)
+- [Linkedin](https://www.linkedin.com/in/%E5%81%89%E5%87%B1-%E6%9E%97-668aaa204/)
+- [Medium](https://medium.com/@weikai0116)
+
+### Backend
+
+#### 吳忠全
+
+- [Github](https://github.com/popojk)
 
 ## Acknowledgments
 
-This is where you can give a hat tip to anyone who helped you out on this project. Perhaps you worked in a team or got some inspiration from someone else's solution. This is the perfect place to give them some credit.
+Special thanks to the project organizer [忠全](https://github.com/popojk) for not only planning the API but also creating the wireframes, which greatly accelerated the progress of the project.
+
+Also thanks to the frontend collaborators [Liao Oliver](https://github.com/Ollieeryo) and [Wei Kai Lin](https://github.com/Beginneraboutlife116) for their collaboration and contributions.
