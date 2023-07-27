@@ -37,7 +37,7 @@ export default function SignupStepOnePage() {
 				const { token, userId, role } = response.data;
 				localStorage.setItem('isport', JSON.stringify({ token, role }));
 				setAuth({ token, role, userId, email, isAuthenticated: true, avatar: '', name: '匿名' });
-				navigate(`/signup/${userId}`);
+				navigate(`/signup/next`);
 			}
 		} catch (error) {
 			if (isAxiosError(error)) {
@@ -51,36 +51,37 @@ export default function SignupStepOnePage() {
 		}
 	}
 
+	const emailError = errors['email']?.message ?? '';
+	const passwordError = errors['password']?.message ?? '';
+	const confirmPasswordError = errors['confirmPassword']?.message ?? '';
+
 	return (
 		<>
 			<h1 className={styles.auth__title}>用戶註冊 Step 1</h1>
 			<form onSubmit={handleSubmit(onSubmit)}>
 				<EmailInput
 					register={register}
-					errors={errors}
+					errorMessage={emailError as string}
 					setError={setError}
 					clearErrors={clearErrors}
-					name='email'
 					placeholder='請輸入註冊Email'
 					className={styles.auth__input}
 				/>
 				<PasswordInput
 					register={register}
-					errors={errors}
+					errorMessage={passwordError as string}
 					setError={setError}
 					clearErrors={clearErrors}
 					placeholder='請輸入密碼'
-					name='password'
 					className={styles.auth__input}
 				/>
 				<ConfirmPasswordInput
 					watchingPassword={watchingPassword}
 					register={register}
-					errors={errors}
+					errorMessage={confirmPasswordError as string}
 					setError={setError}
 					clearErrors={clearErrors}
 					placeholder='請再次輸入確認密碼'
-					name='confirmPassword'
 					className={styles.auth__input}
 				/>
 				<Button type='submit' disabled={!isValid || isSubmitting} className={styles.auth__btn}>

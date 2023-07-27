@@ -63,22 +63,26 @@ export default function StoreSignupPage() {
 		}
 	}
 
+	const emailError = errors['email']?.message ?? '';
+	const nameError = errors['storeName']?.message ?? '';
+	const passwordError = errors['password']?.message ?? '';
+	const confirmPasswordError = errors['confirmPassword']?.message ?? '';
+
 	return (
 		<>
 			<h1 className={authStyles.auth__title}>商家註冊</h1>
 			<form onSubmit={handleSubmit(onSubmit)}>
 				<EmailInput
 					register={register}
-					errors={errors}
 					setError={setError}
+					errorMessage={emailError as string}
 					clearErrors={clearErrors}
-					name='email'
 					placeholder='請輸入註冊Email'
 					className={authStyles.auth__input}
 				/>
 				<NameInput
 					register={register}
-					errors={errors}
+					errorMessage={nameError as string}
 					setError={setError}
 					clearErrors={clearErrors}
 					name='storeName'
@@ -87,21 +91,19 @@ export default function StoreSignupPage() {
 				/>
 				<PasswordInput
 					register={register}
-					errors={errors}
+					errorMessage={passwordError as string}
 					setError={setError}
 					clearErrors={clearErrors}
 					placeholder='請輸入密碼'
-					name='password'
 					className={authStyles.auth__input}
 				/>
 				<ConfirmPasswordInput
 					watchingPassword={watchingPassword}
+					errorMessage={confirmPasswordError as string}
 					register={register}
-					errors={errors}
 					setError={setError}
 					clearErrors={clearErrors}
 					placeholder='請再次輸入確認密碼'
-					name='confirmPassword'
 					className={authStyles.auth__input}
 				/>
 				<Button type='submit' disabled={!isValid || isSubmitting} className={authStyles.auth__btn}>
