@@ -44,23 +44,23 @@ export default function BottomForm() {
 		}
 	}
 
+	const passwordError = errors['password']?.message || '';
+	const confirmPasswordError = errors['confirmPassword']?.message || '';
+
 	return (
 		<form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
 			<PasswordInput
 				type='password'
 				label='請輸入密碼'
-				name='password'
-				errors={errors}
+				errorMessage={passwordError as string}
 				register={register}
 				className={styles.form__input}
 				setError={setError}
 				clearErrors={clearErrors}
 			/>
 			<ConfirmPasswordInput
-				type='password'
 				label='請再次輸入密碼'
-				name='confirmPassword'
-				errors={errors}
+				errorMessage={confirmPasswordError as string}
 				register={register}
 				className={styles.form__input}
 				setError={setError}

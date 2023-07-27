@@ -74,12 +74,16 @@ export default function UpperForm() {
 		}
 	}
 
+	const avatarError = errors['avatar']?.message || '';
+	const emailError = errors['email']?.message || '';
+	const nameError = errors['nickname']?.message || '';
+
 	return (
 		<form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
 			<AvatarInput
 				className={styles.form__input}
 				imgInfo={imgInfo}
-				errorMessage={errors['avatar']?.message as string}
+				errorMessage={avatarError as string}
 				{...register('avatar', {
 					validate: {
 						fileType: (v) => {
@@ -108,17 +112,15 @@ export default function UpperForm() {
 			/>
 			<EmailInput
 				register={register}
-				type='email'
-				errors={errors}
 				label='Email'
 				className={styles.form__input}
-				name='email'
 				setError={setError}
 				clearErrors={clearErrors}
+				errorMessage={emailError as string}
 			/>
 			<NameInput
 				register={register}
-				errors={errors}
+				errorMessage={nameError as string}
 				label='暱稱'
 				name='nickname'
 				className={styles.form__input}
