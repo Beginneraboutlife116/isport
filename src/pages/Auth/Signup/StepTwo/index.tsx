@@ -15,7 +15,7 @@ export default function SignupStepTwoPage() {
 	const {
 		register,
 		handleSubmit,
-		formState: { isValid, errors, isSubmitting, dirtyFields },
+		formState: { isValid, errors, isSubmitting },
 		setError,
 		clearErrors,
 	} = useForm<FieldValues>({ values: { nickname: auth.name } });
@@ -29,20 +29,18 @@ export default function SignupStepTwoPage() {
 	async function onSubmit(data: FieldValues) {
 		try {
 			const { nickname, avatar } = data;
-			if (Object.values(dirtyFields).some((value) => value)) {
-				let fakeAvatar = '';
-				const file = avatar ? avatar[0] : null;
-				fakeAvatar = file ? URL.createObjectURL(file) : '';
+			let fakeAvatar = '';
+			const file = avatar ? avatar[0] : null;
+			fakeAvatar = file ? URL.createObjectURL(file) : '';
 
-				const formData = new FormData();
-				formData.append('nickname', nickname);
-				formData.append('email', auth.email);
-				formData.append('avatar', file);
-				const response = await updateUserAccount(formData);
-				if (response.status === 200) {
-					setAuth({ ...auth, name: nickname, avatar: fakeAvatar });
-					navigate('/find');
-				}
+			const formData = new FormData();
+			formData.append('nickname', nickname);
+			formData.append('email', auth.email);
+			formData.append('avatar', file);
+			const response = await updateUserAccount(formData);
+			if (response.status === 200) {
+				setAuth({ ...auth, name: nickname, avatar: fakeAvatar });
+				navigate('/find');
 			}
 		} catch (error) {
 			if (isAxiosError(error)) {
@@ -63,7 +61,7 @@ export default function SignupStepTwoPage() {
 				<AvatarInput
 					className={authStyles.auth__input}
 					imgInfo={imgInfo}
-					errorMessage={errors['avatar']?.message as string}
+					errorMessage={(errors['avatar']?.message ?? '') as string}
 					{...register('avatar', {
 						validate: {
 							fileType: (v) => {
@@ -92,7 +90,7 @@ export default function SignupStepTwoPage() {
 				/>
 				<NameInput
 					register={register}
-					errors={errors}
+					errorMessage={(errors['nickname']?.message ?? '') as string}
 					name='nickname'
 					setError={setError}
 					clearErrors={clearErrors}

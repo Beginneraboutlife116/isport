@@ -79,7 +79,7 @@ export default function UpperForm() {
 			<AvatarInput
 				className={styles.form__input}
 				imgInfo={imgInfo}
-				errorMessage={errors['avatar']?.message as string}
+				errorMessage={(errors['avatar']?.message || '') as string}
 				{...register('avatar', {
 					validate: {
 						fileType: (v) => {
@@ -108,17 +108,15 @@ export default function UpperForm() {
 			/>
 			<EmailInput
 				register={register}
-				type='email'
-				errors={errors}
 				label='Email'
 				className={styles.form__input}
-				name='email'
 				setError={setError}
 				clearErrors={clearErrors}
+				errorMessage={(errors['email']?.message || '') as string}
 			/>
 			<NameInput
 				register={register}
-				errors={errors}
+				errorMessage={(errors['nickname']?.message || '') as string}
 				label='暱稱'
 				name='nickname'
 				className={styles.form__input}

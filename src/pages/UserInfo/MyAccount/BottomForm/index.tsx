@@ -49,18 +49,15 @@ export default function BottomForm() {
 			<PasswordInput
 				type='password'
 				label='請輸入密碼'
-				name='password'
-				errors={errors}
+				errorMessage={(errors['password']?.message || '') as string}
 				register={register}
 				className={styles.form__input}
 				setError={setError}
 				clearErrors={clearErrors}
 			/>
 			<ConfirmPasswordInput
-				type='password'
 				label='請再次輸入密碼'
-				name='confirmPassword'
-				errors={errors}
+				errorMessage={(errors['confirmPassword']?.message || '') as string}
 				register={register}
 				className={styles.form__input}
 				setError={setError}

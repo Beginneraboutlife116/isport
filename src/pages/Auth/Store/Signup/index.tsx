@@ -69,16 +69,15 @@ export default function StoreSignupPage() {
 			<form onSubmit={handleSubmit(onSubmit)}>
 				<EmailInput
 					register={register}
-					errors={errors}
 					setError={setError}
+					errorMessage={(errors['email']?.message ?? '') as string}
 					clearErrors={clearErrors}
-					name='email'
 					placeholder='請輸入註冊Email'
 					className={authStyles.auth__input}
 				/>
 				<NameInput
 					register={register}
-					errors={errors}
+					errorMessage={(errors['storeName']?.message ?? '') as string}
 					setError={setError}
 					clearErrors={clearErrors}
 					name='storeName'
@@ -87,21 +86,19 @@ export default function StoreSignupPage() {
 				/>
 				<PasswordInput
 					register={register}
-					errors={errors}
+					errorMessage={(errors['password']?.message ?? '') as string}
 					setError={setError}
 					clearErrors={clearErrors}
 					placeholder='請輸入密碼'
-					name='password'
 					className={authStyles.auth__input}
 				/>
 				<ConfirmPasswordInput
 					watchingPassword={watchingPassword}
+					errorMessage={(errors['confirmPassword']?.message ?? '') as string}
 					register={register}
-					errors={errors}
 					setError={setError}
 					clearErrors={clearErrors}
 					placeholder='請再次輸入確認密碼'
-					name='confirmPassword'
 					className={authStyles.auth__input}
 				/>
 				<Button type='submit' disabled={!isValid || isSubmitting} className={authStyles.auth__btn}>

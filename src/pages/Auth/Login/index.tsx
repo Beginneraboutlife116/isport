@@ -31,13 +31,20 @@ export default function LoginPage() {
 			}
 		} catch (error) {
 			if (isAxiosError(error)) {
-				const whichInputError = error.response?.data.message.includes('密碼')
-					? 'password'
-					: 'email';
-				setError(whichInputError, {
-					type: error.response?.data.status,
-					message: error.response?.data.message,
-				});
+				if (error.response?.data.status === 'error') {
+					setError('email', {
+						type: error.response?.data.status,
+						message: '非正確使用者登入，請再檢查權限，或聯絡管理者',
+					});
+				} else {
+					const whichInputError = error.response?.data.message.includes('密碼')
+						? 'password'
+						: 'email';
+					setError(whichInputError, {
+						type: error.response?.data.status,
+						message: error.response?.data.message,
+					});
+				}
 			} else {
 				console.error(error);
 			}
@@ -50,21 +57,19 @@ export default function LoginPage() {
 			<form onSubmit={handleSubmit(onSubmit)}>
 				<EmailInput
 					register={register}
-					errors={errors}
+					errorMessage={(errors['email']?.message ?? '') as string}
 					setError={setError}
 					clearErrors={clearErrors}
-					name='email'
 					placeholder='請輸入Email'
 					className={styles.auth__input}
 				/>
 				<PasswordInput
 					register={register}
-					errors={errors}
+					errorMessage={(errors['password']?.message ?? '') as string}
 					setError={setError}
 					clearErrors={clearErrors}
 					placeholder='請輸入密碼'
 					className={styles.auth__input}
-					name={'password'}
 				/>
 				<Button type='submit' disabled={!isValid || isSubmitting} className={styles.auth__btn}>
 					{isSubmitting ? '登入中...' : '登入'}
