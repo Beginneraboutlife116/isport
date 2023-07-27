@@ -58,53 +58,52 @@ i-sport 是一個整合運動場館課程預約平台，產品訴求是協助運
 <div>
   <section>
     <h4>使用者畫面</h4>
-    <div class="screenshots">
-      <img src='./src/assets/screenshot/login-screen.png' alt='login screen'>
-      <img src='./src/assets/screenshot/signup-screen.png' alt='signup screen'>
-      <img src='./src/assets/screenshot/signup-step2-screen.png' alt='sign up step 2 screen'>
-      <img src='./src/assets/screenshot/find-screen.png' alt='find screen'>
-      <img src='./src/assets/screenshot/my-collections-screen.png' alt='my collections screen'>
-      <img src='./src/assets/screenshot/my-reservation-screen.png' alt='my reservation screen'>
-      <img src='./src/assets/screenshot/my-account-screen.png' alt='my account screen'>
-      <img src='./src/assets/screenshot/my-plans-screen.png' alt='my plans screen'>
-      <img src='./src/assets/screenshot/certain-store-classes-screen.png' alt='certain store classes screen'>
-      <img src='./src/assets/screenshot/certain-store-plans-screen.png' alt='certain store plans screen'>
-      <img src='./src/assets/screenshot/certain-store-plans-buying-screen.png' alt='certain store plans buying screen'>
-      <img src='./src/assets/screenshot/certain-store-reviews-screen.png' alt='certain store reviews screen'>
+    <div>
+      <img src='./src/assets/screenshot/login-screen.png' alt='login screen' style="width: 45%">
+      <img src='./src/assets/screenshot/signup-screen.png' alt='signup screen' style="width: 45%">
+      <img src='./src/assets/screenshot/signup-step2-screen.png' alt='sign up step 2 screen' style="width: 45%">
+      <img src='./src/assets/screenshot/find-screen.png' alt='find screen' style="width: 45%">
+      <img src='./src/assets/screenshot/my-collections-screen.png' alt='my collections screen' style="width: 45%">
+      <img src='./src/assets/screenshot/my-reservation-screen.png' alt='my reservation screen' style="width: 45%">
+      <img src='./src/assets/screenshot/my-account-screen.png' alt='my account screen' style="width: 45%">
+      <img src='./src/assets/screenshot/my-plans-screen.png' alt='my plans screen' style="width: 45%">
+      <img src='./src/assets/screenshot/certain-store-classes-screen.png' alt='certain store classes screen' style="width: 45%">
+      <img src='./src/assets/screenshot/certain-store-plans-screen.png' alt='certain store plans screen' style="width: 45%">
+      <img src='./src/assets/screenshot/certain-store-plans-buying-screen.png' alt='certain store plans buying screen' style="width: 45%">
+      <img src='./src/assets/screenshot/certain-store-reviews-screen.png' alt='certain store reviews screen' style="width: 45%">
     </div>
     <h5 class="tx-underline">user1@example.com</h5>
-    <div class="screenshots">
-      <img src='./src/assets/screenshot/user1-my-reservation-screen.png' alt='user1 my reservation screen'>
-      <img src='./src/assets/screenshot/user1-my-account-screen.png' alt='user1 my account screen'>
-      <img src='./src/assets/screenshot/user1-my-plans-screen.png' alt='user1 my plans screen'>
+    <div>
+      <img src='./src/assets/screenshot/user1-my-reservation-screen.png' alt='user1 my reservation screen' style="width: 45%">
+      <img src='./src/assets/screenshot/user1-my-account-screen.png' alt='user1 my account screen' style="width: 45%">
+      <img src='./src/assets/screenshot/user1-my-plans-screen.png' alt='user1 my plans screen' style="width: 45%">
     </div>
   </section>
 
   <section>
     <h4>商家畫面</h4>
-    <div class="screenshots">
-      <img src='./src/assets/screenshot/store-login-screen.png' alt='store login screen'>
-      <img src='./src/assets/screenshot/store-signup-screen.png' alt='store signup screen'>
-      <img src='./src/assets/screenshot/store-find-screen.png' alt='store find screen'>
+    <div>
+      <img src='./src/assets/screenshot/store-login-screen.png' alt='store login screen' style="width: 45%">
+      <img src='./src/assets/screenshot/store-signup-screen.png' alt='store signup screen' style="width: 45%">
+      <img src='./src/assets/screenshot/store-find-screen.png' alt='store find screen' style="width: 45%">
+      <img src='./src/assets/screenshot/store-find-create-screen.png' alt='store find screen create store screen' style="width: 45%">
+      <img src='./src/assets/screenshot/store-find-create-with-data-screen.png' alt='store find screen create store with data screen' style="width: 45%">
+      <img src='./src/assets/screenshot/store-find-created-screen.png' alt='store find screen created screen' style="width: 45%">
+      <img src='./src/assets/screenshot/store-find-editing-screen.png' alt='store find screen editing store screen' style="width: 45%">
+      <img src='./src/assets/screenshot/store-find-edited-screen.png' alt='store find screen edited screen' style="width: 45%">
+      <img src='./src/assets/screenshot/store-in-certain-store-screen.png' alt='store in certain store screen' style="width: 45%">
+      <img src='./src/assets/screenshot/store-in-certain-store-add-class-screen.png' alt='store in certain store add class screen' style="width: 45%">
+      <img src='./src/assets/screenshot/store-in-certain-store-class-added-screen.png' alt='store in certain store class added screen' style="width: 45%">
+      <img src='./src/assets/screenshot/store-in-certain-store-edit-class-screen.png' alt='store in certain store edit class screen' style="width: 45%">
+      <img src='./src/assets/screenshot/store-in-certain-store-plans-screen.png' alt='store in certain store plans screen' style="width: 45%">
+      <img src='./src/assets/screenshot/store-in-certain-store-plans-create-screen.png' alt='store in certain store plans create screen' style="width: 45%">
+      <img src='./src/assets/screenshot/store-in-certain-store-plans-created-screen.png' alt='store in certain store plans created screen' style="width: 45%">
+      <img src='./src/assets/screenshot/store-in-certain-store-plans-editing-screen.png' alt='store in certain store plans editing screen' style="width: 45%">
+      <img src='./src/assets/screenshot/store-in-certain-store-plans-edited-screen.png' alt='store in certain store plans edited screen' style="width: 45%">
+      <img src='./src/assets/screenshot/store-in-certain-store-reviews-screen.png' alt='store in certain store reviews screen' style="width: 45%">
+      <img src='./src/assets/screenshot/store-account-screen.png' alt='store account screen' style="width: 45%">
     </div>
   </section>
-
-  <style>
-    img {
-      max-width: 100%;
-      height: auto;
-    }
-
-    .screenshots {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-    }
-
-    .tx-underline {
-      text-decoration: underline;
-    }
-  </style>
 </div>
 
 ### 作品連結
