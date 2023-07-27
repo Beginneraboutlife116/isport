@@ -53,9 +53,6 @@ export default function SignupStepTwoPage() {
 			}
 		}
 	}
-	
-	const avatarError = errors['avatar']?.message ?? '';
-	const nameError = errors['nickname']?.message ?? '';
 
 	return (
 		<>
@@ -64,7 +61,7 @@ export default function SignupStepTwoPage() {
 				<AvatarInput
 					className={authStyles.auth__input}
 					imgInfo={imgInfo}
-					errorMessage={avatarError as string}
+					errorMessage={(errors['avatar']?.message ?? '') as string}
 					{...register('avatar', {
 						validate: {
 							fileType: (v) => {
@@ -93,7 +90,7 @@ export default function SignupStepTwoPage() {
 				/>
 				<NameInput
 					register={register}
-					errorMessage={nameError as string}
+					errorMessage={(errors['nickname']?.message ?? '') as string}
 					name='nickname'
 					setError={setError}
 					clearErrors={clearErrors}

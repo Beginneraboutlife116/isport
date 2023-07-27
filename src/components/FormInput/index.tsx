@@ -1,9 +1,6 @@
 import { forwardRef, FocusEvent, ChangeEvent, InputHTMLAttributes } from 'react';
 import { UseFormSetError, FieldValues, UseFormClearErrors, UseFormRegister } from 'react-hook-form';
 import styles from './styles.module.scss';
-// import NameInput from './NameInput';
-// import PasswordInput from './PasswordInput';
-// import ConfirmPasswordInput from './ConfirmPasswordInput';
 
 export function handleOnBlur(name: string, setError: UseFormSetError<FieldValues>, label?: string) {
 	return (event: FocusEvent<HTMLInputElement, Element>) => {
@@ -71,7 +68,7 @@ function EmailInput({
 	const rules = {
 		required: true,
 		pattern: /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/,
-		onBlur: handleOnBlur(name, setError),
+		onBlur: handleOnBlur(name, setError, props.label || ''),
 		onChange: (event: ChangeEvent<HTMLInputElement>) => {
 			const { target } = event;
 			const pattern = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
@@ -95,7 +92,7 @@ function PasswordInput({
 }: DerivedInputProps) {
 	const rules = {
 		required: true,
-		onBlur: handleOnBlur(name, setError),
+		onBlur: handleOnBlur(name, setError, props.label || ''),
 		onChange: () => clearErrors(name),
 	};
 	return <FormInput {...props} type='password' {...register(name, rules)} />;
@@ -118,7 +115,7 @@ function ConfirmPasswordInput({
 		validate: {
 			different: (v: string) => v === watchingPassword,
 		},
-		onBlur: handleOnBlur(name, setError),
+		onBlur: handleOnBlur(name, setError, props.label || ''),
 		onChange: (event: ChangeEvent<HTMLInputElement>) => {
 			const { target } = event;
 			if (target.value !== watchingPassword) {
@@ -142,7 +139,7 @@ function NameInput({
 	const rules = {
 		required: true,
 		maxLength,
-		onBlur: handleOnBlur(name, setError),
+		onBlur: handleOnBlur(name, setError, props.label || ''),
 		onChange: (event: React.ChangeEvent<HTMLInputElement>) => {
 			const { target } = event;
 			if (target.value.length > maxLength) {

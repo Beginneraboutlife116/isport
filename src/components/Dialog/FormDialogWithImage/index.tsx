@@ -1,7 +1,7 @@
-import { useState, useRef, useEffect, ReactNode } from 'react';
+import { useState, useRef, useEffect, ReactNode, ChangeEvent } from 'react';
 import { useForm } from 'react-hook-form';
 import type { FieldValues } from 'react-hook-form';
-import { EmailInput, NameInput } from '../../FormInput';
+import { EmailInput, NameInput, handleOnBlur } from '../../FormInput';
 import Dialog from '../../Dialog';
 import Button from '../../Button';
 import styles from '../styles.module.scss';
@@ -80,15 +80,6 @@ export default function FormDialogWithImage({
 		};
 	}, [isOpen]);
 
-	function handleBlur(name: string, label: string) {
-		return (event: React.FocusEvent<HTMLInputElement, Element>) => {
-			const { target } = event;
-			if (target.value === '') {
-				setError(name, { type: 'required', message: `必須輸入${label}` });
-			}
-		};
-	}
-
 	let btnDisabled = false;
 	if (!editingStore) {
 		btnDisabled = !isValid || isPending;
@@ -121,7 +112,7 @@ export default function FormDialogWithImage({
 					inputClassName={styles.input}
 					name='storeName'
 					register={register}
-					errors={errors}
+					errorMessage={(errors.storeName?.message || '') as string}
 					setError={setError}
 					clearErrors={clearErrors}
 				/>
@@ -131,7 +122,7 @@ export default function FormDialogWithImage({
 					inputClassName={styles.input}
 					name='address'
 					register={register}
-					errors={errors}
+					errorMessage={(errors.address?.message || '') as string}
 					setError={setError}
 					clearErrors={clearErrors}
 					maxLength={100}
@@ -142,17 +133,16 @@ export default function FormDialogWithImage({
 					inputClassName={styles.input}
 					name='phone'
 					register={register}
-					errors={errors}
+					errorMessage={(errors.phone?.message || '') as string}
 					setError={setError}
 					clearErrors={clearErrors}
 				/>
 				<EmailInput
 					label='場館Email'
-					name='email'
 					labelClassName={styles.label}
 					inputClassName={styles.input}
 					register={register}
-					errors={errors}
+					errorMessage={(errors.email?.message || '') as string}
 					setError={setError}
 					clearErrors={clearErrors}
 				/>
@@ -162,8 +152,8 @@ export default function FormDialogWithImage({
 						{...register('introduction', {
 							required: true,
 							maxLength: 300,
-							onBlur: handleBlur('introduction', '場館介紹'),
-							onChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+							onBlur: handleOnBlur('introduction', setError, '場館介紹'),
+							onChange: (event: ChangeEvent<HTMLTextAreaElement>) => {
 								const { target } = event;
 								if (target.value.length > 300) {
 									setError('introduction', {
@@ -235,7 +225,7 @@ export default function FormDialogWithImage({
 									}
 								},
 							},
-							onBlur: handleBlur('photo', '場館照片'),
+							onBlur: handleOnBlur('photo', setError,'場館照片'),
 							onChange: (event: React.ChangeEvent<HTMLInputElement>) => {
 								const file = event.target.files?.[0];
 								if (file) {

@@ -44,15 +44,12 @@ export default function BottomForm() {
 		}
 	}
 
-	const passwordError = errors['password']?.message || '';
-	const confirmPasswordError = errors['confirmPassword']?.message || '';
-
 	return (
 		<form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
 			<PasswordInput
 				type='password'
 				label='請輸入密碼'
-				errorMessage={passwordError as string}
+				errorMessage={(errors['password']?.message || '') as string}
 				register={register}
 				className={styles.form__input}
 				setError={setError}
@@ -60,7 +57,7 @@ export default function BottomForm() {
 			/>
 			<ConfirmPasswordInput
 				label='請再次輸入密碼'
-				errorMessage={confirmPasswordError as string}
+				errorMessage={(errors['confirmPassword']?.message || '') as string}
 				register={register}
 				className={styles.form__input}
 				setError={setError}

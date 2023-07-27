@@ -51,16 +51,13 @@ export default function StoreLoginPage() {
 		}
 	}
 
-	const emailError = errors['email']?.message ?? '';
-	const passwordError = errors['password']?.message ?? '';
-
 	return (
 		<>
 			<h1 className={authStyles.auth__title}>請先登入愛運動商家帳戶</h1>
 			<form onSubmit={handleSubmit(onSubmit)}>
 				<EmailInput
 					register={register}
-					errorMessage={emailError as string}
+					errorMessage={(errors['email']?.message ?? '') as string}
 					placeholder='請輸入Email'
 					setError={setError}
 					clearErrors={clearErrors}
@@ -68,7 +65,7 @@ export default function StoreLoginPage() {
 				/>
 				<PasswordInput
 					setError={setError}
-					errorMessage={passwordError as string}
+					errorMessage={(errors['password']?.message ?? '') as string}
 					clearErrors={clearErrors}
 					placeholder='請輸入密碼'
 					register={register}

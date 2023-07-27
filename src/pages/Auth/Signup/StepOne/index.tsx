@@ -51,17 +51,13 @@ export default function SignupStepOnePage() {
 		}
 	}
 
-	const emailError = errors['email']?.message ?? '';
-	const passwordError = errors['password']?.message ?? '';
-	const confirmPasswordError = errors['confirmPassword']?.message ?? '';
-
 	return (
 		<>
 			<h1 className={styles.auth__title}>用戶註冊 Step 1</h1>
 			<form onSubmit={handleSubmit(onSubmit)}>
 				<EmailInput
 					register={register}
-					errorMessage={emailError as string}
+					errorMessage={(errors['email']?.message ?? '') as string}
 					setError={setError}
 					clearErrors={clearErrors}
 					placeholder='請輸入註冊Email'
@@ -69,7 +65,7 @@ export default function SignupStepOnePage() {
 				/>
 				<PasswordInput
 					register={register}
-					errorMessage={passwordError as string}
+					errorMessage={(errors['password']?.message ?? '') as string}
 					setError={setError}
 					clearErrors={clearErrors}
 					placeholder='請輸入密碼'
@@ -78,7 +74,7 @@ export default function SignupStepOnePage() {
 				<ConfirmPasswordInput
 					watchingPassword={watchingPassword}
 					register={register}
-					errorMessage={confirmPasswordError as string}
+					errorMessage={(errors['confirmPassword']?.message ?? '') as string}
 					setError={setError}
 					clearErrors={clearErrors}
 					placeholder='請再次輸入確認密碼'

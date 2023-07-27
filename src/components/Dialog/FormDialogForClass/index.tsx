@@ -1,7 +1,7 @@
-import { useEffect, useRef, ChangeEvent, FocusEvent } from 'react';
+import { useEffect, useRef, ChangeEvent } from 'react';
 import { useForm, Controller, FieldValues } from 'react-hook-form';
 import * as Slider from '@radix-ui/react-slider';
-import FormInput, { NameInput } from '../../FormInput';
+import FormInput, { NameInput, handleOnBlur } from '../../FormInput';
 import { ClassType } from '../../../pages/OwnerStore/OwnerClasses';
 import Button from '../../Button';
 import Dialog from '..';
@@ -107,7 +107,7 @@ export default function FormDialogForClass({
 				</select>
 				<NameInput
 					register={register}
-					errors={errors}
+					errorMessage={(errors.className?.message || '') as string}
 					name='className'
 					label='課程名稱'
 					setError={setError}
@@ -115,21 +115,15 @@ export default function FormDialogForClass({
 					labelClassName={styles.label}
 				/>
 				<FormInput
-					register={register}
 					labelClassName={styles.label}
 					label='名額'
-					errors={errors}
-					name='headcount'
+					errorMessage={(errors.headcount?.message || '') as string}
 					type='number'
-					rules={{
+					min={1}
+					{...register('headcount', {
 						required: true,
 						validate: { min: (v) => Number.parseInt(v, 10) > 0 },
-						onBlur: (event: FocusEvent<HTMLInputElement, Element>) => {
-							const { target } = event;
-							if (!target.value) {
-								setError('headcount', { type: 'required', message: '名額 不可為空' });
-							}
-						},
+						onBlur: handleOnBlur('headcount', setError, '名額'),
 						onChange: (event: ChangeEvent<HTMLInputElement>) => {
 							const { target } = event;
 							if (Number.parseInt(target.value, 10) <= 0) {
@@ -138,7 +132,7 @@ export default function FormDialogForClass({
 								clearErrors('headcount');
 							}
 						},
-					}}
+					})}
 				/>
 				<Controller
 					control={control}

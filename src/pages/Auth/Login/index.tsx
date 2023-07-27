@@ -51,16 +51,13 @@ export default function LoginPage() {
 		}
 	}
 
-	const emailError = errors['email']?.message ?? '';
-	const passwordError = errors['password']?.message ?? '';
-
 	return (
 		<>
 			<h1 className={styles.auth__title}>請先登入愛運動帳戶</h1>
 			<form onSubmit={handleSubmit(onSubmit)}>
 				<EmailInput
 					register={register}
-					errorMessage={emailError as string}
+					errorMessage={(errors['email']?.message ?? '') as string}
 					setError={setError}
 					clearErrors={clearErrors}
 					placeholder='請輸入Email'
@@ -68,7 +65,7 @@ export default function LoginPage() {
 				/>
 				<PasswordInput
 					register={register}
-					errorMessage={passwordError as string}
+					errorMessage={(errors['password']?.message ?? '') as string}
 					setError={setError}
 					clearErrors={clearErrors}
 					placeholder='請輸入密碼'

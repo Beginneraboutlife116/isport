@@ -63,11 +63,6 @@ export default function StoreSignupPage() {
 		}
 	}
 
-	const emailError = errors['email']?.message ?? '';
-	const nameError = errors['storeName']?.message ?? '';
-	const passwordError = errors['password']?.message ?? '';
-	const confirmPasswordError = errors['confirmPassword']?.message ?? '';
-
 	return (
 		<>
 			<h1 className={authStyles.auth__title}>商家註冊</h1>
@@ -75,14 +70,14 @@ export default function StoreSignupPage() {
 				<EmailInput
 					register={register}
 					setError={setError}
-					errorMessage={emailError as string}
+					errorMessage={(errors['email']?.message ?? '') as string}
 					clearErrors={clearErrors}
 					placeholder='請輸入註冊Email'
 					className={authStyles.auth__input}
 				/>
 				<NameInput
 					register={register}
-					errorMessage={nameError as string}
+					errorMessage={(errors['storeName']?.message ?? '') as string}
 					setError={setError}
 					clearErrors={clearErrors}
 					name='storeName'
@@ -91,7 +86,7 @@ export default function StoreSignupPage() {
 				/>
 				<PasswordInput
 					register={register}
-					errorMessage={passwordError as string}
+					errorMessage={(errors['password']?.message ?? '') as string}
 					setError={setError}
 					clearErrors={clearErrors}
 					placeholder='請輸入密碼'
@@ -99,7 +94,7 @@ export default function StoreSignupPage() {
 				/>
 				<ConfirmPasswordInput
 					watchingPassword={watchingPassword}
-					errorMessage={confirmPasswordError as string}
+					errorMessage={(errors['confirmPassword']?.message ?? '') as string}
 					register={register}
 					setError={setError}
 					clearErrors={clearErrors}

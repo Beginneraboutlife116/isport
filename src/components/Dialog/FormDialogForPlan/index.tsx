@@ -1,7 +1,7 @@
-import { useEffect, useRef, FocusEvent, ChangeEvent } from 'react';
+import { useEffect, useRef, ChangeEvent } from 'react';
 import { useForm, FieldValues } from 'react-hook-form';
 import Dialog from '..';
-import FormInput, { NameInput } from '../../FormInput';
+import FormInput, { NameInput, handleOnBlur } from '../../FormInput';
 import Button from '../../Button';
 import { PlanType } from '../../../pages/OwnerStore/OwnerPlans';
 import styles from '../styles.module.scss';
@@ -84,7 +84,7 @@ export default function FormDialogForPlan({
 				<NameInput
 					register={register}
 					name='planName'
-					errors={errors}
+					errorMessage={(errors.planName?.message || '') as string}
 					setError={setError}
 					clearErrors={clearErrors}
 					label='方案名稱'
@@ -97,22 +97,13 @@ export default function FormDialogForPlan({
 				<FormInput
 					labelClassName={styles.label}
 					type='number'
-					register={register}
-					errors={errors}
+					errorMessage={(errors.planAmount?.message || '') as string}
 					label={watch('planType')}
-					name='planAmount'
-					rules={{
+					min={1}
+					{...register('planAmount', {
 						required: true,
 						validate: { min: (v) => Number.parseInt(v, 10) > 0 },
-						onBlur: (event: FocusEvent<HTMLInputElement, Element>) => {
-							const { target } = event;
-							if (!target.value) {
-								setError('planAmount', {
-									type: 'required',
-									message: `${watch('planType')} 不可為空`,
-								});
-							}
-						},
+						onBlur: handleOnBlur('planAmount', setError, watch('planType')),
 						onChange: (event: ChangeEvent<HTMLInputElement>) => {
 							const { target } = event;
 							if (Number.parseInt(target.value, 10) <= 0) {
@@ -121,24 +112,18 @@ export default function FormDialogForPlan({
 								clearErrors('planAmount');
 							}
 						},
-					}}
+					})}
 				/>
 				<FormInput
 					labelClassName={styles.label}
 					type='number'
-					register={register}
-					errors={errors}
+					errorMessage={(errors.price?.message || '') as string}
 					label='價錢'
-					name='price'
-					rules={{
+					min={0}
+					{...register('price', {
 						required: true,
 						validate: { min: (v) => Number.parseInt(v, 10) > 0 },
-						onBlur: (event: FocusEvent<HTMLInputElement, Element>) => {
-							const { target } = event;
-							if (!target.value) {
-								setError('price', { type: 'required', message: '價錢 不可為空' });
-							}
-						},
+						onBlur: handleOnBlur('price', setError, '價錢'),
 						onChange: (event: ChangeEvent<HTMLInputElement>) => {
 							const { target } = event;
 							if (Number.parseInt(target.value, 10) <= 0) {
@@ -147,7 +132,7 @@ export default function FormDialogForPlan({
 								clearErrors('price');
 							}
 						},
-					}}
+					})}
 				/>
 				<Button type='submit' className={styles['btn--submit']} disabled={btnDisabled}>
 					{isSubmitSuccessful ? '送出中...' : buttonText}
