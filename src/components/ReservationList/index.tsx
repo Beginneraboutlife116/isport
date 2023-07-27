@@ -15,6 +15,7 @@ type ItemProps = {
 	weekDay: string;
 	data: any[];
 	setData: React.Dispatch<React.SetStateAction<any[]>>;
+	setDataLength: React.Dispatch<React.SetStateAction<number>>;
 };
 
 function Item({
@@ -28,6 +29,7 @@ function Item({
 	weekDay,
 	data,
 	setData,
+	setDataLength,
 }: ItemProps) {
 	const [showModal, setShowModal] = useState(false);
 	const navigate = useNavigate();
@@ -49,6 +51,8 @@ function Item({
 		// 取消預約課程
 		await fetchCancelStore(authToken || '', reservationId);
 		setShowModal(false);
+
+		setDataLength((pre) => pre - 1);
 	}
 
 	function handleCancelModal() {
@@ -160,6 +164,7 @@ function ReservationList() {
 								className={item.className}
 								data={data}
 								setData={setData}
+								setDataLength={setDataLength}
 							/>
 						))
 					)}
