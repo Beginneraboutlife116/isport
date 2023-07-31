@@ -1,6 +1,7 @@
 import { useEffect, useState, ChangeEvent, KeyboardEvent, MouseEvent } from 'react';
 import CardList from '../../components/CardList';
 import SearchBar from '../../components/SearchBar';
+import { MapModal } from '../../components/Dialog';
 import styled from './styles.module.scss';
 import { fetchStoresData } from '../../api/stores';
 import { useStoresData } from '../../contexts/findContext';
@@ -9,6 +10,11 @@ function Find() {
 	const { storesData, setStoresData, filteredData, setFilteredData, setOneStore } = useStoresData();
 	const [isLoading, setIsLoading] = useState(true);
 	const [searchTerm, setSearchTerm] = useState('');
+	const [toggleMap, setToggleMap] = useState(false);
+	const [storeMap, setStoreMap] = useState<{ address: string; storeName: string }>({
+		address: '',
+		storeName: '',
+	});
 
 	const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
 		e.preventDefault();
@@ -36,6 +42,14 @@ function Find() {
 		if (e.key === 'Enter') {
 			e.preventDefault();
 			handleSearch();
+		}
+	};
+
+	const handleOpenMap = (id: number) => {
+		const storeForMap = storesData.find((item) => item.id === id);
+		if (storeForMap) {
+			setStoreMap({ address: storeForMap.address, storeName: storeForMap.storeName });
+			setToggleMap(!toggleMap);
 		}
 	};
 
@@ -72,13 +86,21 @@ function Find() {
 					handleSearchClick={handleSearchClick}
 				/>
 
+				<MapModal
+					isOpen={toggleMap}
+					closeDialog={() => {
+						setToggleMap(!toggleMap);
+					}}
+					storeMap={storeMap}
+				/>
+
 				{isLoading ? (
 					// 旋轉動畫
 					<div className={styled.container__loading}></div>
 				) : filteredData.length <= 0 ? (
-					<CardList data={storesData} />
+					<CardList data={storesData} handleOpenMap={handleOpenMap} />
 				) : (
-					<CardList data={filteredData} />
+					<CardList data={filteredData} handleOpenMap={handleOpenMap} />
 				)}
 			</div>
 		</div>

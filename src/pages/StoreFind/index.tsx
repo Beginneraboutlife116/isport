@@ -6,7 +6,7 @@ import SearchBar from '../../components/SearchBar';
 import Button from '../../components/Button';
 import { StoreType } from '../../components/Dialog/FormDialogWithImage';
 import { CardData } from '../../components/CardList';
-import { FormDialogWithImage } from '../../components/Dialog';
+import { MapModal, FormDialogWithImage } from '../../components/Dialog';
 import { getOwnerStores, getOneStore, createStore, updateStore } from '../../api/owner';
 import { isAxiosError } from '../../util/helpers';
 import Loading from '../../components/Loading';
@@ -19,6 +19,11 @@ export default function StoreFindPage() {
 	const [filteredData, setFilteredData] = useState<CardData[] | []>([]);
 	const [editingStore, setEditingStore] = useState<StoreType>();
 	const [isPending, setIsPending] = useState(false);
+	const [toggleMap, setToggleMap] = useState(false);
+	const [storeMap, setStoreMap] = useState<{ address: string; storeName: string }>({
+		address: '',
+		storeName: '',
+	});
 
 	useEffect(() => {
 		async function fetchOwnerStores() {
@@ -50,6 +55,14 @@ export default function StoreFindPage() {
 
 	function handleEdit(id: number) {
 		fetchOneStore(id);
+	}
+
+	function handleOpenMap(id: number) {
+		const storeForMap = filteredData.find((data) => data.id === id);
+		if (storeForMap) {
+			setStoreMap({ address: storeForMap.address, storeName: storeForMap.storeName });
+		}
+		setToggleMap(!toggleMap);
 	}
 
 	async function fetchOneStore(storeId: number) {
@@ -222,11 +235,16 @@ export default function StoreFindPage() {
 						handleDialogSubmit={editingStore ? editStoreIntoStores : createStoreIntoStores}
 						buttonText={editingStore ? '修改送出' : '送出'}
 					/>
+					<MapModal
+						isOpen={toggleMap}
+						closeDialog={() => setToggleMap(!toggleMap)}
+						storeMap={storeMap}
+					/>
 				</div>
 				{isPending ? (
 					<Loading />
 				) : filteredData.length ? (
-					<CardList data={filteredData} handleClick={handleEdit} />
+					<CardList data={filteredData} handleClick={handleEdit} handleOpenMap={handleOpenMap} />
 				) : (
 					<h2 data-title='no store'>沒有建立之場館</h2>
 				)}
