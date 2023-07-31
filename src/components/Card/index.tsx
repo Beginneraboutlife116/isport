@@ -6,6 +6,7 @@ import styled from './styles.module.scss';
 import { addLikeStore, deleteLikeStore } from '../../api/like';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useStoresData } from '../../contexts/findContext';
+// import MapModal from '../MapModal';
 
 export type CardProps = {
 	id: number;
@@ -20,6 +21,8 @@ export type CardProps = {
 	phone?: string;
 	onClick?: (id: number) => void;
 	onOpenMap?: Function;
+	// lat?: number;
+	// lng?: number;
 };
 
 function Card({
@@ -35,9 +38,12 @@ function Card({
 	phone,
 	onClick,
 	onOpenMap,
+	// lat,
+	// lng,
 }: CardProps) {
 	const { oneStore } = useStoresData();
 	const [isStoreLiked, setIsStoreLiked] = useState(isLiked);
+	// const [isMapOpen, setIsMapOpen] = useState(false);
 	const navigate = useNavigate();
 	const { pathname } = useLocation();
 
@@ -70,6 +76,11 @@ function Card({
 		navigate(pathname.includes('/store/find') ? `/store/find/${id}` : `/find/${id}`);
 		localStorage.setItem('oneStoreId', String(id));
 	};
+
+	// const handleMapClick = () => {
+		// e.stopPropagation();
+		// console.log(onOpenMap);
+	// };
 
 	return (
 		<div className={styled.card} key={id}>
@@ -107,6 +118,15 @@ function Card({
 								<div className={styled['card__infoWrap__detailWrap__detail--rating']}>
 									{rating ?? 0}
 								</div>
+								{/* google map */}
+								{/* {isMapOpen && (
+									<MapModal
+										onClose={handleMapClick}
+										storeName={storeName}
+										lat={lat || 0}
+										lng={lng || 0}
+									/>
+								)} */}
 
 								<div className={styled['card__infoWrap__detailWrap__detail--review']}>
 									{reviewCounts}則評論

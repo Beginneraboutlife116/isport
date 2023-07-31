@@ -10,8 +10,8 @@ export type CardData = {
 	reviewCounts: number;
 	introduction: string;
 	isLiked?: boolean;
-	lat: number;
-	lng: number;
+	// lat: number;
+	// lng: number;
 };
 
 type CardListProps = {
@@ -36,6 +36,8 @@ function CardList({ data, handleClick, handleOpenMap }: CardListProps) {
 						isLiked={item.isLiked}
 						onClick={handleClick}
 						onOpenMap={handleOpenMap}
+						// lat={item.lat}
+						// lng={item.lng}
 					/>
 				);
 			})}
