@@ -7,7 +7,7 @@
 	border-radius: 0.5rem;
 	box-shadow: 0 0 0 100vw rgb(#9eadba, 0.25);
 	padding: 2rem 1.25rem 1.5rem;
-	max-height: 75cqb;
+	max-height: 75%;
 	overflow-y: scroll;
 	position: fixed;
 
@@ -22,10 +22,28 @@
 	border-radius: 0.5rem;
 	box-shadow: 0 0 0 100vw rgb(#9eadba, 0.25);
 	padding: 2rem 1.25rem 1.5rem;
-	max-height: 75cqb;
+	max-height: 75%;
 
 	& .close {
 		right: 0;
+	}
+
+	&--map {
+		width: 40vw;
+		top: -25vh;
+
+		& h2 {
+			padding-block-end: 1rem;
+			border-bottom: 0.0625rem solid #9eadba;
+			margin-block-end: 1rem;
+		}
+
+		& iframe {
+			display: block;
+			width: 100%;
+			aspect-ratio: 16 / 9;
+			border: 0;
+		}
 	}
 }
 

@@ -3,6 +3,7 @@ import { IoMdCloseCircle } from 'react-icons/io';
 import Button from '../Button';
 import styles from './styles.module.scss';
 import DeleteModal from './DeleteModal';
+import MapModal from './MapModal';
 import FormDialogForClass from './FormDialogForClass';
 import FormDialogForPlan from './FormDialogForPlan';
 import FormDialogWithImage from './FormDialogWithImage';
@@ -10,16 +11,16 @@ import FormDialogWithImage from './FormDialogWithImage';
 type DialogProps = {
 	closeDialog: Function;
 	children: ReactNode;
-	dialogType?: string;
+	dialogType?: 'dialog' | 'modal';
 	className?: string;
 };
 
 const Dialog = forwardRef<HTMLDialogElement, DialogProps>(function Dialog(
-	{ closeDialog, children, dialogType },
+	{ closeDialog, children, dialogType = 'dialog', ...props },
 	ref,
 ) {
 	return (
-		<dialog ref={ref} className={styles[dialogType || 'dialog']}>
+		<dialog ref={ref} className={`${styles[dialogType]} ${props.className ?? ''}`.trim()}>
 			<Button type='button' onClick={() => closeDialog()} className={styles.close}>
 				<IoMdCloseCircle />
 			</Button>
@@ -29,4 +30,4 @@ const Dialog = forwardRef<HTMLDialogElement, DialogProps>(function Dialog(
 });
 
 export default Dialog;
-export { DeleteModal, FormDialogForClass, FormDialogWithImage, FormDialogForPlan };
+export { MapModal, DeleteModal, FormDialogForClass, FormDialogWithImage, FormDialogForPlan };

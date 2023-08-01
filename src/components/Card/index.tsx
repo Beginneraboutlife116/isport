@@ -6,7 +6,7 @@ import styled from './styles.module.scss';
 import { addLikeStore, deleteLikeStore } from '../../api/like';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useStoresData } from '../../contexts/findContext';
-import MapModal from '../MapModal';
+// import MapModal from '../MapModal';
 
 export type CardProps = {
 	id: number;
@@ -20,8 +20,9 @@ export type CardProps = {
 	email?: string;
 	phone?: string;
 	onClick?: (id: number) => void;
-	lat?: number;
-	lng?: number;
+	onOpenMap?: Function;
+	// lat?: number;
+	// lng?: number;
 };
 
 function Card({
@@ -36,12 +37,13 @@ function Card({
 	email,
 	phone,
 	onClick,
-	lat,
-	lng,
+	onOpenMap,
+	// lat,
+	// lng,
 }: CardProps) {
 	const { oneStore } = useStoresData();
 	const [isStoreLiked, setIsStoreLiked] = useState(isLiked);
-	const [isMapOpen, setIsMapOpen] = useState(false);
+	// const [isMapOpen, setIsMapOpen] = useState(false);
 	const navigate = useNavigate();
 	const { pathname } = useLocation();
 
@@ -75,10 +77,10 @@ function Card({
 		localStorage.setItem('oneStoreId', String(id));
 	};
 
-	const handleMapClick = (e: MouseEvent<HTMLDivElement>) => {
-		e.stopPropagation();
-		setIsMapOpen(!isMapOpen);
-	};
+	// const handleMapClick = () => {
+		// e.stopPropagation();
+		// console.log(onOpenMap);
+	// };
 
 	return (
 		<div className={styled.card} key={id}>
@@ -103,7 +105,11 @@ function Card({
 							<div className={styled.card__infoWrap__detailWrap__detail}>
 								<div
 									className={styled.card__infoWrap__detailWrap__detail__map}
-									onClick={handleMapClick}
+									onClick={() => {
+										if (onOpenMap) {
+											onOpenMap(id);
+										}
+									}}
 								>
 									<BiSolidMap className={styled['card__infoWrap__detailWrap__detail__map--logo']} />
 									<span>Map</span>
@@ -113,14 +119,14 @@ function Card({
 									{rating ?? 0}
 								</div>
 								{/* google map */}
-								{isMapOpen && (
+								{/* {isMapOpen && (
 									<MapModal
 										onClose={handleMapClick}
 										storeName={storeName}
 										lat={lat || 0}
 										lng={lng || 0}
 									/>
-								)}
+								)} */}
 
 								<div className={styled['card__infoWrap__detailWrap__detail--review']}>
 									{reviewCounts}則評論

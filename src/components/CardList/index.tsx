@@ -10,16 +10,17 @@ export type CardData = {
 	reviewCounts: number;
 	introduction: string;
 	isLiked?: boolean;
-	lat: number;
-	lng: number;
+	// lat: number;
+	// lng: number;
 };
 
 type CardListProps = {
 	data: CardData[];
 	handleClick?: (id: number) => void;
+	handleOpenMap?: Function;
 };
 
-function CardList({ data, handleClick }: CardListProps) {
+function CardList({ data, handleClick, handleOpenMap }: CardListProps) {
 	return (
 		<div className={styled.container}>
 			{data.map((item) => {
@@ -34,8 +35,9 @@ function CardList({ data, handleClick }: CardListProps) {
 						photo={item.photo}
 						isLiked={item.isLiked}
 						onClick={handleClick}
-						lat={item.lat}
-						lng={item.lng}
+						onOpenMap={handleOpenMap}
+						// lat={item.lat}
+						// lng={item.lng}
 					/>
 				);
 			})}
