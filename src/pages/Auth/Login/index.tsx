@@ -1,6 +1,7 @@
+import { LegacyRef, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm, FieldValues } from 'react-hook-form';
-import { BsGoogle, BsFacebook } from 'react-icons/bs';
+import { BsFacebook } from 'react-icons/bs';
 import Button from '../../../components/Button';
 import styles from '../styles.module.scss';
 import { EmailInput, PasswordInput } from '../../../components/FormInput';
@@ -8,7 +9,10 @@ import { login } from '../../../api/auth';
 import { useAuth } from '../../../contexts/authContext';
 import { isAxiosError } from '../../../util/helpers.ts';
 
+
 export default function LoginPage() {
+	const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+	const buttonRef = useRef<HTMLElement>();
 	const [, setAuth] = useAuth();
 	const navigate = useNavigate();
 	const {
@@ -18,6 +22,27 @@ export default function LoginPage() {
 		setError,
 		clearErrors,
 	} = useForm();
+
+	useEffect(() => {
+		const button = buttonRef.current;
+		if (button) {
+			google.accounts.id.initialize({
+				client_id: googleClientId,
+				callback: handleCredentialResponse,
+			});
+
+			google.accounts.id.renderButton(button, {
+				type: 'standard',
+				theme: 'outline',
+				size: 'large',
+			});
+
+			google.accounts.id.prompt();
+		}
+		function handleCredentialResponse(response: google.accounts.id.CredentialResponse) {
+			console.log('Encoded JWT ID token: ' + response.credential);
+		}
+	}, []);
 
 	async function onSubmit(data: FieldValues) {
 		try {
@@ -84,9 +109,11 @@ export default function LoginPage() {
 				</Link>
 			</div>
 			<div className={styles.auth__iconWrapper}>
-				<Button>
-					<BsGoogle className={`${styles['auth__icon--google']} ${styles.auth__icon}`} />
-				</Button>
+				<button
+					aria-label='google sign in'
+					ref={buttonRef as LegacyRef<HTMLButtonElement>}
+					className={styles.auth__google}
+				/>
 				<Button>
 					<BsFacebook className={`${styles['auth__icon--facebook']} ${styles.auth__icon}`} />
 				</Button>

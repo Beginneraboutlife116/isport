@@ -58,12 +58,14 @@
 			justify-items: center;
 		}
 
-		&--google {
-			color: #d3455b;
-		}
-
 		&--facebook {
 			color: #3488d9;
 		}
+	}
+
+	&__google {
+		padding: 0;
+		background-color: transparent;
+		border: 0;
 	}
 }
