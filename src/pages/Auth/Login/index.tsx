@@ -9,9 +9,9 @@ import { login } from '../../../api/auth';
 import { useAuth } from '../../../contexts/authContext';
 import { isAxiosError } from '../../../util/helpers.ts';
 
+const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
 export default function LoginPage() {
-	const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 	const buttonRef = useRef<HTMLElement>();
 	const [, setAuth] = useAuth();
 	const navigate = useNavigate();
@@ -27,7 +27,7 @@ export default function LoginPage() {
 		const button = buttonRef.current;
 		if (button) {
 			google.accounts.id.initialize({
-				client_id: googleClientId,
+				client_id: CLIENT_ID,
 				callback: handleCredentialResponse,
 			});
 
