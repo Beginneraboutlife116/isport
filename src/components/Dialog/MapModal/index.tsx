@@ -2,7 +2,7 @@ import { useRef, useEffect } from 'react';
 import Dialog from '..';
 import styles from '../styles.module.scss';
 
-const apiKey = import.meta.env.VITE_GOOGLE_EMBED_API;
+const EMBED_API_KEY = import.meta.env.VITE_GOOGLE_EMBED_API;
 
 type MapModal = {
 	closeDialog: Function;
@@ -46,7 +46,7 @@ export default function MapModal({
 			<iframe
 				title='map'
 				loading='lazy'
-				src={`https://www.google.com/maps/embed/v1/place?q=${address}&key=${apiKey}`}
+				src={`https://www.google.com/maps/embed/v1/place?q=${address}&key=${EMBED_API_KEY}`}
 			></iframe>
 		</Dialog>
 	);
