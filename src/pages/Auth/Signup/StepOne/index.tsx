@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { FieldValues, useForm } from 'react-hook-form';
-import { BsGoogle, BsFacebook } from 'react-icons/bs';
+// import { BsGoogle, BsFacebook } from 'react-icons/bs';
 import { EmailInput, PasswordInput, ConfirmPasswordInput } from '../../../../components/FormInput';
 import Button from '../../../../components/Button';
 import { signup } from '../../../../api/auth';
@@ -92,14 +92,14 @@ export default function SignupStepOnePage() {
 					<Button className={styles['auth__otherMethods--btn']}>商家註冊頁</Button>
 				</Link>
 			</div>
-			<div className={styles.auth__iconWrapper}>
+			{/* <div className={styles.auth__iconWrapper}>
 				<Button>
 					<BsGoogle className={`${styles['auth__icon--google']} ${styles.auth__icon}`} />
 				</Button>
 				<Button>
 					<BsFacebook className={`${styles['auth__icon--facebook']} ${styles.auth__icon}`} />
 				</Button>
-			</div>
+			</div> */}
 		</>
 	);
 }
