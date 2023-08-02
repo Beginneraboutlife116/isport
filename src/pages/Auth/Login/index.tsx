@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm, FieldValues } from 'react-hook-form';
-import { BsGoogle, BsFacebook } from 'react-icons/bs';
+// import { BsGoogle, BsFacebook } from 'react-icons/bs';
 import Button from '../../../components/Button';
 import styles from '../styles.module.scss';
 import { EmailInput, PasswordInput } from '../../../components/FormInput';
@@ -83,14 +83,14 @@ export default function LoginPage() {
 					<Button className={styles['auth__otherMethods--btn']}>商家登入頁</Button>
 				</Link>
 			</div>
-			<div className={styles.auth__iconWrapper}>
+			{/* <div className={styles.auth__iconWrapper}>
 				<Button>
 					<BsGoogle className={`${styles['auth__icon--google']} ${styles.auth__icon}`} />
 				</Button>
 				<Button>
 					<BsFacebook className={`${styles['auth__icon--facebook']} ${styles.auth__icon}`} />
 				</Button>
-			</div>
+			</div> */}
 		</>
 	);
 }
