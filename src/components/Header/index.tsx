@@ -18,7 +18,7 @@ export default function Header({
 }) {
 	return (
 		<header className={`${styles.header} ${className ?? ''}`.trim()}>
-			<div className={styles.header__wrapper}>
+			<div className={`container ${styles.header__wrapper}`}>
 				<div className={styles.header__logo}>
 					<img src={logo} alt='isport logo' />
 				</div>

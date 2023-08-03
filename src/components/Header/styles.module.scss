@@ -1,3 +1,5 @@
+@use '../../sass/abstracts/' as *;
+
 .header {
 	--clr-primary: #3fb1e4;
 
@@ -7,8 +9,8 @@
 	color: #fff;
 
 	&__wrapper {
-		width: min(100%, 80rem);
-		margin-inline: auto;
+		// width: min(100%, 80rem);
+		// margin-inline: auto;
 		display: flex;
 		align-items: center;
 		gap: 1.25rem;
@@ -46,4 +48,11 @@
 	&__btn {
 		@extend .header__linkWrap__link;
 	}
+}
+
+:global(.container) {
+	--padding: #{$container-padding};
+
+	width: min(100% - var(--padding) * 2, 80rem);
+	margin-inline: auto;
 }
