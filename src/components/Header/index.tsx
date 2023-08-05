@@ -17,14 +17,16 @@ export default function Header({
 	avatar: string;
 	onLogout: () => void;
 }) {
-	const [toggleNav, setToggleNav] = useState(false);
+	const [toggleNav, setToggleNav] = useState(true);
 	useEffect(() => {
 		window.addEventListener('resize', () => {
-			if (!toggleNav && window.innerWidth > 560) {
+			if (window.innerWidth <= 560) {
+				setToggleNav(false);
+			} else {
 				setToggleNav(true);
 			}
 		});
-	}, [toggleNav]);
+	}, []);
 
 	return (
 		<header className={`${styles.header} ${className ?? ''}`.trim()}>
@@ -44,7 +46,7 @@ export default function Header({
 					</label>
 				)}
 
-				{toggleNav && (
+				{role && toggleNav && (
 					<div className={styles.header__linkWrap}>
 						{role && (
 							<Link to={`/${role !== 'user' ? 'store/' : ''}find`}>
