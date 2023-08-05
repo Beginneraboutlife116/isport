@@ -1,29 +1,16 @@
-.container {
-	padding-top: 2rem;
-	margin-inline: auto;
-	width: fit-content;
+@use '../../sass/abstracts/' as *;
 
-	&:has(h2[data-title="no store"]) {
-		width: 80%;
-	}
-
-	&__wrap {
-		display: grid;
-		position: relative;
-	}
-
-	&__dialog {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		position: relative;
-	}
+.dialog-wrapper {
+	gap: 0.5rem;
+	display: grid;
+	grid-template-columns: 1fr auto;
+	justify-content: space-between;
 }
 
 .btn--openDialog {
-	width: 2.25rem;
 	aspect-ratio: 1;
 	padding-inline: 0;
+	width: 2.25rem;
 
 	& > svg {
 		width: 100%;

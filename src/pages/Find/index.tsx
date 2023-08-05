@@ -1,8 +1,9 @@
 import { useEffect, useState, ChangeEvent, KeyboardEvent, MouseEvent } from 'react';
 import CardList from '../../components/CardList';
 import SearchBar from '../../components/SearchBar';
+import Loading from '../../components/Loading';
 import { MapModal } from '../../components/Dialog';
-import styled from './styles.module.scss';
+// import styled from './styles.module.scss';
 import { fetchStoresData } from '../../api/stores';
 import { useStoresData } from '../../contexts/findContext';
 
@@ -77,8 +78,8 @@ function Find() {
 		setOneStore(false);
 	}, []);
 	return (
-		<div className={styled.container}>
-			<div className={styled.container__wrap}>
+		<div className='pt-32'>
+			<div className='container'>
 				<SearchBar
 					searchTerm={searchTerm}
 					handleInputChange={handleInputChange}
@@ -96,7 +97,8 @@ function Find() {
 
 				{isLoading ? (
 					// 旋轉動畫
-					<div className={styled.container__loading}></div>
+					// <div className={styled.container__loading}></div>
+					<Loading />
 				) : filteredData.length <= 0 ? (
 					<CardList data={storesData} handleOpenMap={handleOpenMap} />
 				) : (

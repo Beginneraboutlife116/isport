@@ -1,0 +1,17 @@
+@use '../abstracts/' as *;
+@use 'sass:map';
+
+.even-columns {
+	--card-gap: #{$card-gap};
+
+	display: grid;
+	gap: var(--card-gap, 1rem);
+
+	@include mq(min, sm) {
+		grid-template-columns: repeat(2, 1fr);
+	}
+
+	@include mq(min, md) {
+		grid-template-columns: repeat(3, 1fr);
+	}
+}
