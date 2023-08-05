@@ -1,3 +1,4 @@
+@use '../../../sass/abstracts/' as *;
 @use '../../Auth/styles.module.scss';
 
 .form {
@@ -18,7 +19,7 @@
 }
 
 .section {
-	max-width: 65%;
+	width: 65%;
 	margin-inline: auto;
 
 	&__title {
@@ -31,5 +32,9 @@
 			width: 1.5em;
 			height: 1.5em;
 		}
+	}
+
+	@include mq(max, md) {
+		width: 100%;
 	}
 }
