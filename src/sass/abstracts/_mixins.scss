@@ -27,15 +27,15 @@
 				$other-breakpoint
 			)
 		);
-		@media (min-width: $min) and (max-width: $max) {
+		@media (width > $min) and (width <= $max) {
 			@content;
 		}
 	} @else if ($min-max-or-between == 'min') {
-		@media (min-width: if(map.has-key($breakpoints, $breakpoint), map.get($breakpoints, $breakpoint), $breakpoint)) {
+		@media (width > if(map.has-key($breakpoints, $breakpoint), map.get($breakpoints, $breakpoint), $breakpoint)) {
 			@content;
 		}
 	} @else if ($min-max-or-between == 'max') {
-		@media (max-width: if(map.has-key($breakpoints, $breakpoint), map.get($breakpoints, $breakpoint), $breakpoint)) {
+		@media (width <= if(map.has-key($breakpoints, $breakpoint), map.get($breakpoints, $breakpoint), $breakpoint)) {
 			@content;
 		}
 	} @else {

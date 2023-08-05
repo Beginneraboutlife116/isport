@@ -1,8 +1,9 @@
-import styles from './styles.module.scss';
-import logo from '../../assets/logo.png';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { IconContext } from 'react-icons';
 import { BiSolidUserCircle } from 'react-icons/bi';
+import styles from './styles.module.scss';
+import logo from '../../assets/logo.png';
 import Button from '../Button';
 
 export default function Header({
@@ -16,6 +17,15 @@ export default function Header({
 	avatar: string;
 	onLogout: () => void;
 }) {
+	const [toggleNav, setToggleNav] = useState(false);
+	useEffect(() => {
+		window.addEventListener('resize', () => {
+			if (!toggleNav && window.innerWidth > 560) {
+				setToggleNav(true);
+			}
+		});
+	}, [toggleNav]);
+
 	return (
 		<header className={`${styles.header} ${className ?? ''}`.trim()}>
 			<div className={`container ${styles.header__wrapper}`}>
@@ -23,27 +33,40 @@ export default function Header({
 					<img src={logo} alt='isport logo' />
 				</div>
 
-				<div className={styles.header__linkWrap}>
-					{role && (
-						<Link to={`/${role !== 'user' ? 'store/' : ''}find`}>
-							<Button className={styles.header__linkWrap__link}>
-								{role === 'user' ? '找場館' : '所有場館'}
-							</Button>
-						</Link>
-					)}
+				{role && (
+					<label htmlFor='toggle-nav' className={styles.header__toggle}>
+						<input
+							type='checkbox'
+							id='toggle-nav'
+							className='hidden'
+							onChange={() => setToggleNav(!toggleNav)}
+						/>
+					</label>
+				)}
 
-					{role === 'user' && (
-						<Link to='/collection'>
-							<Button className={styles.header__linkWrap__link}>我的場館</Button>
-						</Link>
-					)}
+				{toggleNav && (
+					<div className={styles.header__linkWrap}>
+						{role && (
+							<Link to={`/${role !== 'user' ? 'store/' : ''}find`}>
+								<Button className={styles.header__linkWrap__link}>
+									{role === 'user' ? '找場館' : '所有場館'}
+								</Button>
+							</Link>
+						)}
 
-					{role === 'user' && (
-						<Link to='/reservation'>
-							<Button className={styles.header__linkWrap__link}>我的預約</Button>
-						</Link>
-					)}
-				</div>
+						{role === 'user' && (
+							<Link to='/collection'>
+								<Button className={styles.header__linkWrap__link}>我的場館</Button>
+							</Link>
+						)}
+
+						{role === 'user' && (
+							<Link to='/reservation'>
+								<Button className={styles.header__linkWrap__link}>我的預約</Button>
+							</Link>
+						)}
+					</div>
+				)}
 
 				{role && (
 					<>
@@ -60,7 +83,7 @@ export default function Header({
 								</Button>
 							</Link>
 						)}
-						<Link to={`/${role === 'user' ? 'user' : 'store'}/account`}>
+						<Link to={`/${role === 'user' ? 'user' : 'store'}/account`} data-role={role}>
 							<Button className={styles.header__btn}>我的帳戶</Button>
 						</Link>
 
