@@ -25,6 +25,7 @@
 
 	row-gap: 0.5rem;
 	margin-inline: auto;
+	font-size: clamp(0.75rem, calc(0.31rem + 2.22vw), 1rem);
 
 	&:hover {
 		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
@@ -50,14 +51,16 @@
 		grid-gap: 0.5rem;
 
 		padding: 1rem 0.5rem 0.5rem;
-    align-content: flex-start;
+		align-content: flex-start;
 
 		&--title {
 			font-size: 24px;
 			font-weight: bold;
 			// margin: 1rem 0.5rem;
 			// height: 50px;
-      min-height: 4rem;
+			min-height: 3.125rem;
+
+			font-size: clamp(1.125rem, calc(0.46rem + 3.33vw), 1.5rem);
 		}
 
 		&__detailWrap {

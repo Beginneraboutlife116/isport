@@ -38,9 +38,9 @@ function Card({
 	phone,
 	onClick,
 	onOpenMap,
-	// lat,
-	// lng,
-}: CardProps) {
+}: // lat,
+// lng,
+CardProps) {
 	const { oneStore } = useStoresData();
 	const [isStoreLiked, setIsStoreLiked] = useState(isLiked);
 	// const [isMapOpen, setIsMapOpen] = useState(false);
@@ -78,8 +78,8 @@ function Card({
 	};
 
 	// const handleMapClick = () => {
-		// e.stopPropagation();
-		// console.log(onOpenMap);
+	// e.stopPropagation();
+	// console.log(onOpenMap);
 	// };
 
 	return (
@@ -158,7 +158,7 @@ function Card({
 					</>
 				) : (
 					// one store version
-					<div className={styled.card__storeInfoWrap}>
+					<>
 						{/* store-name */}
 						<div className={styled['card__storeInfoWrap--title']}>
 							<span>{storeName}</span>
@@ -208,7 +208,7 @@ function Card({
 							<MdEmail className={styled['card__storeInfoWrap--emailIcon']} />
 							<span>{email}</span>
 						</div>
-					</div>
+					</>
 				)}
 			</div>
 		</div>

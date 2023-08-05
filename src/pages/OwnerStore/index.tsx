@@ -102,72 +102,76 @@ export default function OwnerStore() {
 	}
 
 	return (
-		<main className={styles.container}>
-			{isPending ? (
-				<Loading />
-			) : (
-				<Card
-					{...(store as CardProps)}
-					onClick={() => {
-						setEditingStore({
-							id: store?.id || 0,
-							storeName: store?.storeName || '',
-							introduction: store?.introduction || '',
-							photo: store?.photo || '',
-							address: store?.address || '',
-							email: store?.email || '',
-							phone: store?.phone || '',
-						});
-						setToggleImgDialog(!toggleImgDialog);
-					}}
-				/>
-			)}
-			<div className={styles.content}>
-				<nav className={styles.nav}>
-					<ul className={styles.nav__list}>
-						<li>
-							<Button
-								onClick={() => setCurrentNav('classes')}
-								className={styles.nav__btn}
-								data-selected={currentNav === 'classes'}
-							>
-								每週課表
-							</Button>
-						</li>
-						<li>
-							<Button
-								onClick={() => setCurrentNav('plans')}
-								className={styles.nav__btn}
-								data-selected={currentNav === 'plans'}
-							>
-								方案
-							</Button>
-						</li>
-						<li>
-							<Button
-								onClick={() => setCurrentNav('reviews')}
-								className={styles.nav__btn}
-								data-selected={currentNav === 'reviews'}
-							>
-								評價
-							</Button>
-						</li>
-					</ul>
-				</nav>
-				{currentNav === 'classes' && <OwnerClasses />}
-				{currentNav === 'plans' && <OwnerPlans />}
-				{currentNav === 'reviews' && <OwnerReviews />}
+		<main>
+			<div className='container pt-32'>
+				<div className={`${styles.container} mx-auto`}>
+					{isPending ? (
+						<Loading />
+					) : (
+						<Card
+							{...(store as CardProps)}
+							onClick={() => {
+								setEditingStore({
+									id: store?.id || 0,
+									storeName: store?.storeName || '',
+									introduction: store?.introduction || '',
+									photo: store?.photo || '',
+									address: store?.address || '',
+									email: store?.email || '',
+									phone: store?.phone || '',
+								});
+								setToggleImgDialog(!toggleImgDialog);
+							}}
+						/>
+					)}
+					<div className={styles.content}>
+						<nav className={styles.nav}>
+							<ul className={styles.nav__list}>
+								<li>
+									<Button
+										onClick={() => setCurrentNav('classes')}
+										className={styles.nav__btn}
+										data-selected={currentNav === 'classes'}
+									>
+										每週課表
+									</Button>
+								</li>
+								<li>
+									<Button
+										onClick={() => setCurrentNav('plans')}
+										className={styles.nav__btn}
+										data-selected={currentNav === 'plans'}
+									>
+										方案
+									</Button>
+								</li>
+								<li>
+									<Button
+										onClick={() => setCurrentNav('reviews')}
+										className={styles.nav__btn}
+										data-selected={currentNav === 'reviews'}
+									>
+										評價
+									</Button>
+								</li>
+							</ul>
+						</nav>
+						{currentNav === 'classes' && <OwnerClasses />}
+						{currentNav === 'plans' && <OwnerPlans />}
+						{currentNav === 'reviews' && <OwnerReviews />}
+					</div>
+					<FormDialogWithImage
+						isOpen={toggleImgDialog}
+						closeDialog={() => {
+							setEditingStore(undefined);
+							setToggleImgDialog(!toggleImgDialog);
+						}}
+						editingStore={editingStore}
+						handleDialogSubmit={editStoreIntoStore}
+						buttonText='修改送出'
+					/>
+				</div>
 			</div>
-			<FormDialogWithImage
-				isOpen={toggleImgDialog}
-				closeDialog={() => {
-					setEditingStore(undefined);
-					setToggleImgDialog(!toggleImgDialog);
-				}}
-				editingStore={editingStore}
-				handleDialogSubmit={editStoreIntoStore}
-				buttonText='修改送出'
-			/>
 		</main>
 	);
 }

@@ -1,5 +1,4 @@
 .container {
-	width: 20vw;
 	height: 15vh;
 	display: grid;
 	text-align: center;
@@ -11,7 +10,7 @@
 
 	&__wrapper {
 		display: flex;
-		justify-content: space-between;
+		gap: 1rem;
 	}
 
 	&__confirm {

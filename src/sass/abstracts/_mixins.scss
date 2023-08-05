@@ -31,11 +31,11 @@
 			@content;
 		}
 	} @else if ($min-max-or-between == 'min') {
-		@media (min-width: map.get($breakpoints, $breakpoint)) {
+		@media (min-width: if(map.has-key($breakpoints, $breakpoint), map.get($breakpoints, $breakpoint), $breakpoint)) {
 			@content;
 		}
 	} @else if ($min-max-or-between == 'max') {
-		@media (max-width: map.get($breakpoints, $breakpoint)) {
+		@media (max-width: if(map.has-key($breakpoints, $breakpoint), map.get($breakpoints, $breakpoint), $breakpoint)) {
 			@content;
 		}
 	} @else {
