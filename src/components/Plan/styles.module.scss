@@ -1,35 +1,40 @@
+@use '../../sass/abstracts/' as *;
+
 .container {
-  width: 100%;
-  display: grid;
-  grid-auto-flow: column;
-  border-bottom: 2px solid lightgray;
-  padding: 1rem 0;
-  align-items: center;
+	// width: 100%;
+	display: grid;
+	grid-auto-flow: column;
+	border-bottom: 2px solid lightgray;
+	padding: 1rem 0;
+	align-items: center;
 
-  &__course {
-    font-size: 20px;
+	&__course {
+		font-size: 20px;
+	}
 
-  }
-  
-  &__price {
-    display: grid;
-    grid-auto-flow: column;
-    align-items: center;
-    justify-self: end;
-    grid-gap: 6rem;
+	&__price {
+		display: grid;
+		grid-auto-flow: column;
+		align-items: center;
+		justify-self: end;
+		grid-gap: 6rem;
+		gap: clamp(3rem, calc(-5.25rem + 15vw), 6rem);
 
-    &--button {
-      outline: none;
-      border: 2px solid rgb(110, 110, 239);
-      background-color: lightblue;
-      color: white;
-      padding: 5px 1.5rem;
-      border-radius: 20px;
-      
-      &:hover {
-        background-color: rgb(23, 180, 233);
-      }
-    }
+		&--button {
+			outline: none;
+			border: 2px solid rgb(110, 110, 239);
+			background-color: lightblue;
+			color: white;
+			padding: 5px 1.5rem;
+			border-radius: 20px;
 
-  }
+			&:hover {
+				background-color: rgb(23, 180, 233);
+			}
+		}
+
+		@include mq(max, md) {
+			gap: clamp(1rem, calc(-1.86rem + 14.29vw), 6rem);
+		}
+	}
 }

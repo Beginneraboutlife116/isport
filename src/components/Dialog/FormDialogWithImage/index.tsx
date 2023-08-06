@@ -189,25 +189,26 @@ export default function FormDialogWithImage({
 						/>
 					</div>
 
-					<label htmlFor='photo' className={styles['btn--image']}>
-						請選擇檔案
-					</label>
-
-					<Button
-						type='button'
-						onClick={() => {
-							if (imgSrc) {
-								resetField('photo');
-								setImgInfo({ imgSrc: '', imgName: '' });
-								setError('photo', { type: 'required', message: '請選擇圖片' });
-								setPhotoChanged(true);
-							}
-						}}
-						className={styles['btn--reset']}
-						disabled={!imgSrc}
-					>
-						取消圖
-					</Button>
+					<div className={styles['uploadImage__btn-wrapper']}>
+						<label htmlFor='photo' className={styles['btn--image']}>
+							請選擇檔案
+						</label>
+						<Button
+							type='button'
+							onClick={() => {
+								if (imgSrc) {
+									resetField('photo');
+									setImgInfo({ imgSrc: '', imgName: '' });
+									setError('photo', { type: 'required', message: '請選擇圖片' });
+									setPhotoChanged(true);
+								}
+							}}
+							className={styles['btn--reset']}
+							disabled={!imgSrc}
+						>
+							清空圖
+						</Button>
+					</div>
 
 					<input
 						className='hidden'

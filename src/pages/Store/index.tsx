@@ -71,8 +71,8 @@ function Store() {
 	}, []);
 
 	return (
-		<div className={styled.container}>
-			<div className={styled.container__wrap}>
+		<div className='container pt-32'>
+			<div className={`${styled.container__wrap} mx-auto`}>
 				<Card
 					key={oneStoreData?.id}
 					id={oneStoreData ? oneStoreData.id : 0}

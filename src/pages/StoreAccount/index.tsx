@@ -170,8 +170,8 @@ function StoreAccount() {
 	}, []);
 
 	return (
-		<div className={styled.container}>
-			<div className={styled.container__wrap}>
+		<div className='container pt-32'>
+			<div className={`${styled.container__wrap} mx-auto`}>
 				{/* email account */}
 				<div className={styled['container__wrap--h2']}>
 					<span>我的帳戶</span>

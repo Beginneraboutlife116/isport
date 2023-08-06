@@ -1,23 +1,25 @@
 .searchWrap {
-  border: 2px solid gray;
-  border-radius: 5px;
-  cursor: pointer;
-  width: 350px;
-  height: 35px;
-  display: flex;
-  align-items: center;
-  margin-bottom: 1rem;
-  
-  &_search {
-    border: none;
-    background: none;
-    outline: none;
-    width: 90%;
-    height: 100%;
-    padding-left: 10px;
-  }
+	border: 2px solid gray;
+	border-radius: 5px;
+	cursor: pointer;
+	// width: 350px;
+	height: 35px;
+	display: flex;
+	align-items: center;
+	margin-bottom: 1rem;
 
-  &_icon {
-    color: gray;
-  }
+	max-width: 21.875rem;
+
+	&_search {
+		border: none;
+		background: none;
+		outline: none;
+		width: 90%;
+		height: 100%;
+		padding-left: 10px;
+	}
+
+	&_icon {
+		color: gray;
+	}
 }

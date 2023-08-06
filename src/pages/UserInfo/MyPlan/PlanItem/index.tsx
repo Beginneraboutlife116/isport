@@ -15,8 +15,8 @@ export default function PlanItem({ id, storeName, plans }: PlanItemProps) {
 		isPlanMissing && (
 			<li className={styles.item}>
 				<Link to={`/find/${id}`} onClick={() => localStorage.setItem('oneStoreId', id.toString())}>
-					<header className={`${styles.item__header} ${styles.item__row}`}>
-						<h3>{storeName}</h3>
+					<header className={`${styles.item__header}`}>
+						<h3 className={styles.item__row}>{storeName}</h3>
 					</header>
 				</Link>
 				<ul aria-label={`${storeName} 目前剩餘方案狀況`}>
@@ -25,17 +25,21 @@ export default function PlanItem({ id, storeName, plans }: PlanItemProps) {
 							if (plan.planType !== null && plan.planName !== null) {
 								return (
 									<Fragment key={plan.id}>
-										<div className={`${styles.item__planType} ${styles.item__row}`}>
-											<p>{plan.planName}</p>
-											<p>{plan.planType}</p>
+										<div className={styles.item__planType}>
+											<div className={styles.item__row}>
+												<p>{plan.planName}</p>
+												<p>{plan.planType}</p>
+											</div>
 										</div>
-										<div className={`${styles.item__planRest} ${styles.item__row}`}>
-											<p>{plan.planType.includes('次') ? '剩餘次數' : '剩餘天數'}</p>
-											<p>
-												{plan.planType.includes('次')
-													? `${plan.amountLeft} 次`
-													: `${plan.amountLeft} 天`}
-											</p>
+										<div className={styles.item__planRest}>
+											<div className={styles.item__row}>
+												<p>{plan.planType.includes('次') ? '剩餘次數' : '剩餘天數'}</p>
+												<p>
+													{plan.planType.includes('次')
+														? `${plan.amountLeft} 次`
+														: `${plan.amountLeft} 天`}
+												</p>
+											</div>
 										</div>
 									</Fragment>
 								);

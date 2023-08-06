@@ -3,7 +3,7 @@ import styled from './styles.module.scss';
 
 function Reservation() {
 	return (
-		<div className={styled.container}>
+		<div className='container pt-32'>
 			<div className={styled.container__wrap}>
 				<ReservationList />
 			</div>

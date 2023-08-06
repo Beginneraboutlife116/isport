@@ -33,6 +33,8 @@
 
     &--text {
       font-size: 22px;
+      
+      font-size: clamp(1.125rem, calc(1.03rem + 0.45vw), 1.375rem);
     }
 
     &--button {

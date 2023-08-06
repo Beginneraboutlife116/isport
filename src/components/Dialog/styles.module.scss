@@ -1,8 +1,9 @@
+@use '../../sass/abstracts/' as *;
+
 .dialog {
 	left: auto;
 	top: 10%;
 	right: 1rem;
-	width: 25cqi;
 	border: 0.0625rem solid #9eadba;
 	border-radius: 0.5rem;
 	box-shadow: 0 0 0 100vw rgb(#9eadba, 0.25);
@@ -10,10 +11,15 @@
 	max-height: 75%;
 	overflow-y: scroll;
 	position: fixed;
+	width: min(75vw, 25rem);
 
 	scrollbar-width: none;
 	&::-webkit-scrollbar {
 		display: none;
+	}
+
+	@include mq(max, 'sm') {
+		right: 0;
 	}
 }
 
@@ -50,7 +56,7 @@
 .close {
 	position: absolute;
 	top: 0.125rem;
-	right: -0.25rem;
+	right: 0;
 	color: #6558f5;
 	width: 2.5rem;
 	padding-inline: 0;
@@ -83,9 +89,10 @@
 		padding: 0.25em 0.5em;
 		border-radius: 0.125em;
 		border: 0.0625rem solid #9eadba;
-		font-size: 1rem;
+		font-size: clamp(0.75rem, calc(0.31rem + 2.22vw), 1rem);
 		color: #4b5c6c;
 		cursor: pointer;
+		margin-inline-start: 0.5rem;
 	}
 
 	&--reset {
@@ -133,9 +140,8 @@
 .uploadImage {
 	position: relative;
 	display: grid;
-	grid-template-columns: 2fr auto auto;
+	grid-template-columns: 2fr auto;
 	align-items: end;
-	gap: 0.5rem;
 
 	&__image {
 		object-fit: cover;
@@ -147,6 +153,13 @@
 		top: 100%;
 		color: #da1010;
 	}
+
+	@include mq(max, sm) {
+		&__btn-wrapper {
+			display: grid;
+			gap: 0.5rem;
+		}
+	}
 }
 
 .select {
@@ -157,6 +170,10 @@
 
 	&:focus {
 		outline-color: #6558f5;
+	}
+
+	@include mq(max, sm) {
+		width: 50%;
 	}
 }
 

@@ -206,49 +206,47 @@ export default function StoreFindPage() {
 	}
 
 	return (
-		<div className={styled.container}>
-			<div className={styled.container__wrap}>
-				<div className={styled.container__dialog}>
-					<SearchBar
-						searchTerm={searchTerm}
-						handleInputChange={(event) => setSearchTerm(event.target.value)}
-						handleKeyDown={(event) => {
-							if (event.keyCode !== 229 && event.key === 'Enter') {
-								handleSearch();
-							}
-						}}
-						handleSearchClick={handleSearch}
-					/>
-					<Button
-						onClick={() => setToggleDialog(!toggleDialog)}
-						className={styled['btn--openDialog']}
-					>
-						<BsPlusCircleFill />
-					</Button>
-					<FormDialogWithImage
-						isOpen={toggleDialog}
-						closeDialog={() => {
-							setEditingStore(undefined);
-							setToggleDialog(!toggleDialog);
-						}}
-						editingStore={editingStore}
-						handleDialogSubmit={editingStore ? editStoreIntoStores : createStoreIntoStores}
-						buttonText={editingStore ? '修改送出' : '送出'}
-					/>
-					<MapModal
-						isOpen={toggleMap}
-						closeDialog={() => setToggleMap(!toggleMap)}
-						storeMap={storeMap}
-					/>
-				</div>
-				{isPending ? (
-					<Loading />
-				) : filteredData.length ? (
-					<CardList data={filteredData} handleClick={handleEdit} handleOpenMap={handleOpenMap} />
-				) : (
-					<h2 data-title='no store'>沒有建立之場館</h2>
-				)}
+		<div className='container pt-32'>
+			<div className={styled['dialog-wrapper']}>
+				<SearchBar
+					searchTerm={searchTerm}
+					handleInputChange={(event) => setSearchTerm(event.target.value)}
+					handleKeyDown={(event) => {
+						if (event.keyCode !== 229 && event.key === 'Enter') {
+							handleSearch();
+						}
+					}}
+					handleSearchClick={handleSearch}
+				/>
+				<Button
+					onClick={() => setToggleDialog(!toggleDialog)}
+					className={styled['btn--openDialog']}
+				>
+					<BsPlusCircleFill />
+				</Button>
+				<FormDialogWithImage
+					isOpen={toggleDialog}
+					closeDialog={() => {
+						setEditingStore(undefined);
+						setToggleDialog(!toggleDialog);
+					}}
+					editingStore={editingStore}
+					handleDialogSubmit={editingStore ? editStoreIntoStores : createStoreIntoStores}
+					buttonText={editingStore ? '修改送出' : '送出'}
+				/>
+				<MapModal
+					isOpen={toggleMap}
+					closeDialog={() => setToggleMap(!toggleMap)}
+					storeMap={storeMap}
+				/>
 			</div>
+			{isPending ? (
+				<Loading />
+			) : filteredData.length ? (
+				<CardList data={filteredData} handleClick={handleEdit} handleOpenMap={handleOpenMap} />
+			) : (
+				<h2 data-title='no store'>沒有建立之場館</h2>
+			)}
 		</div>
 	);
 }

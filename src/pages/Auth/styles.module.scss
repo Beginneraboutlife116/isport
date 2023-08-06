@@ -1,5 +1,9 @@
+@use '../../sass/abstracts/' as *;
+
 .auth {
-	width: min(100%, 25rem);
+	--padding: #{$container-padding};
+
+	width: min(100% - var(--padding) * 2, 25rem);
 	margin-inline: auto;
 	text-align: center;
 

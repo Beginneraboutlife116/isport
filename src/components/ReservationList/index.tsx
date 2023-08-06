@@ -77,9 +77,7 @@ function Item({
 				{storeName}
 			</button>
 			<span className={styled.container__class}>{className}</span>
-			<button className={styled.container__cancel} onClick={handleCancel}>
-				取消
-			</button>
+			<button className={styled.container__cancel} onClick={handleCancel} aria-label='取消' />
 
 			{/* 按下取消鍵的彈出視窗 */}
 			{showModal && (

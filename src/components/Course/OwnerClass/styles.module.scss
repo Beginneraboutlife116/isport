@@ -1,3 +1,5 @@
+@use '../../../sass/abstracts/' as *;
+
 .course {
 	&[open] {
 		& summary {
@@ -13,7 +15,7 @@
 	cursor: pointer;
 	background-color: #61afdf;
 	list-style: none;
-	font-size: 1.125rem;
+	font-size: clamp(0.875rem, calc(0.43rem + 2.22vw), 1.125rem);
 	color: #1a1a1a;
 	position: relative;
 
@@ -59,10 +61,25 @@
 	&__right {
 		display: flex;
 		align-items: start;
-		gap: 5rem;
+		gap: clamp(1rem, calc(-19rem + 32vw), 5rem);
 
 		& p {
 			color: #38ae9f;
+		}
+
+		@include mq(max, 62.5em) {
+			flex-direction: column;
+			gap: 0;
+		}
+
+		@include mq(max, md) {
+			flex-direction: row;
+			gap: clamp(1rem, calc(-2.33rem + 13.33vw), 5rem);
+		}
+
+		@include mq(max, sm) {
+			flex-direction: column;
+			gap: 0;
 		}
 	}
 }

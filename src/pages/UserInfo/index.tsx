@@ -7,7 +7,7 @@ function UserInfoPage() {
 	const { pathname } = useLocation();
 
 	return (
-		<main className={styles.container}>
+		<main className='container pt-32'>
 			<h1 className='hidden'>我的帳戶資訊</h1>
 			<div className={styles.header}>
 				<Link

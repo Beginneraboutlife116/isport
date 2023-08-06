@@ -1,0 +1,44 @@
+@use 'sass:meta';
+@use 'sass:math';
+@use 'sass:map';
+@use 'breakpoints' as *;
+
+@mixin mq($min-max-or-between, $breakpoint, $other-breakpoint: '') {
+	@if (map.has-key($breakpoints, $breakpoint) == false and math.is-unitless($breakpoint)) {
+		@error 'The $breakpoint is invalid value and doesn\'t define in the $breakpoints list.';
+	}
+	@if ($other-breakpoint != '' and map.has-key($breakpoints, $other-breakpoint) == false) {
+		@error 'The $other-breakpoint is invalid value and doesn\'t define in the $breakpoints list.';
+	}
+	@if ($min-max-or-between == 'between' and $other-breakpoint != '') {
+		$min: math.min(
+			if(map.has-key($breakpoints, $breakpoint), map.get($breakpoints, $breakpoint), $breakpoint),
+			if(
+				map.has-key($breakpoints, $other-breakpoint),
+				map.get($breakpoints, $other-breakpoint),
+				$other-breakpoint
+			)
+		);
+		$max: math.max(
+			if(map.has-key($breakpoints, $breakpoint), map.get($breakpoints, $breakpoint), $breakpoint),
+			if(
+				map.has-key($breakpoints, $other-breakpoint),
+				map.get($breakpoints, $other-breakpoint),
+				$other-breakpoint
+			)
+		);
+		@media (width > $min) and (width <= $max) {
+			@content;
+		}
+	} @else if ($min-max-or-between == 'min') {
+		@media (width > if(map.has-key($breakpoints, $breakpoint), map.get($breakpoints, $breakpoint), $breakpoint)) {
+			@content;
+		}
+	} @else if ($min-max-or-between == 'max') {
+		@media (width <= if(map.has-key($breakpoints, $breakpoint), map.get($breakpoints, $breakpoint), $breakpoint)) {
+			@content;
+		}
+	} @else {
+		@error 'Something wrong happened.';
+	}
+}

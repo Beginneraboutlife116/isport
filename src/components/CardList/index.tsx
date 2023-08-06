@@ -1,5 +1,5 @@
 import Card from '../Card';
-import styled from './styles.module.scss';
+// import styled from './styles.module.scss';
 
 export type CardData = {
 	id: number;
@@ -22,7 +22,7 @@ type CardListProps = {
 
 function CardList({ data, handleClick, handleOpenMap }: CardListProps) {
 	return (
-		<div className={styled.container}>
+		<div className='even-columns'>
 			{data.map((item) => {
 				return (
 					<Card

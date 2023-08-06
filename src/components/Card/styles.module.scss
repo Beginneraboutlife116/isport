@@ -1,163 +1,172 @@
 @mixin rating {
-  background-color: lightcoral;
-  color: white;
-  border-radius: 20px;
-  padding: 5px 10px 5px 10px;
-  width: 20px;
-  text-align: center;
+	background-color: lightcoral;
+	color: white;
+	border-radius: 20px;
+	padding: 5px 10px 5px 10px;
+	width: 20px;
+	text-align: center;
 }
 
 %iconColor {
-  color: rgb(163, 163, 248);
+	color: rgb(163, 163, 248);
 }
 
 .card {
-  min-width: 400px;
-  max-width: 400px;
-  display: flex;
-  flex-direction: column;
-  border: 1px solid lightgray;
-  border-radius: 20px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  cursor: pointer;
-  transition: box-shadow 0.3s ease;
-  flex-grow: 1;
-  
-  &:hover {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-  }
+	// min-width: 400px;
+	max-width: 400px;
+	display: flex;
+	flex-direction: column;
+	border: 1px solid lightgray;
+	border-radius: 20px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+	cursor: pointer;
+	transition: box-shadow 0.3s ease;
+	// flex-grow: 1;
 
-  &__imgWrap {
-    width: 100%;
-    height: 50%;
-    padding-bottom: 0.5rem;
+	row-gap: 0.5rem;
+	margin-inline: auto;
+	font-size: clamp(0.75rem, calc(0.31rem + 2.22vw), 1rem);
 
-    &--img {
-      object-fit: cover;
-      width: 100%;
-      height: 100%;
-      border-radius: 20px 20px 0 0;
-    }
-  }
+	&:hover {
+		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+	}
 
-  &__infoWrap {
-    display: grid;
-    grid-gap: 0.5rem;
+	&__imgWrap {
+		// width: 100%;
+		// height: 50%;
+		// padding-bottom: 0.5rem;
 
-    &--title {
-      font-size: 24px;
-      font-weight: bold;
-      margin: 1rem 0.5rem;
-      height: 50px;
-    }
+		&--img {
+			object-fit: cover;
+			// width: 100%;
+			// height: 100%;
+			border-radius: 20px 20px 0 0;
 
-    &__detailWrap {
-      display: flex;
-      justify-content: space-between;
-      padding: 0 0.5rem;
-      align-items: center;
-      
-      &__detail {
-        display: grid;
-        grid-auto-flow: column;
-        grid-gap: 1rem;
+			aspect-ratio: 5 / 3;
+		}
+	}
 
-        &__map {
-          display: flex;
-          align-items: center;
-          background-color: lightblue;
-          border-radius: 5px;
-          color: white;
-          cursor: pointer;
-          transition: 0.3 ease-out;
-          padding: 5px;
+	&__infoWrap {
+		display: grid;
+		grid-gap: 0.5rem;
 
-          &:hover {
-            background-color: rgb(133, 133, 245);
-          }
+		padding: 1rem 0.5rem 0.5rem;
+		align-content: flex-start;
 
-          &--logo {
-            @extend %iconColor;
-          }
-        }
+		&--title {
+			font-size: 24px;
+			font-weight: bold;
+			// margin: 1rem 0.5rem;
+			// height: 50px;
+			min-height: 3.125rem;
 
-        &--rating {
-          @include rating;
-        }
+			font-size: clamp(1.125rem, calc(0.46rem + 3.33vw), 1.5rem);
+		}
 
-        &--review {
-          display: flex;
-          align-items: center;
-        }
-      }
-    }
+		&__detailWrap {
+			display: flex;
+			justify-content: space-between;
+			padding: 0 0.5rem;
+			align-items: center;
 
-    &--text {
-      display: -webkit-box;
-      -webkit-box-orient: vertical;
-      -webkit-line-clamp: 3;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      padding-left: 10px;
-      padding-right: 10px;
-    }
-  }
+			&__detail {
+				display: grid;
+				grid-auto-flow: column;
+				grid-gap: 1rem;
 
-  // store version
-  &__storeInfoWrap {
-    display: grid;
-    grid-gap: 1rem;
-    padding: 1rem;
+				&__map {
+					display: flex;
+					align-items: center;
+					background-color: lightblue;
+					border-radius: 5px;
+					color: white;
+					cursor: pointer;
+					transition: 0.3 ease-out;
+					padding: 5px;
 
-    &--title {
-      display: flex;
-      justify-content: space-between;
-      font-size: 24px;
-      font-weight: bold;
-      height: 50px;
-    }
+					&:hover {
+						background-color: rgb(133, 133, 245);
+					}
 
-    &--address {
-      display: flex;
-      align-items: center;
-    }
+					&--logo {
+						@extend %iconColor;
+					}
+				}
 
-    &--addressIcon {
-      @extend %iconColor;
-      font-size: 24px;
-    }
+				&--rating {
+					@include rating;
+				}
 
-    &--review {
-      display: flex;
-      align-items: center;
-    }
+				&--review {
+					display: flex;
+					align-items: center;
+				}
+			}
+		}
 
-    &--rating {
-      @include rating;
-      margin-right: 5px;
-    }
+		&--text {
+			display: -webkit-box;
+			-webkit-box-orient: vertical;
+			-webkit-line-clamp: 3;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			// padding-left: 10px;
+			// padding-right: 10px;
+		}
+	}
 
-    &--phone {
-      display: flex;
-      align-items: center
-    }
+	// store version
+	&__storeInfoWrap {
+		display: grid;
+		grid-gap: 1rem;
+		padding: 1rem;
 
-    &--phoneIcon {
-      @extend %iconColor;
-      margin-right: 5px;
-    }
+		&--title {
+			display: flex;
+			justify-content: space-between;
+			font-size: 24px;
+			font-weight: bold;
+			height: 50px;
+		}
 
-    &--email {
-      display: flex;
-      align-items: center
-    }
+		&--address {
+			display: flex;
+			align-items: center;
+		}
 
-    &--emailIcon {
-      @extend %iconColor;
-      margin-right: 5px;
-    }
+		&--addressIcon {
+			@extend %iconColor;
+			font-size: 24px;
+		}
 
-  }
+		&--review {
+			display: flex;
+			align-items: center;
+		}
 
-  
+		&--rating {
+			@include rating;
+			margin-right: 5px;
+		}
+
+		&--phone {
+			display: flex;
+			align-items: center;
+		}
+
+		&--phoneIcon {
+			@extend %iconColor;
+			margin-right: 5px;
+		}
+
+		&--email {
+			display: flex;
+			align-items: center;
+		}
+
+		&--emailIcon {
+			@extend %iconColor;
+			margin-right: 5px;
+		}
+	}
 }

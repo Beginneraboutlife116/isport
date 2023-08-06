@@ -68,7 +68,7 @@ function Collection() {
 	}, []);
 
 	return (
-		<div className={styled.container}>
+		<div className='container pt-32'>
 			<div className={styled.container__wrap}>
 				<SearchBar
 					handleInputChange={handleInputChange}
