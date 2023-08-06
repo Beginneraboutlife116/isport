@@ -171,6 +171,10 @@
 	&:focus {
 		outline-color: #6558f5;
 	}
+
+	@include mq(max, sm) {
+		width: 50%;
+	}
 }
 
 .label {

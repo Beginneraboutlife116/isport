@@ -121,10 +121,19 @@
     border-radius: 20px;
     width: 50px;
 
-    &:hover {
-      background-color: gray;
-    }
-  }
+		&:hover {
+			background-color: gray;
+		}
+
+		&::after {
+			content: '取消';
+			display: block;
+
+			@include mq(max, 28em) {
+				content: '✕';
+			}
+		}
+	}
 
 	&__modal {
 		position: fixed;
