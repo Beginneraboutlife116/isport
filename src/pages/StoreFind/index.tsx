@@ -29,7 +29,7 @@ export default function StoreFindPage() {
 		async function fetchOwnerStores() {
 			try {
 				setIsPending(true);
-				const response = await getOwnerStores();
+				const response = await getOwnerStores(0, 6);
 				setStoresData(response.data);
 				setFilteredData(response.data);
 			} catch (error) {

@@ -1,9 +1,10 @@
-import { useEffect, useState, SetStateAction } from 'react';
+import { useEffect, useState, SetStateAction, forwardRef } from 'react';
 import styled from './styles.module.scss';
 import { fetchStoreReview } from '../../api/stores';
 import Rating from '@mui/material/Rating';
 import Stack from '@mui/material/Stack';
 import { addComment } from '../../api/comment';
+import { LoadingPlaceholder } from '../Loading';
 
 export type ItemProps = {
 	id?: number;
@@ -19,9 +20,12 @@ type StarRatingProps = {
 	rating: number;
 };
 
-export function ReviewItem({ avatar, content, createdAt, nickname, rating }: ItemProps) {
+export const ReviewItem = forwardRef<HTMLDivElement, ItemProps>(function ReviewItem(
+	{ avatar, content, createdAt, nickname, rating },
+	reviewRef,
+) {
 	return (
-		<div className={styled.container__reviewWrap}>
+		<div className={styled.container__reviewWrap} ref={reviewRef}>
 			{/* info */}
 			<div className={styled.container__infoWrap}>
 				<div className={styled.container__info}>
@@ -43,6 +47,35 @@ export function ReviewItem({ avatar, content, createdAt, nickname, rating }: Ite
 			{/* text */}
 			<div className={styled.container__textWrap}>
 				<span className={styled['container__textWrap--text']}>評論內容 : {content}</span>
+			</div>
+		</div>
+	);
+});
+
+export function ReviewPlaceholder() {
+	return (
+		<div className={styled.container__reviewWrap}>
+			{/* info */}
+			<div className={styled.container__infoWrap}>
+				<div className={styled.container__info}>
+					<div>
+						<LoadingPlaceholder className={styled['container__info--avatar']} />
+					</div>
+
+					<div className={styled.container__name}>
+						<LoadingPlaceholder className={styled.placeholder} />
+						<LoadingPlaceholder className={styled.placeholder} />
+					</div>
+				</div>
+
+				<div className={styled.container__rating}>
+					<span>0</span>
+				</div>
+			</div>
+
+			{/* text */}
+			<div className={styled.container__textWrap}>
+				<LoadingPlaceholder className={styled['container__textWrap--text']} />
 			</div>
 		</div>
 	);
