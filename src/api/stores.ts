@@ -1,16 +1,17 @@
-import axios from "axios";
+import axios from 'axios';
 
 // const baseUrl = 'http://i-sport-api-env-1.eba-yaqmmn4t.ap-northeast-2.elasticbeanstalk.com/api';
-const baseUrl = 'https://isports.tw/api';
+// const baseUrl = 'https://isports.tw/api';
+const baseUrl = 'http://localhost:8080/api';
 
 // 取得所有場館
-export const fetchStoresData = async (authToken: string) => {
+export const fetchStoresData = async (authToken: string, page: number, pageSize: number) => {
 	try {
-		const response = await axios.get(`${baseUrl}/stores`, {
+		const response = await axios.get(`${baseUrl}/stores?page=${page}&pageSize=${pageSize}`, {
 			headers: {
 				Authorization: 'Bearer ' + authToken,
 			},
-		});    
+		});
 
 		return response.data;
 	} catch (error) {
@@ -26,7 +27,7 @@ export const fetchOneStoreData = async (authToken: string, storeId: number) => {
 				Authorization: 'Bearer ' + authToken,
 			},
 		});
-		
+
 		return response.data;
 	} catch (error) {
 		console.error('[Get Store Data Failed]: ', error);
@@ -41,13 +42,13 @@ export const fetchLikeStoresData = async (authToken: string) => {
 				Authorization: 'Bearer ' + authToken,
 			},
 		});
-		
+
 		return { res: response.data, noLikeStores: undefined };
 	} catch (error) {
 		console.error('[Get Like Stores Data Failed]: ', error);
-			
-		if((error as any).response.data.status === 'error') {
-			const noLikeStores = (error as any).response.data.status;		
+
+		if ((error as any).response.data.status === 'error') {
+			const noLikeStores = (error as any).response.data.status;
 			return { res: undefined, noLikeStores };
 		}
 	}
@@ -61,12 +62,12 @@ export const fetchCollectionData = async (authToken: string) => {
 				Authorization: 'Bearer ' + authToken,
 			},
 		});
-		
+
 		return { res: response.data, noReservations: undefined };
 	} catch (error) {
 		console.error('[Get Reservations Data Failed]: ', error);
-		if((error as any).response.data.status === 'error') {
-			const noReservations = (error as any).response.data.status;				
+		if ((error as any).response.data.status === 'error') {
+			const noReservations = (error as any).response.data.status;
 			return { res: undefined, noReservations };
 		}
 	}
@@ -80,7 +81,7 @@ export const fetchStoreClasses = async (authToken: string, storeId: number) => {
 				Authorization: 'Bearer ' + authToken,
 			},
 		});
-		
+
 		return response.data;
 	} catch (error) {
 		console.error('[Get Classes Data Failed]: ', error);
@@ -95,7 +96,7 @@ export const fetchStorePlan = async (authToken: string, storeId: number) => {
 				Authorization: 'Bearer ' + authToken,
 			},
 		});
-		
+
 		return response.data;
 	} catch (error) {
 		console.error('[Get Plans Data Failed]: ', error);
@@ -103,16 +104,15 @@ export const fetchStorePlan = async (authToken: string, storeId: number) => {
 };
 
 // 取得場館評價
-export const fetchStoreReview = async (authToken: string, storeId: number) => {
-	try {
-		const response = await axios.get(`${baseUrl}/stores/${storeId}/reviews`, {
-			headers: {
-				Authorization: 'Bearer ' + authToken,
-			},
-		});
-		
-		return response.data;
-	} catch (error) {
-		console.error('[Get Plans Data Failed]: ', error);
-	}
+export const fetchStoreReview = async (
+	authToken: string,
+	storeId: number,
+	page: number,
+	pageSize: number,
+) => {
+	return axios.get(`${baseUrl}/stores/${storeId}/reviews?page=${page}&pageSize=${pageSize}`, {
+		headers: {
+			Authorization: 'Bearer ' + authToken,
+		},
+	});
 };

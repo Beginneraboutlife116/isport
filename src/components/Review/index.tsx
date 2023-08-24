@@ -1,10 +1,13 @@
-import { useEffect, useState, SetStateAction, forwardRef } from 'react';
+import { useEffect, useState, SetStateAction, forwardRef, useRef } from 'react';
+import { useParams } from 'react-router-dom';
 import styled from './styles.module.scss';
 import { fetchStoreReview } from '../../api/stores';
 import Rating from '@mui/material/Rating';
 import Stack from '@mui/material/Stack';
 import { addComment } from '../../api/comment';
 import { LoadingPlaceholder } from '../Loading';
+import useIntersectionObserver from '../../util/useIntersectionObserver';
+import { isAxiosError } from '../../util/helpers';
 
 export type ItemProps = {
 	id?: number;
@@ -102,8 +105,28 @@ function Review() {
 	const [reviews, setReviews] = useState<ItemProps[]>([]);
 	const [rating, setRating] = useState(0);
 	const [comment, setComment] = useState('');
-	const oneStoreId = localStorage.getItem('oneStoreId');
-	const storeIdNumber = Number(oneStoreId);
+	const { id } = useParams();
+	const REVIEWS_PER_PAGE = 3;
+	const [reviewsPage, setReviewsPage] = useState<number>(0);
+	const [isPending, setIsPending] = useState<boolean>(false);
+	const [noDataMessage, setNoDataMessage] = useState<string>('');
+	const rootRef = useRef<HTMLDivElement>(null);
+	const [hasMounted, setHasMounted] = useState<boolean>(false);
+	const [hasMoreReviews, setHasMoreReviews] = useState<boolean>(true);
+	const lastReviewRef = useIntersectionObserver(
+		(entries) => {
+			if (entries[0].isIntersecting && hasMoreReviews) {
+				setReviewsPage(reviewsPage + 1);
+			}
+		},
+		{
+			root: rootRef.current,
+			threshold: 0.5,
+		},
+		hasMounted,
+	);
+
+	const storeIdNumber = parseInt(id as string, 10);
 	const storedData = localStorage.getItem('isport');
 	let dataObject: { token?: string } = {};
 	if (storedData) {
@@ -122,10 +145,23 @@ function Review() {
 		// 送出評論
 		if (rating !== 0 && comment !== '') {
 			await addComment(authToken || '', storeIdNumber, rating, comment);
-			const storeReview = await fetchStoreReview(authToken || '', storeIdNumber);
-			setReviews(storeReview);
-			setRating(0);
-			setComment('');
+			try {
+				const response = await fetchStoreReview(
+					authToken || '',
+					storeIdNumber,
+					reviewsPage,
+					REVIEWS_PER_PAGE,
+				);
+				if (response.status === 200) {
+					setReviews(response.data);
+					setReviewsPage(0);
+					setRating(0);
+					setComment('');
+					setHasMoreReviews(true);
+				}
+			} catch (error) {
+				console.error(error);
+			}
 		}
 	};
 
@@ -133,29 +169,60 @@ function Review() {
 		const fetchData = async () => {
 			try {
 				// 取得場館評論
-				const storeReview = await fetchStoreReview(authToken || '', storeIdNumber);
-				setReviews(storeReview);
+				setIsPending(true);
+				const response = await fetchStoreReview(
+					authToken || '',
+					storeIdNumber,
+					reviewsPage,
+					REVIEWS_PER_PAGE,
+				);
+				if (response.status === 200) {
+					setReviews([...reviews, ...response.data]);
+					if (response.data.length < REVIEWS_PER_PAGE) {
+						setHasMoreReviews(false);
+					}
+				}
 			} catch (error) {
-				console.log(error);
+				if (isAxiosError(error)) {
+					if (!reviews.length) {
+						setNoDataMessage(error.response?.data.message);
+					}
+				}
+			} finally {
+				setIsPending(false);
 			}
 		};
 		fetchData();
-	}, []);
+	}, [storeIdNumber, reviewsPage, REVIEWS_PER_PAGE, authToken]);
+
+	useEffect(() => {
+		setHasMounted(!isPending && !noDataMessage);
+	}, [isPending, noDataMessage]);
 
 	return (
 		<div className={styled.container}>
 			{/* Reviews */}
-			<div className={styled.container__reviewCon}>
-				{reviews.map((item) => (
-					<ReviewItem
-						key={item.id}
-						avatar={item.avatar}
-						content={item.content}
-						createdAt={item.createdAt}
-						nickname={item.nickname}
-						rating={item.rating}
-					/>
-				))}
+			<div className={styled.container__reviewCon} ref={rootRef}>
+				{isPending ? (
+					reviews.length ? (
+						<ReviewPlaceholder />
+					) : (
+						new Array(REVIEWS_PER_PAGE)
+							.fill(null)
+							.map(() => <ReviewPlaceholder key={crypto.randomUUID()} />)
+					)
+				) : null}
+				{noDataMessage ? (
+					<p>{noDataMessage}</p>
+				) : (
+					reviews.map((item, index) => {
+						if (index % ((REVIEWS_PER_PAGE - 1) * (reviewsPage + 1)) === 0) {
+							return <ReviewItem key={item.id} {...item} ref={lastReviewRef} />;
+						} else {
+							return <ReviewItem key={item.id} {...item} />;
+						}
+					})
+				)}
 			</div>
 
 			{/* send review */}

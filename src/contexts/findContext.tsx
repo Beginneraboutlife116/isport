@@ -13,6 +13,10 @@ interface FindContextProps {
 	setOneStore: React.Dispatch<React.SetStateAction<boolean>>;
 	classData: any[];
 	setClassData: React.Dispatch<React.SetStateAction<any[]>>;
+	storesPage: number;
+	setStoresPage: React.Dispatch<React.SetStateAction<number>>;
+	hasMoreStores: boolean;
+	setHasMoreStores: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const FindContext = createContext<FindContextProps>({
@@ -28,6 +32,10 @@ const FindContext = createContext<FindContextProps>({
 	setOneStore: () => {},
 	classData: [],
 	setClassData: () => {},
+	storesPage: 0,
+	setStoresPage: () => {},
+	hasMoreStores: true,
+	setHasMoreStores: () => {},
 });
 
 export const FindProvider = ({ children }: { children: ReactNode }) => {
@@ -37,6 +45,9 @@ export const FindProvider = ({ children }: { children: ReactNode }) => {
 	const [filteredLike, setFilteredLike] = useState<any[]>([]);
 	const [oneStore, setOneStore] = useState(false);
 	const [classData, setClassData] = useState<any[]>([]);
+	// for lazy loading in find page
+	const [storesPage, setStoresPage] = useState<number>(0);
+	const [hasMoreStores, setHasMoreStores] = useState<boolean>(true);
 
 	const value = {
 		storesData,
@@ -51,6 +62,10 @@ export const FindProvider = ({ children }: { children: ReactNode }) => {
 		setOneStore,
 		classData,
 		setClassData,
+		storesPage,
+		setStoresPage,
+		hasMoreStores,
+		setHasMoreStores,
 	};
 
 	return <FindContext.Provider value={value}>{children}</FindContext.Provider>;

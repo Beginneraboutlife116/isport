@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { isAxiosError } from '../../../util/helpers';
 import { getStoreReviews } from '../../../api/owner';
 import { ReviewItem, ItemProps, ReviewPlaceholder } from '../../../components/Review';
+import useIntersectionObserver from '../../../util/useIntersectionObserver';
 import styles from '../styles.module.scss';
 
 export default function OwnerReviews() {
@@ -10,12 +11,20 @@ export default function OwnerReviews() {
 	const [reviews, setReviews] = useState<ItemProps[]>([]);
 	const [noDataMessage, setNoDataMessage] = useState<string>();
 	const [isPending, setIsPending] = useState(false);
-	const observerRef = useRef<IntersectionObserver>();
-	const sectionRef = useRef<HTMLDivElement>(null);
-	const lastReviewRef = useRef<HTMLDivElement>(null);
-	const reviewsPerPage = 5;
+	const REVIEWS_PER_PAGE = 4;
 	const [reviewsPage, setReviewsPage] = useState(0);
 	const [hasMoreReviews, setHasMoreReviews] = useState(true);
+	const sectionRef = useRef<HTMLDivElement>(null);
+	const [hasMounted, setHasMounted] = useState<boolean>(false);
+	const lastReviewRef = useIntersectionObserver(
+		(entries) => {
+			if (entries[0].isIntersecting && hasMoreReviews) {
+				setReviewsPage(reviewsPage + 1);
+			}
+		},
+		{ root: sectionRef.current, rootMargin: '10px', threshold: 1 },
+		hasMounted,
+	);
 
 	useEffect(() => {
 		async function fetchReviews() {
@@ -24,16 +33,12 @@ export default function OwnerReviews() {
 				const response = await getStoreReviews(
 					Number.parseInt(storeId as string, 10),
 					reviewsPage,
-					reviewsPerPage,
+					REVIEWS_PER_PAGE,
 				);
 				if (response.status === 200) {
-					if (reviews.length) {
-						setReviews([...reviews, ...response.data]);
-						if (response.data.length < reviewsPerPage) {
-							setHasMoreReviews(false);
-						}
-					} else {
-						setReviews(response.data);
+					setReviews([...reviews, ...response.data]);
+					if (response.data.length < REVIEWS_PER_PAGE) {
+						setHasMoreReviews(false);
 					}
 				}
 			} catch (error) {
@@ -52,29 +57,10 @@ export default function OwnerReviews() {
 		}
 
 		fetchReviews();
-	}, [storeId, reviewsPage, reviewsPerPage]);
+	}, [storeId, reviewsPage, REVIEWS_PER_PAGE]);
 
 	useEffect(() => {
-		if (!isPending && !noDataMessage) {
-			if (window) {
-				if (sectionRef.current && lastReviewRef.current) {
-					const options = {
-						root: sectionRef.current,
-						rootMargin: '0px',
-						threshold: 0,
-					};
-					observerRef.current = new IntersectionObserver((entries) => {
-						if (entries[0].isIntersecting && hasMoreReviews) {
-							setReviewsPage(reviewsPage + 1);
-						}
-					}, options);
-					observerRef.current.observe(lastReviewRef.current);
-				}
-			}
-		}
-		return () => {
-			observerRef.current?.disconnect();
-		};
+		setHasMounted(!isPending && !noDataMessage);
 	}, [isPending, noDataMessage]);
 
 	return (
@@ -85,7 +71,7 @@ export default function OwnerReviews() {
 				</p>
 			) : (
 				reviews.map((review, index) => {
-					if (index % (reviewsPerPage - 1) === 0) {
+					if (index % ((REVIEWS_PER_PAGE - 1) * (reviewsPage + 1)) === 0) {
 						return <ReviewItem key={review.id} {...review} ref={lastReviewRef} />;
 					} else {
 						return <ReviewItem key={review.id} {...review} />;
@@ -96,7 +82,7 @@ export default function OwnerReviews() {
 				reviews.length ? (
 					<ReviewPlaceholder />
 				) : (
-					new Array(reviewsPerPage)
+					new Array(REVIEWS_PER_PAGE)
 						.fill(null)
 						.map(() => <ReviewPlaceholder key={crypto.randomUUID()} />)
 				)
