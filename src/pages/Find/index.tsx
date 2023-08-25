@@ -137,7 +137,7 @@ function Find() {
 				<div className='even-columns'>
 					{filteredData.length
 						? filteredData.map((item, index) => {
-								if (index % ((STORES_PER_PAGE - 1) * (storesPage + 1)) === 0) {
+								if ((index + 1) % (STORES_PER_PAGE * (storesPage + 1)) === 0) {
 									return (
 										<Card key={item.id} {...item} onOpenMap={handleOpenMap} ref={lastStoreRef} />
 									);
@@ -146,7 +146,7 @@ function Find() {
 								}
 						  })
 						: storesData.map((item, index) => {
-								if (index % ((STORES_PER_PAGE - 1) * (storesPage + 1)) === 0) {
+								if ((index + 1) % (STORES_PER_PAGE * (storesPage + 1)) === 0) {
 									return (
 										<Card key={item.id} {...item} onOpenMap={handleOpenMap} ref={lastStoreRef} />
 									);

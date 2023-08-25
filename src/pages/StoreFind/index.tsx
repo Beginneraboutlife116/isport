@@ -1,7 +1,6 @@
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { BsPlusCircleFill } from 'react-icons/bs';
 import { UseFormReset, FieldValues, UseFormSetError } from 'react-hook-form';
-import CardList from '../../components/CardList';
 import SearchBar from '../../components/SearchBar';
 import Button from '../../components/Button';
 import { StoreType } from '../../components/Dialog/FormDialogWithImage';
@@ -9,7 +8,8 @@ import { CardData } from '../../components/CardList';
 import { MapModal, FormDialogWithImage } from '../../components/Dialog';
 import { getOwnerStores, getOneStore, createStore, updateStore } from '../../api/owner';
 import { isAxiosError } from '../../util/helpers';
-import Loading from '../../components/Loading';
+import useIntersectionObserver from '../../util/useIntersectionObserver';
+import Card, { CardPlaceholder } from '../../components/Card';
 import styled from './styles.module.scss';
 
 export default function StoreFindPage() {
@@ -24,17 +24,44 @@ export default function StoreFindPage() {
 		address: '',
 		storeName: '',
 	});
+	const [storesPage, setStoresPage] = useState<number>(0);
+	const [hasMounted, setHasMounted] = useState<boolean>(false);
+	const [hasMoreStores, setHasMoreStores] = useState<boolean>(true);
+	const [noDataMessage, setNoDataMessage] = useState<string>('');
+	const lastStoreRef = useIntersectionObserver(
+		(entries) => {
+			if (entries[0].isIntersecting && hasMoreStores) {
+				setStoresPage(storesPage + 1);
+			}
+		},
+		{
+			rootMargin: '10px',
+			threshold: 1,
+		},
+		hasMounted,
+	);
+	const STORES_PER_PAGE = 6;
 
 	useEffect(() => {
 		async function fetchOwnerStores() {
 			try {
 				setIsPending(true);
-				const response = await getOwnerStores(0, 6);
-				setStoresData(response.data);
-				setFilteredData(response.data);
+				const response = await getOwnerStores(storesPage, STORES_PER_PAGE);
+				if (storesData.length) {
+					setStoresData([...storesData, ...response.data]);
+					setFilteredData([...filteredData, ...response.data]);
+				} else {
+					setStoresData(response.data);
+					setFilteredData(response.data);
+				}
 			} catch (error) {
 				if (isAxiosError(error)) {
 					console.error(error);
+					if (storesData.length) {
+						setHasMoreStores(false);
+					} else {
+						setNoDataMessage(error.response?.data.message);
+					}
 				} else {
 					console.error(error);
 				}
@@ -43,7 +70,11 @@ export default function StoreFindPage() {
 			}
 		}
 		fetchOwnerStores();
-	}, []);
+	}, [storesPage]);
+
+	useEffect(() => {
+		setHasMounted(!isPending && filteredData.length !== 0);
+	}, [isPending, filteredData]);
 
 	function handleSearch() {
 		if (searchTerm) {
@@ -108,13 +139,13 @@ export default function StoreFindPage() {
 					lat: 0,
 					lng: 0,
 				};
-				setStoresData([...storesData, fakeStore]);
+				setStoresData([fakeStore, ...storesData]);
 				if (searchTerm) {
 					if ((data.get('storeName') as string).includes(searchTerm)) {
-						setFilteredData([...filteredData, fakeStore]);
+						setFilteredData([fakeStore, ...filteredData]);
 					}
 				} else {
-					setFilteredData([...filteredData, fakeStore]);
+					setFilteredData([fakeStore, ...filteredData]);
 				}
 				reset();
 				setToggleDialog(!toggleDialog);
@@ -240,13 +271,36 @@ export default function StoreFindPage() {
 					storeMap={storeMap}
 				/>
 			</div>
-			{isPending ? (
-				<Loading />
-			) : filteredData.length ? (
-				<CardList data={filteredData} handleClick={handleEdit} handleOpenMap={handleOpenMap} />
-			) : (
-				<h2 data-title='no store'>沒有建立之場館</h2>
-			)}
+			<div className='even-columns'>
+				{filteredData.length ? (
+					filteredData.map((item, index) => {
+						if ((index + 1) % (STORES_PER_PAGE * (storesPage + 1)) === 0) {
+							return (
+								<Card
+									key={item.id}
+									{...item}
+									onClick={handleEdit}
+									onOpenMap={handleOpenMap}
+									ref={lastStoreRef}
+								/>
+							);
+						} else {
+							return (
+								<Card key={item.id} {...item} onClick={handleEdit} onOpenMap={handleOpenMap} />
+							);
+						}
+					})
+				) : noDataMessage ? (
+					<h2>{noDataMessage}</h2>
+				) : null}
+				{isPending
+					? filteredData.length
+						? new Array(3).fill(null).map(() => <CardPlaceholder key={crypto.randomUUID()} />)
+						: new Array(STORES_PER_PAGE)
+								.fill(null)
+								.map(() => <CardPlaceholder key={crypto.randomUUID()} />)
+					: null}
+			</div>
 		</div>
 	);
 }

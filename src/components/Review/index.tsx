@@ -216,7 +216,7 @@ function Review() {
 					<p>{noDataMessage}</p>
 				) : (
 					reviews.map((item, index) => {
-						if (index % ((REVIEWS_PER_PAGE - 1) * (reviewsPage + 1)) === 0) {
+						if ((index + 1) % (REVIEWS_PER_PAGE * (reviewsPage + 1)) === 0) {
 							return <ReviewItem key={item.id} {...item} ref={lastReviewRef} />;
 						} else {
 							return <ReviewItem key={item.id} {...item} />;

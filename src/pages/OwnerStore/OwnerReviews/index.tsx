@@ -71,7 +71,7 @@ export default function OwnerReviews() {
 				</p>
 			) : (
 				reviews.map((review, index) => {
-					if (index % ((REVIEWS_PER_PAGE - 1) * (reviewsPage + 1)) === 0) {
+					if ((index + 1) % (REVIEWS_PER_PAGE * (reviewsPage + 1)) === 0) {
 						return <ReviewItem key={review.id} {...review} ref={lastReviewRef} />;
 					} else {
 						return <ReviewItem key={review.id} {...review} />;
