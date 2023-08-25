@@ -1,21 +1,45 @@
 import { useEffect, useState, ChangeEvent, KeyboardEvent, MouseEvent } from 'react';
-import CardList from '../../components/CardList';
 import SearchBar from '../../components/SearchBar';
-import Loading from '../../components/Loading';
 import { MapModal } from '../../components/Dialog';
-// import styled from './styles.module.scss';
 import { fetchStoresData } from '../../api/stores';
 import { useStoresData } from '../../contexts/findContext';
+import Card, { CardPlaceholder } from '../../components/Card';
+import useIntersectionObserver from '../../util/useIntersectionObserver';
 
 function Find() {
-	const { storesData, setStoresData, filteredData, setFilteredData, setOneStore } = useStoresData();
-	const [isLoading, setIsLoading] = useState(true);
+	const {
+		storesData,
+		setStoresData,
+		filteredData,
+		setFilteredData,
+		setOneStore,
+		storesPage,
+		setStoresPage,
+		hasMoreStores,
+		setHasMoreStores,
+	} = useStoresData();
+	const [isLoading, setIsLoading] = useState(false);
 	const [searchTerm, setSearchTerm] = useState('');
 	const [toggleMap, setToggleMap] = useState(false);
 	const [storeMap, setStoreMap] = useState<{ address: string; storeName: string }>({
 		address: '',
 		storeName: '',
 	});
+	const [hasMounted, setHasMounted] = useState<boolean>(false);
+	const lastStoreRef = useIntersectionObserver(
+		(entries) => {
+			if (entries[0].isIntersecting && hasMoreStores) {
+				setStoresPage(storesPage + 1);
+			}
+		},
+		{
+			rootMargin: '10px',
+			threshold: 1,
+		},
+		hasMounted,
+	);
+
+	const STORES_PER_PAGE = 9;
 
 	const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
 		e.preventDefault();
@@ -65,18 +89,33 @@ function Find() {
 				}
 				const authToken = dataObject.token;
 
+				setIsLoading(true);
 				// 取得所有場館
-				const res = await fetchStoresData(authToken || '');
-
-				setStoresData(res);
-				setIsLoading(false);
+				if (hasMoreStores) {
+					const res = await fetchStoresData(authToken || '', storesPage, STORES_PER_PAGE);
+					if (storesData.length === 0 && hasMoreStores) {
+						setStoresData(res);
+					} else if (storesData.length !== 0 && hasMoreStores) {
+						setStoresData([...storesData, ...res]);
+					}
+					if (res.length < STORES_PER_PAGE) {
+						setHasMoreStores(false);
+					}
+				}
 			} catch (error) {
 				console.log(error);
+			} finally {
+				setIsLoading(false);
 			}
 		};
 		fetchData();
 		setOneStore(false);
-	}, []);
+	}, [storesPage, STORES_PER_PAGE]);
+
+	useEffect(() => {
+		setHasMounted(!isLoading && storesData.length !== 0);
+	}, [isLoading]);
+
 	return (
 		<div className='pt-32'>
 			<div className='container'>
@@ -95,15 +134,34 @@ function Find() {
 					storeMap={storeMap}
 				/>
 
-				{isLoading ? (
-					// 旋轉動畫
-					// <div className={styled.container__loading}></div>
-					<Loading />
-				) : filteredData.length <= 0 ? (
-					<CardList data={storesData} handleOpenMap={handleOpenMap} />
-				) : (
-					<CardList data={filteredData} handleOpenMap={handleOpenMap} />
-				)}
+				<div className='even-columns'>
+					{filteredData.length
+						? filteredData.map((item, index) => {
+								if ((index + 1) % (STORES_PER_PAGE * (storesPage + 1)) === 0) {
+									return (
+										<Card key={item.id} {...item} onOpenMap={handleOpenMap} ref={lastStoreRef} />
+									);
+								} else {
+									return <Card key={item.id} {...item} onOpenMap={handleOpenMap} />;
+								}
+						  })
+						: storesData.map((item, index) => {
+								if ((index + 1) % (STORES_PER_PAGE * (storesPage + 1)) === 0) {
+									return (
+										<Card key={item.id} {...item} onOpenMap={handleOpenMap} ref={lastStoreRef} />
+									);
+								} else {
+									return <Card key={item.id} {...item} onOpenMap={handleOpenMap} />;
+								}
+						  })}
+					{isLoading
+						? storesData.length
+							? new Array(3).fill(null).map(() => <CardPlaceholder key={crypto.randomUUID()} />)
+							: new Array(STORES_PER_PAGE)
+									.fill(null)
+									.map(() => <CardPlaceholder key={crypto.randomUUID()} />)
+						: null}
+				</div>
 			</div>
 		</div>
 	);

@@ -1,11 +1,12 @@
 import { BiSolidMap } from 'react-icons/bi';
 import { BsHeart, BsHeartFill, BsFillTelephoneFill } from 'react-icons/bs';
 import { MdEmail, MdEdit } from 'react-icons/md';
-import { useState, MouseEvent } from 'react';
+import { useState, MouseEvent, forwardRef } from 'react';
 import styled from './styles.module.scss';
 import { addLikeStore, deleteLikeStore } from '../../api/like';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import { useStoresData } from '../../contexts/findContext';
+import { LoadingPlaceholder } from '../Loading';
 // import MapModal from '../MapModal';
 
 export type CardProps = {
@@ -25,22 +26,25 @@ export type CardProps = {
 	// lng?: number;
 };
 
-function Card({
-	id,
-	storeName,
-	rating,
-	reviewCounts,
-	introduction,
-	photo,
-	isLiked,
-	address,
-	email,
-	phone,
-	onClick,
-	onOpenMap,
-}: // lat,
-// lng,
-CardProps) {
+const Card = forwardRef<HTMLDivElement, CardProps>(function Card(
+	{
+		id,
+		storeName,
+		rating,
+		reviewCounts,
+		introduction,
+		photo,
+		isLiked,
+		address,
+		email,
+		phone,
+		onClick,
+		onOpenMap,
+	}: // lat,
+	// lng,
+	CardProps,
+	ref,
+) {
 	const { oneStore } = useStoresData();
 	const [isStoreLiked, setIsStoreLiked] = useState(isLiked);
 	// const [isMapOpen, setIsMapOpen] = useState(false);
@@ -83,7 +87,7 @@ CardProps) {
 	// };
 
 	return (
-		<div className={styled.card} key={id}>
+		<div className={styled.card} key={id} ref={ref}>
 			<div className={styled.card__imgWrap}>
 				<img
 					src={photo}
@@ -207,6 +211,89 @@ CardProps) {
 						<div className={styled['card__storeInfoWrap--email']}>
 							<MdEmail className={styled['card__storeInfoWrap--emailIcon']} />
 							<span>{email}</span>
+						</div>
+					</>
+				)}
+			</div>
+		</div>
+	);
+});
+
+export function CardPlaceholder() {
+	const { id } = useParams();
+	const { pathname } = useLocation();
+	return (
+		<div className={styled.card} key={id}>
+			<div className={styled.card__imgWrap}>
+				<LoadingPlaceholder className={`${styled['card__imgWrap--img']} ${styled.placeholder}`} />
+			</div>
+
+			{/* info */}
+			<div className={styled.card__infoWrap}>
+				{!id ? (
+					<>
+						<LoadingPlaceholder className={styled['card__infoWrap--title']} />
+
+						<div className={styled.card__infoWrap__detailWrap}>
+							<div className={styled.card__infoWrap__detailWrap__detail}>
+								<div className={styled.card__infoWrap__detailWrap__detail__map}>
+									<BiSolidMap className={styled['card__infoWrap__detailWrap__detail__map--logo']} />
+									<span>Map</span>
+								</div>
+
+								<div className={styled['card__infoWrap__detailWrap__detail--rating']}>0</div>
+
+								<div className={styled['card__infoWrap__detailWrap__detail--review']}>
+									{'0 '}則評論
+								</div>
+							</div>
+
+							{pathname !== '/store/find' ? (
+								<div>
+									<BsHeart style={{ fontSize: '24px' }} />
+								</div>
+							) : (
+								<MdEdit />
+							)}
+						</div>
+
+						<LoadingPlaceholder
+							className={`${styled['card__infoWrap--text']} ${styled.placeholder}`}
+						/>
+					</>
+				) : (
+					<>
+						<div className={styled['card__storeInfoWrap--title']}>
+							<LoadingPlaceholder />
+							{!pathname.includes('/store/find') ? (
+								<div>
+									<BsHeart style={{ fontSize: '24px' }} />
+								</div>
+							) : (
+								<MdEdit style={{ fontSize: '24px' }} />
+							)}
+						</div>
+
+						<div className={styled['card__storeInfoWrap--address']}>
+							<BiSolidMap className={styled['card__storeInfoWrap--addressIcon']} />
+							<LoadingPlaceholder />
+						</div>
+
+						<div className={styled['card__storeInfoWrap--review']}>
+							<span className={styled['card__storeInfoWrap--rating']}>0</span>
+							<span>0則評論</span>
+						</div>
+
+						<LoadingPlaceholder />
+
+						<div className={styled['card__storeInfoWrap--phone']}>
+							<BsFillTelephoneFill className={styled['card__storeInfoWrap--phoneIcon']} />
+							<LoadingPlaceholder />
+						</div>
+
+						<div className={styled['card__storeInfoWrap--email']}>
+							<MdEmail className={styled['card__storeInfoWrap--emailIcon']} />
+							<LoadingPlaceholder />
 						</div>
 					</>
 				)}

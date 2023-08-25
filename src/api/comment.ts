@@ -1,7 +1,8 @@
 import axios from "axios";
 
 // const baseUrl = 'http://i-sport-api-env-1.eba-yaqmmn4t.ap-northeast-2.elasticbeanstalk.com/api';
-const baseUrl = 'https://isports.tw/api';
+// const baseUrl = 'https://isports.tw/api';
+const baseUrl = 'http://localhost:8080/api';
 
 // 新增評論
 export const addComment = async (authToken: string, storeId: number, rating :number, content: string) => {

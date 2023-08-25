@@ -18,3 +18,7 @@ export default function Loading() {
 		</div>
 	);
 }
+
+export function LoadingPlaceholder({ className }: { className?: string }) {
+	return <div className={`${styles.loadingPlaceholder} ${className}`.trim()}></div>;
+}

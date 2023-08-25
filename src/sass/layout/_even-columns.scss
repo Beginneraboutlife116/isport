@@ -7,6 +7,10 @@
 	display: grid;
 	gap: var(--card-gap, 1rem);
 
+	& > * {
+		width: 100%;
+	}
+
 	@include mq(min, sm) {
 		grid-template-columns: repeat(2, 1fr);
 	}

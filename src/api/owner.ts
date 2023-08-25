@@ -6,8 +6,8 @@ function getOwnerData() {
 	return apiHelper.get('/owner/users/account');
 }
 
-function getOwnerStores() {
-	return apiHelper.get('/owner/stores');
+function getOwnerStores(page: number, pageSize: number) {
+	return apiHelper.get(`/owner/stores?page=${page}&pageSize=${pageSize}`);
 }
 
 function getOneStore(id: number) {
@@ -92,8 +92,8 @@ function deletePlan(id: number) {
 }
 
 // reviews
-function getStoreReviews(id: number) {
-	return apiHelper.get(`/owner/stores/${id}/reviews`);
+function getStoreReviews(id: number, page: number, pageSize: number) {
+	return apiHelper.get(`/owner/stores/${id}/reviews?page=${page}&pageSize=${pageSize}`);
 }
 
 export {
