@@ -1,8 +1,7 @@
 import axios from 'axios';
 
 // const baseUrl = 'http://i-sport-api-env-1.eba-yaqmmn4t.ap-northeast-2.elasticbeanstalk.com/api';
-// const baseUrl = 'https://isports.tw/api';
-const baseUrl = 'http://localhost:8080/api';
+const baseUrl = 'https://isports.tw/api';
 
 // 取得所有場館
 export const fetchStoresData = async (authToken: string, page: number, pageSize: number) => {
