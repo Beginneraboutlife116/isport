@@ -1,8 +1,7 @@
 import axios, { isAxiosError } from 'axios';
 
 // const baseURL = 'http://i-sport-api-env-1.eba-yaqmmn4t.ap-northeast-2.elasticbeanstalk.com/api';
-// const baseURL = 'https://isports.tw/api';
-const baseURL = 'http://localhost:8080/api';
+const baseURL = 'https://isports.tw/api';
 
 const instance = axios.create({
 	baseURL,
